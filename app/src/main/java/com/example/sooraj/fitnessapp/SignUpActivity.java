@@ -24,7 +24,7 @@ public class SignUpActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference users;
 
-    EditText editMail, editUsername, editPassword;
+    EditText editMail, editUsername, editPassword, editConfirmPassword;
     Button btnSignUp, btnToLogIn;
 
 
@@ -40,6 +40,7 @@ public class SignUpActivity extends AppCompatActivity {
         editMail = (EditText) findViewById(R.id.editMail);
         editUsername = (EditText) findViewById(R.id.editUsername);
         editPassword = (EditText) findViewById(R.id.editPassword);
+        editConfirmPassword = (EditText) findViewById(R.id.editConfirmPassword);
         btnSignUp = (Button) findViewById(R.id.btnSignUp);
         btnToLogIn = (Button) findViewById(R.id.btnToLogIn);
 
@@ -56,8 +57,16 @@ public class SignUpActivity extends AppCompatActivity {
                         if(dataSnapshot.child(user.getUsername()).exists()) {
                             Toast.makeText(SignUpActivity.this, "This Username is Taken!", Toast.LENGTH_SHORT).show();
                         } else {
-                            users.child(user.getUsername()).setValue(user);
-                            Toast.makeText(SignUpActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
+                            
+                            if(editConfirmPassword.getText().toString().equals(editPassword.getText().toString())) {
+                                users.child(user.getUsername()).setValue(user);
+                                Toast.makeText(SignUpActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
+                                Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+                            } else {
+                                Toast.makeText(SignUpActivity.this, "Please ensure the password you have entered is consistant", Toast.LENGTH_SHORT).show();
+                                editConfirmPassword.setText("");
+                            }
+                             
                         }
                     }
 
