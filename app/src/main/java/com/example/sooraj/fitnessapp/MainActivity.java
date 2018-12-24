@@ -30,7 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar toolbar;
     private TabLayout tabLayout;
@@ -40,8 +40,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TabItem stepsTab;
     private TabItem foodTab;
     private TabItem profileTab;
-    private TextView steps;
-    private SensorManager sensorManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,15 +58,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         profileTab = findViewById(R.id.profileTab);
         viewPager = findViewById(R.id.viewPager);
 
-        steps = findViewById(R.id.stepText);
-
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pageAdapter);
-
-        Sensor countSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        sensorManager.registerListener(this, countSensor, SensorManager.SENSOR_DELAY_UI);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -116,13 +108,5 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
 
-    @Override
-    public void onSensorChanged(SensorEvent sensorEvent) {
-        steps.setText(String.valueOf(sensorEvent.values[0]));
-    }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
 }
