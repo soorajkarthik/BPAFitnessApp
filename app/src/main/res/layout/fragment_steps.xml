@@ -4,20 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_steps"
     tools:context=".StepsFragment">
 
 
     <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
+        android:id="@+id/stepsProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="64dp"
         android:layout_marginBottom="128dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progressDrawable="@drawable/progress"
         app:layout_constraintBottom_toTopOf="@+id/caloriesBurnedText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editText" />
+
 
     <TextView
         android:id="@+id/caloriesBurnedText"
@@ -58,17 +63,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/stepsProgressBar" />
 
     <TextView
         android:id="@+id/stepsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        app:layout_constraintEnd_toStartOf="@+id/progressBar"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/stepsProgressBar"
+        app:layout_constraintEnd_toStartOf="@+id/stepsProgressBar"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/progressBar"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintStart_toEndOf="@+id/stepsProgressBar"
+        app:layout_constraintTop_toBottomOf="@+id/stepsProgressBar" />
 
 </android.support.constraint.ConstraintLayout>

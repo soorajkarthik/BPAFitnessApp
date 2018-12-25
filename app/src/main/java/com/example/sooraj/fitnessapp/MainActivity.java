@@ -4,18 +4,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Binder;
 import android.os.IBinder;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.sooraj.fitnessapp.Model.User;
@@ -32,10 +29,16 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private PageAdapter pageAdapter;
-    private TabItem progressTab;
     private TabItem stepsTab;
+    private TabItem progressTab;
     private TabItem foodTab;
     private TabItem profileTab;
+    private int stepgoal = 10000;
+
+    private boolean mServiceBound = false;
+    private BoundService mBoundService;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = findViewById(R.id.tabLayout);
         progressTab = findViewById(R.id.progressTab);
+
         stepsTab = findViewById(R.id.stepsTab);
         foodTab = findViewById(R.id.foodTab);
         profileTab = findViewById(R.id.profileTab);
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                          toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
                          tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
                          getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                         setStepTabText();
                          break;
 
                      case 2:
@@ -97,14 +102,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
-
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
-    private boolean mServiceBound = false;
-    private BoundService mBoundService;
+
 
     @Override
     protected void onStart() {
@@ -112,21 +113,34 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, BoundService.class);
         startService(intent);
 
+        ServiceConnection mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder service) {
+                BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
+                mBoundService = myBinder.getService();
+                mServiceBound = true;
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                mServiceBound = false;
+
+            }
+        };
+
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder service) {
-            BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
-            mBoundService = myBinder.getService();
-            mServiceBound = true;
-        }
+    public void setStepTabText() {
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            mServiceBound = false;
+        Fragment stepsFragment =  getSupportFragmentManager().findFragmentById(R.id.viewPager);
+        TextView stepsText = findViewById(R.id.fragment_steps).findViewById(R.id.stepsText);
+        stepsText.setText("" + mBoundService.getStepCounter());
 
-        }
-    };
+        ProgressBar progressBar = findViewById(R.id.fragment_steps).findViewById(R.id.stepsProgressBar);
+        int percent = (mBoundService.getStepCounter()*100)/stepgoal;
+        progressBar.setProgress(percent);
 
+    }
 }

@@ -18,11 +18,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity" />
-        <activity android:name=".LoginActivity"></activity>
 
-        <service android:name="com.example.sooraj.fitnessapp.BoundService">
-        </service>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".LoginActivity"/>
+        <service android:name="com.example.sooraj.fitnessapp.BoundService"/>
+
+
 
     </application>
 

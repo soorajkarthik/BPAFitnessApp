@@ -9,11 +9,16 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.Fragment;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class BoundService extends Service implements SensorEventListener {
 
     private IBinder mBinder = new MyBinder();
     private boolean isRunning = false;
+    private android.app.Fragment stepsFragment;
 
     @Override
     public void onCreate() {
@@ -34,6 +39,7 @@ public class BoundService extends Service implements SensorEventListener {
     private int counterSteps = 0;
     private int stepDetector = 0;
 
+
     @Override
     public void onSensorChanged (SensorEvent sensorEvent) {
         switch (sensorEvent.sensor.getType()) {
@@ -51,10 +57,7 @@ public class BoundService extends Service implements SensorEventListener {
                 break;
         }
 
-        System.out.println(stepCounter);
-
     }
-
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
@@ -74,4 +77,10 @@ public class BoundService extends Service implements SensorEventListener {
             return BoundService.this;
         }
     }
+
+    public int getStepCounter() {
+        return stepCounter;
+    }
+
+
 }
