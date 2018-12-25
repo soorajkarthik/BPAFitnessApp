@@ -40,6 +40,9 @@ public class StepsFragment extends Fragment {
         if(item.getItemId() == R.id.action_steps) {
             Toast.makeText(getActivity(), "Clicked on " + item.getTitle(), Toast.LENGTH_SHORT).show();
         }
+
         return true;
     }
+
+
 }

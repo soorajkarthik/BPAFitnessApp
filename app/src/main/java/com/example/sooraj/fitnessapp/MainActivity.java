@@ -1,27 +1,17 @@
 package com.example.sooraj.fitnessapp;
 
 import android.content.Context;
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.Toolbar;
-
 
 import com.example.sooraj.fitnessapp.Model.User;
 import com.google.firebase.database.DataSnapshot;
@@ -30,7 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity {
+
+public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
     private android.support.v7.widget.Toolbar toolbar;
     private TabLayout tabLayout;
@@ -40,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TabItem stepsTab;
     private TabItem foodTab;
     private TabItem profileTab;
-
+    private TextView stepText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
         foodTab = findViewById(R.id.foodTab);
         profileTab = findViewById(R.id.profileTab);
         viewPager = findViewById(R.id.viewPager);
+
+        stepText = findViewById(R.id.stepText);
 
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pageAdapter);
@@ -103,9 +96,61 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
+
+    private int stepCounter = 0;
+    private int counterSteps = 0;
+    private int stepDetector = 0;
+    private boolean isRunning = false;
+
+    @Override
+    public void onSensorChanged (SensorEvent sensorEvent) {
+        switch (sensorEvent.sensor.getType()) {
+            case Sensor.TYPE_STEP_DETECTOR:
+                stepDetector++;
+                break;
+            case Sensor.TYPE_STEP_COUNTER:
+                if(counterSteps < 1) {
+                    counterSteps = (int) sensorEvent.values[0];
+                }
+                stepCounter = (int) sensorEvent.values[0];
+                break;
+
+            default:
+                break;
+        }
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(isRunning)
+            return;
+
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        isRunning = true;
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager.unregisterListener(this);
+        isRunning = false;
+    }
 
 
 
