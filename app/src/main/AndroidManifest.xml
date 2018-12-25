@@ -20,6 +20,10 @@
         </activity>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity"></activity>
+
+        <service android:name="com.example.sooraj.fitnessapp.BoundService">
+        </service>
+
     </application>
 
 </manifest>

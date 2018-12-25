@@ -1,10 +1,15 @@
 package com.example.sooraj.fitnessapp;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Binder;
+import android.os.IBinder;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -21,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class MainActivity extends AppCompatActivity {
 
     private android.support.v7.widget.Toolbar toolbar;
     private TabLayout tabLayout;
@@ -31,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TabItem stepsTab;
     private TabItem foodTab;
     private TabItem profileTab;
-    private TextView stepText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         foodTab = findViewById(R.id.foodTab);
         profileTab = findViewById(R.id.profileTab);
         viewPager = findViewById(R.id.viewPager);
-
-        stepText = findViewById(R.id.stepText);
 
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pageAdapter);
@@ -101,57 +103,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
-
-    private int stepCounter = 0;
-    private int counterSteps = 0;
-    private int stepDetector = 0;
-    private boolean isRunning = false;
+    private boolean mServiceBound = false;
+    private BoundService mBoundService;
 
     @Override
-    public void onSensorChanged (SensorEvent sensorEvent) {
-        switch (sensorEvent.sensor.getType()) {
-            case Sensor.TYPE_STEP_DETECTOR:
-                stepDetector++;
-                break;
-            case Sensor.TYPE_STEP_COUNTER:
-                if(counterSteps < 1) {
-                    counterSteps = (int) sensorEvent.values[0];
-                }
-                stepCounter = (int) sensorEvent.values[0];
-                break;
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, BoundService.class);
+        startService(intent);
 
-            default:
-                break;
+    }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder service) {
+            BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
+            mBoundService = myBinder.getService();
+            mServiceBound = true;
         }
 
-    }
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mServiceBound = false;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(isRunning)
-            return;
-
-        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
-        isRunning = true;
-
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int i) {
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensorManager.unregisterListener(this);
-        isRunning = false;
-    }
-
-
+        }
+    };
 
 }
