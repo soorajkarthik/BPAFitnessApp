@@ -12,7 +12,7 @@ public class User {
 
     private int bmi;
     private int steps;
-    private int weightGoal;//lose, maintain, gain(lean muscle)
+    private int weightGoal;//lose = 0, maintain 1, gain(lean muscle) = 2
 
     public int getWeightGoal() {
         return weightGoal;
@@ -33,6 +33,7 @@ public class User {
     private int fat;
     private int fatGoal;
     private boolean setUpCompleted = false;
+    private String gender;
 
     public boolean isSetUpCompleted() {
         return setUpCompleted;
@@ -40,6 +41,14 @@ public class User {
 
     public void setSetUpCompleted(boolean setUpCompleted) {
         this.setUpCompleted = setUpCompleted;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public User() {
