@@ -23,7 +23,7 @@
         android:layout_height="45dp"
         android:layout_marginStart="64dp"
         android:layout_marginTop="64dp"
-        android:layout_marginEnd="60dp"
+        android:layout_marginEnd="64dp"
         android:ems="10"
         android:hint="Email Address"
         android:inputType="textPersonName"

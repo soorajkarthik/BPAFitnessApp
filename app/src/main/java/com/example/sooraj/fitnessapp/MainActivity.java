@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,7 +36,12 @@ public class MainActivity extends AppCompatActivity {
     private TabItem progressTab;
     private TabItem foodTab;
     private TabItem profileTab;
+    private String username;
+    private User user;
     private int stepgoal = 10000;
+
+    FirebaseDatabase database;
+    DatabaseReference users;
 
     private boolean mServiceBound = false;
     private BoundService mBoundService;
@@ -44,6 +52,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
+        username = Objects.requireNonNull(getIntent().getExtras()).getString("Username");
+
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                user = dataSnapshot.child(username).getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString((R.string.app_name)));
@@ -141,6 +165,9 @@ public class MainActivity extends AppCompatActivity {
         ProgressBar progressBar = findViewById(R.id.fragment_steps).findViewById(R.id.stepsProgressBar);
         int percent = (mBoundService.getStepCounter()*100)/stepgoal;
         progressBar.setProgress(percent);
+        TextView percentCompleted = findViewById(R.id.fragment_steps).findViewById(R.id.percentOfStepGoalText);
+        percentCompleted.setText(percent + "% of Goal");
+
 
     }
 }

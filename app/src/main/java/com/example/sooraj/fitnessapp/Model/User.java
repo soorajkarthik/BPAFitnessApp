@@ -6,12 +6,23 @@ public class User {
     private String username;
     private String password;
 
-    private int weight;
-    private int height;
-    private int age;
+    private int weight;//
+    private int height;//
+    private int age;//
+
     private int bmi;
     private int steps;
-    private int stepGoal;
+    private int weightGoal;//lose, maintain, gain(lean muscle)
+
+    public int getWeightGoal() {
+        return weightGoal;
+    }
+
+    public void setWeightGoal(int weightGoal) {
+        this.weightGoal = weightGoal;
+    }
+
+    private int stepGoal;//
     private int caloriesBurned;
     private int calories;
     private int calorieGoal;
@@ -21,6 +32,15 @@ public class User {
     private int proteinGoal;
     private int fat;
     private int fatGoal;
+    private boolean setUpCompleted = false;
+
+    public boolean isSetUpCompleted() {
+        return setUpCompleted;
+    }
+
+    public void setSetUpCompleted(boolean setUpCompleted) {
+        this.setUpCompleted = setUpCompleted;
+    }
 
     public User() {
 

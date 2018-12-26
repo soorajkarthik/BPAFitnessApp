@@ -1,5 +1,48 @@
 <resources>
     <string name="app_name">FitnessApp</string>
-
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="gender_array">
+        <item>Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
+    <string-array name="weight_goal_array">
+        <item>I want to..</item>
+        <item>Lose Fat</item>
+        <item>Maintain Current Weight</item>
+        <item>Gain Lean Muscle</item>
+    </string-array>
+
+    <string-array name="height_feet_array">
+        <item>Feet</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string-array name="height_inches_array">
+        <item>Inches</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
+
+
+
 </resources>

@@ -45,8 +45,10 @@ public class LoginActivity extends AppCompatActivity {
         btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 logIn(editUsername.getText().toString(),
                         editPassword.getText().toString());
+
             }
         });
 
@@ -70,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
                     if(login.getPassword().equals(password)) {
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        myIntent.putExtra("Username", username);
                         startActivity(myIntent);
                     }
                     else {
