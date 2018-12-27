@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 public class GetInformationActivity extends AppCompatActivity  {
@@ -165,7 +166,7 @@ public class GetInformationActivity extends AppCompatActivity  {
                     user.setFatGoal(fat);
                     user.setProteinGoal(protein);
                     user.setSetUpCompleted(true);
-
+                    //user.putStepsStorage(Calendar.getInstance().getTime().toString(), 1000);
 
 
                     users.child(username).setValue(user);

@@ -1,5 +1,8 @@
 package com.example.sooraj.fitnessapp.Model;
 
+import java.util.Date;
+import java.util.HashMap;
+
 public class User {
 
     private String email;//
@@ -23,16 +26,21 @@ public class User {
     private int fatGoal;//
     private int proteinGoal;//
     private int activityLevel;//0 = sedentary, 1 = light, 2 = moderate, 3 = heavy, 4 = very heavy
+    private HashMap<String, Integer> stepsStorage;
+    private HashMap<String, Integer> calorieStorage;
     private boolean setUpCompleted = false;
 
     public User(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;
+        stepsStorage = new HashMap<>();
+        calorieStorage = new HashMap<>();
     }
 
     public User() {
-
+        stepsStorage = new HashMap<>();
+        calorieStorage = new HashMap<>();
     }
 
     public String getEmail() {
@@ -210,4 +218,22 @@ public class User {
     public void setSetUpCompleted(boolean setUpCompleted) {
         this.setUpCompleted = setUpCompleted;
     }
+
+    public HashMap<String, Integer> getStepsStorage() {
+        return stepsStorage;
+    }
+
+    public HashMap<String, Integer> getCalorieStorage() {
+        return calorieStorage;
+    }
+
+    public void putStepsStorage(String date,  int steps) {
+        stepsStorage.put(date, steps);
+    }
+
+    public void putCalorieStorage(String date, int calories) {
+        calorieStorage.put(date, calories);
+    }
+
+
 }

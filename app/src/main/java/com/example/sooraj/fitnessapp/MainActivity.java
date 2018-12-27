@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Intent intent = new Intent(this, BoundService.class);
+        intent.putExtra("Username", username);
         startService(intent);
 
         ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -173,13 +174,12 @@ public class MainActivity extends AppCompatActivity {
         TextView distanceWalked = findViewById(R.id.fragment_steps).findViewById(R.id.distanceWalkedText);
         distanceWalked.setText(milesWalked + " Miles Walked");
 
-        double caloriesBurned = (int) (0.4*user.getWeight()*milesWalked);
+        int caloriesBurned = (int) (0.4*user.getWeight()*milesWalked);
         TextView caloriesBurnedText = findViewById(R.id.fragment_steps).findViewById(R.id.caloriesBurnedText);
         caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
+        user.setCaloriesBurned(caloriesBurned);
 
-
-
-
-
+        users.child(username).child("step").setValue(user.getSteps());
+        users.child(username).child("caloriesBurned").setValue(user.getCaloriesBurned());
     }
 }

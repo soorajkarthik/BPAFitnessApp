@@ -9,20 +9,37 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.v4.app.Fragment;
-import android.widget.TextView;
+import android.support.annotation.NonNull;
 
-import org.w3c.dom.Text;
+import java.util.Calendar;
+import java.util.Date;
+
+import com.example.sooraj.fitnessapp.Model.User;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 
 public class BoundService extends Service implements SensorEventListener {
 
     private IBinder mBinder = new MyBinder();
     private boolean isRunning = false;
-    private android.app.Fragment stepsFragment;
+    private int stepCounter = 0;
+    private int counterSteps = 0;
+    private int stepDetector = 0;
+
+    FirebaseDatabase database;
+    DatabaseReference users;
+    private User user;
+    private String username;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
@@ -32,12 +49,22 @@ public class BoundService extends Service implements SensorEventListener {
 
     @Override
     public IBinder onBind(Intent intent) {
+        username = intent.getExtras().getString("Username");
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                user = dataSnapshot.child(username).getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         return mBinder;
     }
 
-    private int stepCounter = 0;
-    private int counterSteps = 0;
-    private int stepDetector = 0;
+
 
 
     @Override
@@ -57,6 +84,19 @@ public class BoundService extends Service implements SensorEventListener {
                 break;
         }
 
+
+        Calendar c = Calendar.getInstance();
+        int minute = c.get(Calendar.MINUTE);
+        if (minute == 59) {
+            if(c.get(Calendar.HOUR_OF_DAY) == 23) {
+
+                Date date = c.getTime();
+                String dateString = date.toString();
+                user.putStepsStorage(dateString, stepCounter);
+                stepCounter = 0;
+                users.child(username).child("stepStorage").setValue(user.getStepsStorage());
+            }
+        }
     }
 
     @Override
