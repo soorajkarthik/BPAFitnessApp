@@ -14,7 +14,7 @@
         android:layout_marginTop="8dp"
         android:entries="@array/height_feet_array"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/textHeight"
+        app:layout_constraintStart_toStartOf="@+id/weightGoal"
         app:layout_constraintTop_toBottomOf="@+id/editAge" />
 
     <Spinner
@@ -24,7 +24,7 @@
         android:layout_marginTop="8dp"
         android:entries="@array/height_inches_array"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/spinnerHeightFeet"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/editAge" />
 
     <Spinner
@@ -42,13 +42,12 @@
         android:id="@+id/editStepGoal"
         android:layout_width="120dp"
         android:layout_height="50dp"
-        android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Step Goal"
         android:inputType="numberSigned"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/editWeight"
-        app:layout_constraintTop_toBottomOf="@+id/textHeight" />
+        app:layout_constraintTop_toTopOf="@+id/editWeight" />
 
     <EditText
         android:id="@+id/editAge"
@@ -83,18 +82,7 @@
         android:inputType="numberSigned"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/weightGoal"
-        app:layout_constraintTop_toBottomOf="@+id/textHeight" />
-
-    <TextView
-        android:id="@+id/textHeight"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:text="Height"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="@+id/weightGoal"
-        app:layout_constraintTop_toBottomOf="@+id/editAge" />
+        app:layout_constraintTop_toBottomOf="@+id/spinnerHeightFeet" />
 
     <TextView
         android:id="@+id/textYourProfile"
@@ -115,8 +103,40 @@
         android:entries="@array/weight_goal_array"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerActivityLevel" />
+
+    <Spinner
+        android:id="@+id/spinnerActivityLevel"
+        android:layout_width="240dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:entries="@array/activity_level_array"
+        app:layout_constraintStart_toStartOf="@+id/weightGoal"
         app:layout_constraintTop_toBottomOf="@+id/editWeight" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:text="Ft"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/spinnerHeightFeet"
+        app:layout_constraintTop_toBottomOf="@+id/editAge" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:text="In"
+        android:gravity="center_vertical"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/spinnerHeightInches"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerGender" />
 
 
 </android.support.constraint.ConstraintLayout>

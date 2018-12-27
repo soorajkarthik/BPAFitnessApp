@@ -29,7 +29,7 @@ public class GetInformationActivity extends AppCompatActivity  {
 
     Button confirmButton;
     EditText editAge, editWeight, editStepGoal;
-    Spinner gender, heightFeet, heightInches, weightGoal;
+    Spinner gender, heightFeet, heightInches, weightGoal, activityLevel;
 
 
     @Override
@@ -64,6 +64,8 @@ public class GetInformationActivity extends AppCompatActivity  {
         heightFeet = findViewById(R.id.spinnerHeightFeet);
         heightInches = findViewById(R.id.spinnerHeightInches);
         weightGoal = findViewById(R.id.weightGoal);
+        activityLevel = findViewById(R.id.spinnerActivityLevel);
+
 
 
 
@@ -74,11 +76,11 @@ public class GetInformationActivity extends AppCompatActivity  {
                     Toast.makeText(GetInformationActivity.this, "Please enter your Age", Toast.LENGTH_SHORT).show();
                 }
 
-                if(gender.getSelectedItem().toString().equals("Gender")) {
-                    Toast.makeText(GetInformationActivity.this, "Please select your Gender", Toast.LENGTH_SHORT).show();
+                if(gender.getSelectedItem().toString().equals("Sex")) {
+                    Toast.makeText(GetInformationActivity.this, "Please select your Sex", Toast.LENGTH_SHORT).show();
                 }
 
-                if(heightFeet.getSelectedItem().toString().equals("Feet") || heightInches.getSelectedItem().toString().equals("Inches")) {
+                if(heightFeet.getSelectedItem().toString().equals("Height") || heightInches.getSelectedItem().toString().equals("Height")) {
                     Toast.makeText(GetInformationActivity.this, "Please select your Height", Toast.LENGTH_SHORT).show();
                 }
 
@@ -90,19 +92,81 @@ public class GetInformationActivity extends AppCompatActivity  {
                     Toast.makeText(GetInformationActivity.this, "Please enter your Step Goal", Toast.LENGTH_SHORT).show();
                 }
 
-                if(weightGoal.getSelectedItem().toString().equals("I want to...")) {
+                if(weightGoal.getSelectedItem().toString().equals("Weight Goal")) {
                     Toast.makeText(GetInformationActivity.this, "Please select your Weight Goal", Toast.LENGTH_SHORT).show();
                 }
+
+                if(activityLevel.getSelectedItem().toString().equals("Activity Level")) {
+                    Toast.makeText(GetInformationActivity.this, "Please select your Weight Goal", Toast.LENGTH_SHORT).show();
+                }
+
                 else {
-                    user.setAge(Integer.parseInt(editAge.getText().toString()));
-                    user.setGender(gender.getSelectedItem().toString());
-                    int feet = Integer.parseInt(heightFeet.getSelectedItem().toString());
-                    int inches = Integer.parseInt(heightInches.getSelectedItem().toString());
-                    user.setHeight((feet*12) + inches);
-                    user.setWeight(Integer.parseInt(editWeight.getText().toString()));
-                    user.setStepGoal(Integer.parseInt(editStepGoal.getText().toString()));
-                    user.setWeightGoal(weightGoal.getSelectedItemPosition());
+
+                    int age = Integer.parseInt(editAge.getText().toString());
+                    int height = Integer.parseInt(heightFeet.getSelectedItem().toString()) * 12 + Integer.parseInt(heightInches.getSelectedItem().toString());
+                    int weight = Integer.parseInt(editWeight.getText().toString());
+                    double bmi = ((double)weight/(height*height)) * 703;
+                    String genderString = gender.getSelectedItem().toString();
+                    int stepGoal = Integer.parseInt(editStepGoal.getText().toString());
+                    int weightGoalInt = weightGoal.getSelectedItemPosition()-1;
+                    int activityLevelInt = activityLevel.getSelectedItemPosition()-1;
+                    int bmr = genderString.equals("Male") ?  (int)(66 + (6.3 *weight) + (12.9* height) - (6.8 * age)) :  (int)( 655 + (4.3*weight) + (4.7 * height) - (4.7 * age));
+                    int calorieGoal;
+
+                    switch (activityLevelInt)  {
+                        case 0:
+                            calorieGoal = (int)(bmr * 1.2);
+                            break;
+                        case 1:
+                            calorieGoal = (int)(bmr*1.375);
+                            break;
+                        case 2:
+                            calorieGoal = (int)(bmr*1.55);
+                            break;
+                        case 3:
+                            calorieGoal = (int)(bmr*1.725);
+                            break;
+                        case 4:
+                            calorieGoal = (int)(bmr*1.9);
+                            break;
+                        default:
+                            calorieGoal = bmr;
+                            break;
+                    }
+
+                    switch (weightGoalInt) {
+                        case 0:
+                            calorieGoal -= 400;
+                            break;
+                        case 2:
+                            calorieGoal += 250;
+                            break;
+                        default:
+                            break;
+                    }
+
+                    int carbs = (int)(calorieGoal * 0.4 / 4);
+                    int fat = (int) (calorieGoal *.3 / 9);
+                    int protein = (int) (calorieGoal *.3 / 4);
+
+
+
+
+                    user.setAge(age);
+                    user.setGender(genderString);
+                    user.setHeight(height);
+                    user.setWeight(weight);
+                    user.setStepGoal(stepGoal);
+                    user.setWeightGoal(weightGoalInt);
+                    user.setBmi(bmi);
+                    user.setActivityLevel(activityLevelInt);
+                    user.setCalorieGoal(calorieGoal);
+                    user.setCarbGoal(carbs);
+                    user.setFatGoal(fat);
+                    user.setProteinGoal(protein);
                     user.setSetUpCompleted(true);
+
+
 
                     users.child(username).setValue(user);
                     Toast.makeText(GetInformationActivity.this, "Profile Setup Completed!", Toast.LENGTH_SHORT).show();

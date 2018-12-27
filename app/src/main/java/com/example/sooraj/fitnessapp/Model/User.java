@@ -2,58 +2,28 @@ package com.example.sooraj.fitnessapp.Model;
 
 public class User {
 
-    private String email;
-    private String username;
-    private String password;
-
+    private String email;//
+    private String username;//
+    private String password;//
+    private String gender;
     private int weight;//
     private int height;//
     private int age;//
-
-    private int bmi;
+    private double bmi;//
     private int steps;
-    private int weightGoal;//lose = 0, maintain 1, gain(lean muscle) = 2
-
-    public int getWeightGoal() {
-        return weightGoal;
-    }
-
-    public void setWeightGoal(int weightGoal) {
-        this.weightGoal = weightGoal;
-    }
-
     private int stepGoal;//
+    private int weightGoal;//lose = 0, maintain 1, gain(lean muscle) = 2
     private int caloriesBurned;
     private int calories;
-    private int calorieGoal;
+    private int calorieGoal;//
     private int carbs;
-    private int carbGoal;
-    private int protein;
-    private int proteinGoal;
     private int fat;
-    private int fatGoal;
+    private int protein;
+    private int carbGoal;//
+    private int fatGoal;//
+    private int proteinGoal;//
+    private int activityLevel;//0 = sedentary, 1 = light, 2 = moderate, 3 = heavy, 4 = very heavy
     private boolean setUpCompleted = false;
-    private String gender;
-
-    public boolean isSetUpCompleted() {
-        return setUpCompleted;
-    }
-
-    public void setSetUpCompleted(boolean setUpCompleted) {
-        this.setUpCompleted = setUpCompleted;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public User() {
-
-    }
 
     public User(String email, String username, String password) {
         this.email = email;
@@ -61,23 +31,23 @@ public class User {
         this.password = password;
     }
 
-    public String getEmail() {
+    public User() {
 
+    }
+
+    public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
-
         this.email = email;
     }
 
     public String getUsername() {
-
         return username;
     }
 
     public void setUsername(String username) {
-
         this.username = username;
     }
 
@@ -86,8 +56,15 @@ public class User {
     }
 
     public void setPassword(String password) {
-
         this.password = password;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public int getWeight() {
@@ -114,11 +91,11 @@ public class User {
         this.age = age;
     }
 
-    public int getBmi() {
+    public double getBmi() {
         return bmi;
     }
 
-    public void setBmi(int bmi) {
+    public void setBmi(double bmi) {
         this.bmi = bmi;
     }
 
@@ -136,6 +113,14 @@ public class User {
 
     public void setStepGoal(int stepGoal) {
         this.stepGoal = stepGoal;
+    }
+
+    public int getWeightGoal() {
+        return weightGoal;
+    }
+
+    public void setWeightGoal(int weightGoal) {
+        this.weightGoal = weightGoal;
     }
 
     public int getCaloriesBurned() {
@@ -170,12 +155,12 @@ public class User {
         this.carbs = carbs;
     }
 
-    public int getCarbGoal() {
-        return carbGoal;
+    public int getFat() {
+        return fat;
     }
 
-    public void setCarbGoal(int carbGoal) {
-        this.carbGoal = carbGoal;
+    public void setFat(int fat) {
+        this.fat = fat;
     }
 
     public int getProtein() {
@@ -186,20 +171,12 @@ public class User {
         this.protein = protein;
     }
 
-    public int getProteinGoal() {
-        return proteinGoal;
+    public int getCarbGoal() {
+        return carbGoal;
     }
 
-    public void setProteinGoal(int proteinGoal) {
-        this.proteinGoal = proteinGoal;
-    }
-
-    public int getFat() {
-        return fat;
-    }
-
-    public void setFat(int fat) {
-        this.fat = fat;
+    public void setCarbGoal(int carbGoal) {
+        this.carbGoal = carbGoal;
     }
 
     public int getFatGoal() {
@@ -208,5 +185,29 @@ public class User {
 
     public void setFatGoal(int fatGoal) {
         this.fatGoal = fatGoal;
+    }
+
+    public int getProteinGoal() {
+        return proteinGoal;
+    }
+
+    public void setProteinGoal(int proteinGoal) {
+        this.proteinGoal = proteinGoal;
+    }
+
+    public int getActivityLevel() {
+        return activityLevel;
+    }
+
+    public void setActivityLevel(int activityLevel) {
+        this.activityLevel = activityLevel;
+    }
+
+    public boolean isSetUpCompleted() {
+        return setUpCompleted;
+    }
+
+    public void setSetUpCompleted(boolean setUpCompleted) {
+        this.setUpCompleted = setUpCompleted;
     }
 }

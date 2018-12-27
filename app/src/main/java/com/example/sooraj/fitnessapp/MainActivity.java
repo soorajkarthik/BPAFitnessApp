@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private TabItem profileTab;
     private String username;
     private User user;
-    private int stepgoal = 10000;
 
     FirebaseDatabase database;
     DatabaseReference users;
@@ -158,15 +157,28 @@ public class MainActivity extends AppCompatActivity {
 
     public void setStepTabText() {
 
+        user.setSteps(mBoundService.getStepCounter());
+
         Fragment stepsFragment =  getSupportFragmentManager().findFragmentById(R.id.viewPager);
         TextView stepsText = findViewById(R.id.fragment_steps).findViewById(R.id.stepsText);
-        stepsText.setText("" + mBoundService.getStepCounter());
+        stepsText.setText("" + user.getSteps());
 
         ProgressBar progressBar = findViewById(R.id.fragment_steps).findViewById(R.id.stepsProgressBar);
-        int percent = (mBoundService.getStepCounter()*100)/stepgoal;
+        int percent = (user.getSteps()*100)/user.getStepGoal();
         progressBar.setProgress(percent);
         TextView percentCompleted = findViewById(R.id.fragment_steps).findViewById(R.id.percentOfStepGoalText);
         percentCompleted.setText(percent + "% of Goal");
+
+        double milesWalked = (user.getSteps() * ((user.getHeight() * 0.413)/12)) / 5280;
+        TextView distanceWalked = findViewById(R.id.fragment_steps).findViewById(R.id.distanceWalkedText);
+        distanceWalked.setText(milesWalked + " Miles Walked");
+
+        double caloriesBurned = (int) (0.4*user.getWeight()*milesWalked);
+        TextView caloriesBurnedText = findViewById(R.id.fragment_steps).findViewById(R.id.caloriesBurnedText);
+        caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
+
+
+
 
 
     }
