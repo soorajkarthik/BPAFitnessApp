@@ -36,7 +36,7 @@
         android:spinnerMode="dropdown"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/editAge"
-        app:layout_constraintTop_toBottomOf="@+id/textYourProfile" />
+        app:layout_constraintTop_toBottomOf="@+id/textEditProfile" />
 
     <EditText
         android:id="@+id/editStepGoal"
@@ -44,10 +44,10 @@
         android:layout_height="50dp"
         android:ems="10"
         android:hint="Step Goal"
-        android:inputType="numberSigned"
+        android:inputType="number"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/editWeight"
-        app:layout_constraintTop_toTopOf="@+id/editWeight" />
+        app:layout_constraintStart_toEndOf="@+id/editNewWeight"
+        app:layout_constraintTop_toTopOf="@+id/editNewWeight" />
 
     <EditText
         android:id="@+id/editAge"
@@ -56,10 +56,10 @@
         android:layout_marginTop="64dp"
         android:ems="10"
         android:hint="Age"
-        android:inputType="numberSigned"
+        android:inputType="number"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/weightGoal"
-        app:layout_constraintTop_toBottomOf="@+id/textYourProfile" />
+        app:layout_constraintTop_toBottomOf="@+id/textEditProfile" />
 
     <Button
         android:id="@+id/buttonConfirmProfile"
@@ -73,19 +73,19 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/editWeight"
+        android:id="@+id/editNewWeight"
         android:layout_width="120dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:hint="Weight"
-        android:inputType="numberSigned"
+        android:inputType="number"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/weightGoal"
         app:layout_constraintTop_toBottomOf="@+id/spinnerHeightFeet" />
 
     <TextView
-        android:id="@+id/textYourProfile"
+        android:id="@+id/textEditProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
@@ -114,7 +114,7 @@
         android:layout_marginTop="8dp"
         android:entries="@array/activity_level_array"
         app:layout_constraintStart_toStartOf="@+id/weightGoal"
-        app:layout_constraintTop_toBottomOf="@+id/editWeight" />
+        app:layout_constraintTop_toBottomOf="@+id/editNewWeight" />
 
     <TextView
         android:id="@+id/textView2"

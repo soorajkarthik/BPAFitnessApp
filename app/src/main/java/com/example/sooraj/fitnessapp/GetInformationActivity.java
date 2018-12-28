@@ -18,7 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.Calendar;
 import java.util.Objects;
 
 public class GetInformationActivity extends AppCompatActivity  {
@@ -59,7 +58,7 @@ public class GetInformationActivity extends AppCompatActivity  {
 
         confirmButton = (Button) findViewById(R.id.buttonConfirmProfile);
         editAge = findViewById(R.id.editAge);
-        editWeight = findViewById(R.id.editWeight);
+        editWeight = findViewById(R.id.editNewWeight);
         editStepGoal = findViewById(R.id.editStepGoal);
         gender = findViewById(R.id.spinnerGender);
         heightFeet = findViewById(R.id.spinnerHeightFeet);

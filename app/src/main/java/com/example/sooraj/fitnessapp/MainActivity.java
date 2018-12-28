@@ -13,6 +13,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -45,12 +46,15 @@ public class MainActivity extends AppCompatActivity {
     private boolean mServiceBound = false;
     private BoundService mBoundService;
 
-
+    public User getUser() {
+        return user;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
@@ -80,7 +84,9 @@ public class MainActivity extends AppCompatActivity {
         profileTab = findViewById(R.id.profileTab);
         viewPager = findViewById(R.id.viewPager);
 
-        pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+
+
+        pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), username);
         viewPager.setAdapter(pageAdapter);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -179,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
         user.setCaloriesBurned(caloriesBurned);
 
-        users.child(username).child("step").setValue(user.getSteps());
+        users.child(username).child("steps").setValue(user.getSteps());
         users.child(username).child("caloriesBurned").setValue(user.getCaloriesBurned());
     }
 }

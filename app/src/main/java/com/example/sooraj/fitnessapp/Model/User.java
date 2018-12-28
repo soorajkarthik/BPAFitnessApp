@@ -28,6 +28,7 @@ public class User {
     private int activityLevel;//0 = sedentary, 1 = light, 2 = moderate, 3 = heavy, 4 = very heavy
     private HashMap<String, Integer> stepsStorage;
     private HashMap<String, Integer> calorieStorage;
+    private HashMap<String, Integer> weightStorage;
     private boolean setUpCompleted = false;
 
     public User(String email, String username, String password) {
@@ -41,6 +42,7 @@ public class User {
     public User() {
         stepsStorage = new HashMap<>();
         calorieStorage = new HashMap<>();
+        weightStorage = new HashMap<>();
     }
 
     public String getEmail() {
@@ -235,5 +237,9 @@ public class User {
         calorieStorage.put(date, calories);
     }
 
+    public void putWeightStorage(String date, int weight) { weightStorage.put(date, weight); }
 
+    public HashMap<String, Integer> getWeightStorage() {
+        return weightStorage;
+    }
 }
