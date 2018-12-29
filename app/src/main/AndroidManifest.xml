@@ -26,5 +26,6 @@
 
         <activity android:name=".GetInformationActivity"></activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

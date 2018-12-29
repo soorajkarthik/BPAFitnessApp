@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 
@@ -178,7 +179,9 @@ public class MainActivity extends AppCompatActivity {
 
         double milesWalked = (user.getSteps() * ((user.getHeight() * 0.413)/12)) / 5280;
         TextView distanceWalked = findViewById(R.id.fragment_steps).findViewById(R.id.distanceWalkedText);
-        distanceWalked.setText(milesWalked + " Miles Walked");
+        DecimalFormat df = new DecimalFormat("0.00");
+        String milesWalkedString = df.format(milesWalked);
+        distanceWalked.setText(milesWalkedString + " Miles Walked");
 
         int caloriesBurned = (int) (0.4*user.getWeight()*milesWalked);
         TextView caloriesBurnedText = findViewById(R.id.fragment_steps).findViewById(R.id.caloriesBurnedText);

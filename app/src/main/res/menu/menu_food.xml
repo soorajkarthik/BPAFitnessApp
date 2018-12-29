@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_food"
-        android:icon="@drawable/add_white_24dp"
-        android:title="Add Food"
+        android:id="@+id/food_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        android:title="Search"
+        app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom" />
-
 </menu>

@@ -51,6 +51,9 @@
         <item>Hard exercise/sports 6–7 days a week</item>
         <item>Very hard exercise/sports and/or physical job</item>
     </string-array>
+    
+    <string name="Application_ID">b2f7efb9</string>
+    <string name="Application_Key">6c6117ee833ec15cb3018340a39e5d3b</string>
 
 
 

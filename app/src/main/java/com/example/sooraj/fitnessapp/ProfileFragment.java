@@ -56,7 +56,6 @@ public class ProfileFragment extends Fragment {
         username = user.getUsername();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
