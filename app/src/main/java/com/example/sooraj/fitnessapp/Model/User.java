@@ -242,4 +242,6 @@ public class User {
     public HashMap<String, Integer> getWeightStorage() {
         return weightStorage;
     }
+
+
 }

@@ -1,5 +1,6 @@
 package com.example.sooraj.fitnessapp;
 
+import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
     public void setStepTabText() {

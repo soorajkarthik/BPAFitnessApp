@@ -22,7 +22,9 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -57,7 +59,7 @@ public class FoodFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu (Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_food, menu);
-        search = view.findViewById(R.id.food_search);
+        search = (SearchView) menu.getItem(0).getActionView();
         search.setQueryHint("Start typing to search...");
         search.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
 
@@ -100,7 +102,7 @@ public class FoodFragment extends Fragment {
     class myAsyncTask extends AsyncTask<String, Void, String> {
 
 
-        JSONArray foodList;
+        private JSONArray foodList;
         String url = new String();
         String textSearch;
         ProgressDialog pd;
@@ -110,26 +112,7 @@ public class FoodFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            foodList = new JSONArray();
             rQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-
-            request = new JsonObjectRequest(com.android.volley.Request.Method.GET, url, null,
-                    new com.android.volley.Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                foodList = response.getJSONArray("hits");
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }, new com.android.volley.Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                }
-            });
-
             pd = new ProgressDialog(getActivity());
             pd.setCancelable(false);
             pd.setMessage("Searching...");
@@ -140,38 +123,67 @@ public class FoodFragment extends Fragment {
         @Override
         protected String doInBackground(String... sText) {
 
-            String url = "https://api.nutritionix.com/v1_1/search/" + sText + "?results=0%3A20&cal_min=0&cal_max=50000&fields=*&appId=b2f7efb9&appKey=6c6117ee833ec15cb3018340a39e5d3b";
-            String returnResult = getFoodList(url);
-            this.textSearch = sText[0];
-            return returnResult;
+            final String[] search = sText;
+            String url = "https://api.nutritionix.com/v1_1/search/" + sText[0] + "?results=0%3A50&cal_min=0&cal_max=50000&fields=*&appId=b2f7efb9&appKey=6c6117ee833ec15cb3018340a39e5d3b";
+            request = new JsonObjectRequest(com.android.volley.Request.Method.GET, url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                foodList = response.getJSONArray("hits");
+                                String s = getFoodList();
+                                Log.d("GetFoodList", s);
+                                textSearch = search[0];
+
+                                filterFoodArray(textSearch);
+                                searchResults.setAdapter(new SearchResultsAdapter(getActivity(), filteredFoodResults));
+                                Log.d("searchResultsAdapter", searchResults.getAdapter().getCount() + "");
+                                pd.dismiss();
+
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+
+            rQueue.add(request);
+            return "Done";
+
         }
 
-        public String getFoodList(String url) {
-            Food tempFood = new Food();
-            String matchFound = "N";
-            Log.d("AsyncTask", "FoodResults size: " + foodResults.size());
+        public String getFoodList() {
 
             try {
 
-                rQueue.add(request);
-
+                System.out.println(foodList.length());
                 for(int i = 0; i < foodList.length(); i++) {
-                    tempFood = new Food();
+                    Food tempFood = new Food();
+                    String matchFound = "N";
+
+
 
                     JSONObject obj = foodList.getJSONObject(i);
+                    System.out.println(obj.toString());
+                    JSONObject fields = obj.getJSONObject("fields");
+                    tempFood.setCalories(fields.getInt("nf_calories"));
+                    tempFood.setFat(fields.getInt("nf_total_fat"));
+                    tempFood.setCarbs(fields.getInt("nf_total_carbohydrate"));
+                    tempFood.setProtein(fields.getInt("nf_protein"));
+                    tempFood.setId(fields.getString("item_id"));
+                    tempFood.setName(fields.getString("item_name"));
 
-                    tempFood.setCalories(obj.getInt("nf_calories"));
-                    tempFood.setFat(obj.getInt("nf_total_fat"));
-                    tempFood.setCarbs(obj.getInt("nf_total_carbohydrates"));
-                    tempFood.setProtein(obj.getInt("nf_protein"));
-                    tempFood.setId(obj.getString("item_id"));
-                    tempFood.setName(obj.getString("item_name"));
 
-                    matchFound = "N";
 
                     for(int j = 0; i < foodResults.size(); j++) {
                         if(foodResults.get(j).getId().equals(tempFood.getId())) {
                             matchFound = "Y";
+
                         }
                     }
 
@@ -183,11 +195,15 @@ public class FoodFragment extends Fragment {
                 }
 
 
+
+
             } catch (Exception e) {e.printStackTrace(); return "Exception Caught";}
 
             return "OK";
 
         }
+
+
 
         @Override
         protected void onPostExecute(String results) {
@@ -200,8 +216,7 @@ public class FoodFragment extends Fragment {
 
             else {
                 Log.d("AsyncTask", "existing onPostExecute");
-                filterFoodArray(textSearch);
-                searchResults.setAdapter(new SearchResultsAdapter(getActivity(), filteredFoodResults));
+
             }
         }
     }
@@ -212,6 +227,7 @@ public class FoodFragment extends Fragment {
         filteredFoodResults.clear();
         for (int i = 0; i < foodResults.size(); i++) {
             fName = foodResults.get(i).getName().toLowerCase();
+            Log.d("FoodName", fName);
             if(fName.contains(newText.toLowerCase())) {
                 filteredFoodResults.add(foodResults.get(i));
             }
@@ -228,9 +244,10 @@ public class FoodFragment extends Fragment {
         public SearchResultsAdapter(Context context, ArrayList<Food> food_details) {
             layoutInflater = LayoutInflater.from(context);
 
-            this.foodDetails  = food_details;
+            foodDetails.addAll(food_details);
             this.count = food_details.size();
             this.context = context;
+            Log.d("SearchAdapter", "Size: " + count);
         }
 
         @Override
@@ -281,8 +298,7 @@ public class FoodFragment extends Fragment {
             holder.textProtein.setText(tempFood.getProtein() + "");
             holder.buttonAddFood.setText("Click to add food");
 
-
-            return null;
+            return view;
         }
 
         class ViewHolder {
