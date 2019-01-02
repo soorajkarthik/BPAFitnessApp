@@ -13,11 +13,14 @@ import android.widget.Toast;
 
 public class ProgressFragment extends Fragment {
 
+    private View view;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
         setHasOptionsMenu(true);
-        return inflater.inflate(R.layout.fragment_progress, container, false);
+        view = inflater.inflate(R.layout.fragment_progress, container, false);
+        return view;
     }
 
     @Override

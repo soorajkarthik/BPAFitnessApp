@@ -22,13 +22,13 @@ import java.util.Objects;
 public class GetInformationActivity extends AppCompatActivity {
 
     //Firebase
-    FirebaseDatabase database;
-    DatabaseReference users;
-    User user;
+    private FirebaseDatabase database;
+    private DatabaseReference users;
+    private User user;
 
-    Button confirmButton;
-    EditText editAge, editWeight, editStepGoal;
-    Spinner gender, heightFeet, heightInches, weightGoal, activityLevel;
+    private Button confirmButton;
+    private EditText editAge, editWeight, editStepGoal;
+    private Spinner gender, heightFeet, heightInches, weightGoal, activityLevel;
 
 
     @Override

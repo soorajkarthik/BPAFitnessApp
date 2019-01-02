@@ -23,8 +23,8 @@ import java.util.Calendar;
 
 public class ProfileFragment extends Fragment {
 
-    FirebaseDatabase database;
-    DatabaseReference users;
+    private FirebaseDatabase database;
+    private DatabaseReference users;
     private View view;
     private EditText editNewWeight, editAge, editStepGoal;
     private Spinner spinnerGender, spinnerHeightInches, spinnerHeightFeet, spinnerActivityLevel, spinnerWeightGoal;

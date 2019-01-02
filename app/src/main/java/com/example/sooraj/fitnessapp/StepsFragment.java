@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class StepsFragment extends Fragment {
 
-    View view;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {

@@ -24,8 +24,8 @@ import java.util.Date;
 
 public class BoundService extends Service implements SensorEventListener {
 
-    FirebaseDatabase database;
-    DatabaseReference users;
+    private FirebaseDatabase database;
+    private DatabaseReference users;
     private IBinder mBinder = new MyBinder();
     private boolean isRunning = false;
     private int stepCounter = 0;

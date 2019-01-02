@@ -20,11 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 public class SignUpActivity extends AppCompatActivity {
 
     //Firebase
-    FirebaseDatabase database;
-    DatabaseReference users;
+    private FirebaseDatabase database;
+    private DatabaseReference users;
 
-    EditText editMail, editUsername, editPassword, editConfirmPassword;
-    Button btnSignUp, btnToLogIn;
+    private EditText editMail, editUsername, editPassword, editConfirmPassword;
+    private Button btnSignUp, btnToLogIn;
 
 
     @Override

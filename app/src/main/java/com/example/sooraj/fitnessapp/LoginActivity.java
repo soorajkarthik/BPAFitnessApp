@@ -20,11 +20,11 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginActivity extends AppCompatActivity {
 
     //Firebase
-    FirebaseDatabase database;
-    DatabaseReference users;
+    private FirebaseDatabase database;
+    private DatabaseReference users;
 
-    EditText editMail, editUsername, editPassword;
-    Button btnLogIn, btnToSignUp;
+    private EditText editMail, editUsername, editPassword;
+    private Button btnLogIn, btnToSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

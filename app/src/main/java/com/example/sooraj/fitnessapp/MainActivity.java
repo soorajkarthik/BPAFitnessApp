@@ -29,8 +29,8 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseDatabase database;
-    DatabaseReference users;
+    private FirebaseDatabase database;
+    private DatabaseReference users;
     private android.support.v7.widget.Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;

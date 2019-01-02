@@ -24,6 +24,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sooraj.fitnessapp.Model.Food;
+import com.example.sooraj.fitnessapp.Model.User;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,11 +35,15 @@ import java.util.ArrayList;
 
 public class FoodFragment extends Fragment {
 
-    ArrayList<Food> foodResults = new ArrayList<>();
-    ArrayList<Food> filteredFoodResults = new ArrayList<>();
+    private ArrayList<Food> foodResults = new ArrayList<>();
+    private ArrayList<Food> filteredFoodResults = new ArrayList<>();
     private View view;
     private SearchView search;
     private ListView searchResults;
+    private FirebaseDatabase database;
+    private DatabaseReference users;
+    private String username;
+    private User user;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
@@ -44,6 +51,10 @@ public class FoodFragment extends Fragment {
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_food, container, false);
         searchResults = view.findViewById(R.id.search_results);
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
+        user = ((MainActivity) getActivity()).getUser();
+        username = user.getUsername();
         return view;
     }
 
@@ -267,6 +278,13 @@ public class FoodFragment extends Fragment {
                 holder.carbs = view.findViewById(R.id.carbs);
                 holder.protein = view.findViewById(R.id.protein);
                 holder.addFood = view.findViewById(R.id.addFood);
+
+                holder.addFood.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
 
                 view.setTag(holder);
             } else {
