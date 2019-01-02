@@ -1,13 +1,10 @@
 package com.example.sooraj.fitnessapp;
 
-
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,13 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -30,8 +25,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sooraj.fitnessapp.Model.Food;
 
-
-import org.json.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -40,7 +35,6 @@ public class FoodFragment extends Fragment {
     private View view;
     private SearchView search;
     private ListView searchResults;
-    private String found = "N";
 
     ArrayList<Food> foodResults = new ArrayList<>();
     ArrayList<Food> filteredFoodResults = new ArrayList<>();
@@ -51,7 +45,6 @@ public class FoodFragment extends Fragment {
 
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_food, container, false);
-        final MainActivity activity = (MainActivity) getActivity();
         searchResults = view.findViewById(R.id.search_results);
         return view;
     }
@@ -102,9 +95,7 @@ public class FoodFragment extends Fragment {
 
 
         private JSONArray foodList;
-        String url = new String();
         String textSearch;
-        ProgressDialog pd;
         RequestQueue rQueue;
         JsonObjectRequest request;
 
@@ -112,11 +103,6 @@ public class FoodFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             rQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
-            pd = new ProgressDialog(getActivity());
-            pd.setCancelable(false);
-            pd.setMessage("Searching...");
-            pd.getWindow().setGravity(Gravity.CENTER);
-            pd.show();
         }
 
         @Override
@@ -136,8 +122,7 @@ public class FoodFragment extends Fragment {
 
                                 filterFoodArray(textSearch);
                                 searchResults.setAdapter(new SearchResultsAdapter(getActivity(), filteredFoodResults));
-                                Log.d("searchResultsAdapter", searchResults.getAdapter().getCount() + "");
-                                pd.dismiss();
+                                //pd.dismiss();
 
 
                             } catch (Exception e) {
@@ -169,7 +154,6 @@ public class FoodFragment extends Fragment {
 
                     try {
                         JSONObject obj = foodList.getJSONObject(i);
-                        System.out.println(obj.toString());
                         JSONObject fields = obj.getJSONObject("fields");
                         tempFood.setCalories(fields.getInt("nf_calories"));
                         tempFood.setFat(fields.getInt("nf_total_fat"));
@@ -177,6 +161,7 @@ public class FoodFragment extends Fragment {
                         tempFood.setProtein(fields.getInt("nf_protein"));
                         tempFood.setId(fields.getString("item_id"));
                         tempFood.setName(fields.getString("item_name"));
+                        tempFood.setBrand(fields.getString("brand_name"));
                     } catch (Exception e) {
                         continue;
                     }
@@ -186,6 +171,10 @@ public class FoodFragment extends Fragment {
                         if (foodResults.get(j).getId().equals(tempFood.getId())) {
                             matchFound = "Y";
 
+                        }
+
+                        if (j == foodResults.size() - 1) {
+                            break;
                         }
                     }
 
@@ -210,7 +199,6 @@ public class FoodFragment extends Fragment {
 
             if (results.equalsIgnoreCase("Exception Caught")) {
                 Toast.makeText(getActivity(), "Unable to connect to server :/", Toast.LENGTH_SHORT).show();
-                pd.dismiss();
             } else {
                 Log.d("AsyncTask", "existing onPostExecute");
 
@@ -275,12 +263,12 @@ public class FoodFragment extends Fragment {
                 holder.textFat = view.findViewById(R.id.textFat);
                 holder.textCarbs = view.findViewById(R.id.textCarbs);
                 holder.textProtein = view.findViewById(R.id.textProtein);
-                holder.buttonAddFood = view.findViewById(R.id.buttonAddFood);
+                holder.brandText = view.findViewById(R.id.brandText);
                 holder.cals = view.findViewById(R.id.cals);
                 holder.fat = view.findViewById(R.id.fat);
                 holder.carbs = view.findViewById(R.id.carbs);
                 holder.protein = view.findViewById(R.id.protein);
-                holder.foodImage = view.findViewById(R.id.foodImage);
+                holder.addFood = view.findViewById(R.id.addFood);
 
                 view.setTag(holder);
             } else {
@@ -292,7 +280,7 @@ public class FoodFragment extends Fragment {
             holder.textFat.setText(tempFood.getFat() + "");
             holder.textCarbs.setText(tempFood.getCarbs() + "");
             holder.textProtein.setText(tempFood.getProtein() + "");
-            holder.buttonAddFood.setText("Click to add food");
+            holder.brandText.setText(tempFood.getBrand());
 
             return view;
         }
@@ -303,12 +291,12 @@ public class FoodFragment extends Fragment {
             TextView textFat;
             TextView textCarbs;
             TextView textProtein;
-            Button buttonAddFood;
+            TextView brandText;
             TextView cals;
             TextView fat;
             TextView carbs;
             TextView protein;
-            ImageView foodImage;
+            Button addFood;
 
         }
     }

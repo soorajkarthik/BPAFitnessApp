@@ -9,46 +9,34 @@
     android:layout_marginRight="5dp"
     android:background="#FFFFFF">
 
-    <ImageView
-        android:id="@+id/foodImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp"
-        android:src="@drawable/ic_launcher_background"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/foodName"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
+        android:layout_marginTop="8dp"
         android:text="Food Name"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#000000"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/foodImage"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/cals"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="Cals:"
-        app:layout_constraintStart_toStartOf="@+id/foodName"
-        app:layout_constraintTop_toBottomOf="@+id/foodName" />
+        app:layout_constraintStart_toStartOf="@+id/brand"
+        app:layout_constraintTop_toBottomOf="@+id/brand" />
 
     <TextView
         android:id="@+id/fat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Fat:"
-        app:layout_constraintStart_toStartOf="@+id/foodName"
+        app:layout_constraintStart_toStartOf="@+id/brand"
         app:layout_constraintTop_toBottomOf="@+id/cals" />
 
     <TextView
@@ -56,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Carbs:"
-        app:layout_constraintStart_toStartOf="@+id/foodName"
+        app:layout_constraintStart_toStartOf="@+id/brand"
         app:layout_constraintTop_toBottomOf="@+id/fat" />
 
     <TextView
@@ -64,17 +52,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Prot:"
-        app:layout_constraintStart_toStartOf="@+id/foodName"
+        app:layout_constraintStart_toStartOf="@+id/brand"
         app:layout_constraintTop_toBottomOf="@+id/carbs" />
 
     <TextView
         android:id="@+id/textCalories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="____ cals"
         app:layout_constraintStart_toStartOf="@+id/textCarbs"
-        app:layout_constraintTop_toBottomOf="@+id/foodName" />
+        app:layout_constraintTop_toBottomOf="@+id/brandText" />
 
     <TextView
         android:id="@+id/textFat"
@@ -101,16 +88,43 @@
         app:layout_constraintStart_toStartOf="@+id/textCarbs"
         app:layout_constraintTop_toBottomOf="@+id/textCarbs" />
 
-    <Button
-        android:id="@+id/buttonAddFood"
+    <TextView
+        android:id="@+id/brand"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="5dp"
-        android:text="Button"
-        app:layout_constraintBottom_toBottomOf="@+id/textProtein"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="4dp"
+        android:text="Brand:"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/foodName" />
+
+    <TextView
+        android:id="@+id/brandText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brand Name"
+        app:layout_constraintStart_toStartOf="@+id/textCarbs"
+        app:layout_constraintTop_toTopOf="@+id/brand" />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/protein" />
+
+    <Button
+        android:id="@+id/addFood"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:text="Add \nFood"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/brandText" />
 
 
 </android.support.constraint.ConstraintLayout>

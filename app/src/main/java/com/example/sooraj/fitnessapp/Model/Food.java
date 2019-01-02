@@ -11,6 +11,7 @@ public class Food {
     private String id;
     private Image image;
     private String name;
+    private String brand;
 
     public Food(int calories, int fat, int carbs, int protein, Image image) {
         this.calories = calories;
@@ -87,8 +88,11 @@ public class Food {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return calories + ", " + fat + ", " + carbs + ", " + protein;
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

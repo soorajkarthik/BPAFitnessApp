@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="#E6E6E6"
-        android:dividerHeight="5dp" />
-
+        android:dividerHeight="8dp" />
 
 </FrameLayout>
