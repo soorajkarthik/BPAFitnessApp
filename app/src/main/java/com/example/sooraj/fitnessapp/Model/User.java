@@ -1,6 +1,5 @@
 package com.example.sooraj.fitnessapp.Model;
 
-import java.util.Date;
 import java.util.HashMap;
 
 public class User {
@@ -229,7 +228,7 @@ public class User {
         return calorieStorage;
     }
 
-    public void putStepsStorage(String date,  int steps) {
+    public void putStepsStorage(String date, int steps) {
         stepsStorage.put(date, steps);
     }
 
@@ -237,7 +236,9 @@ public class User {
         calorieStorage.put(date, calories);
     }
 
-    public void putWeightStorage(String date, int weight) { weightStorage.put(date, weight); }
+    public void putWeightStorage(String date, int weight) {
+        weightStorage.put(date, weight);
+    }
 
     public HashMap<String, Integer> getWeightStorage() {
         return weightStorage;

@@ -1,12 +1,7 @@
 package com.example.sooraj.fitnessapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,21 +15,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sooraj.fitnessapp.Model.User;
-
-import java.util.Calendar;
-import java.util.Objects;
-
-
-import com.example.sooraj.fitnessapp.Model.User;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.Calendar;
 
 
 public class ProfileFragment extends Fragment {
 
+    FirebaseDatabase database;
+    DatabaseReference users;
     private View view;
     private EditText editNewWeight, editAge, editStepGoal;
     private Spinner spinnerGender, spinnerHeightInches, spinnerHeightFeet, spinnerActivityLevel, spinnerWeightGoal;
@@ -44,15 +34,12 @@ public class ProfileFragment extends Fragment {
     private User user;
     private boolean editingEnabled = false;
 
-    FirebaseDatabase database;
-    DatabaseReference users;
-
     @Override
     public void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
-        user = ((MainActivity)getActivity()).getUser();
+        user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
     }
 
@@ -82,26 +69,24 @@ public class ProfileFragment extends Fragment {
         editAge.setText(user.getAge() + "");
         editStepGoal.setText(user.getStepGoal() + "");
 
-        if(user.getGender().equalsIgnoreCase("Male")) {
+        if (user.getGender().equalsIgnoreCase("Male")) {
             spinnerGender.setSelection(1);
         } else {
             spinnerGender.setSelection(2);
         }
 
-        spinnerHeightFeet.setSelection(user.getHeight()/12);
-        spinnerHeightInches.setSelection((user.getHeight()%12) + 1);
+        spinnerHeightFeet.setSelection(user.getHeight() / 12);
+        spinnerHeightInches.setSelection((user.getHeight() % 12) + 1);
         spinnerActivityLevel.setSelection(user.getActivityLevel() + 1);
         spinnerWeightGoal.setSelection(user.getWeightGoal() + 1);
 
         buttonAddWeight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(editNewWeight.getText().toString().equals(user.getWeight() + "")) {
+                if (editNewWeight.getText().toString().equals(user.getWeight() + "")) {
                     Toast.makeText(getActivity(), "This weight is your current weight", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getActivity(), "Please only add new weights once your weight has changed", Toast.LENGTH_SHORT).show();
-                }
-
-                else {
+                } else {
 
                     user.putWeightStorage(Calendar.getInstance().getTime().toString(), user.getWeight());
                     user.setWeight(Integer.parseInt(editNewWeight.getText().toString()));
@@ -128,14 +113,14 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu (Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.menu_profile, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_profile && !editingEnabled) {
+        if (item.getItemId() == R.id.action_profile && !editingEnabled) {
             Toast.makeText(getActivity(), "Edit your profile " + item.getTitle(), Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Click \"Check\" to confirm " + item.getTitle(), Toast.LENGTH_SHORT).show();
             item.setIcon(R.drawable.done_white_24dp);
@@ -155,9 +140,7 @@ public class ProfileFragment extends Fragment {
             spinnerWeightGoal.setFocusable(true);
             textEditProfile.setText("Edit Profile");
             editingEnabled = true;
-        } 
-        
-        else if (item.getItemId() == R.id.action_profile && editingEnabled) {
+        } else if (item.getItemId() == R.id.action_profile && editingEnabled) {
             item.setIcon(R.drawable.edit_white_24dp);
 
             editAge.setEnabled(false);
@@ -175,58 +158,56 @@ public class ProfileFragment extends Fragment {
             spinnerWeightGoal.setEnabled(false);
             spinnerWeightGoal.setFocusable(false);
 
-            if(editAge.getText().toString().equals("")) {
+            if (editAge.getText().toString().equals("")) {
                 Toast.makeText(getActivity(), "Please enter your Age", Toast.LENGTH_SHORT).show();
             }
 
-            if(spinnerGender.getSelectedItem().toString().equals("Sex")) {
+            if (spinnerGender.getSelectedItem().toString().equals("Sex")) {
                 Toast.makeText(getActivity(), "Please select your Sex", Toast.LENGTH_SHORT).show();
             }
 
-            if(spinnerHeightFeet.getSelectedItem().toString().equals("Height") || spinnerHeightInches.getSelectedItem().toString().equals("Height")) {
+            if (spinnerHeightFeet.getSelectedItem().toString().equals("Height") || spinnerHeightInches.getSelectedItem().toString().equals("Height")) {
                 Toast.makeText(getActivity(), "Please select your Height", Toast.LENGTH_SHORT).show();
             }
 
-            if(editStepGoal.getText().toString().equals("")) {
+            if (editStepGoal.getText().toString().equals("")) {
                 Toast.makeText(getActivity(), "Please enter your Step Goal", Toast.LENGTH_SHORT).show();
             }
 
-            if(spinnerWeightGoal.getSelectedItem().toString().equals("Weight Goal")) {
+            if (spinnerWeightGoal.getSelectedItem().toString().equals("Weight Goal")) {
                 Toast.makeText(getActivity(), "Please select your Weight Goal", Toast.LENGTH_SHORT).show();
             }
 
-            if(spinnerActivityLevel.getSelectedItem().toString().equals("Activity Level")) {
+            if (spinnerActivityLevel.getSelectedItem().toString().equals("Activity Level")) {
                 Toast.makeText(getActivity(), "Please select your Weight Goal", Toast.LENGTH_SHORT).show();
-            }
-
-            else {
+            } else {
 
                 int age = Integer.parseInt(editAge.getText().toString());
                 int height = Integer.parseInt(spinnerHeightFeet.getSelectedItem().toString()) * 12 + Integer.parseInt(spinnerHeightInches.getSelectedItem().toString());
                 int weight = user.getWeight();
-                double bmi = ((double)weight/(height*height)) * 703;
+                double bmi = ((double) weight / (height * height)) * 703;
                 String genderString = spinnerWeightGoal.getSelectedItem().toString();
                 int stepGoal = Integer.parseInt(editStepGoal.getText().toString());
-                int weightGoalInt = spinnerWeightGoal.getSelectedItemPosition()-1;
-                int activityLevelInt = spinnerActivityLevel.getSelectedItemPosition()-1;
-                int bmr = genderString.equals("Male") ?  (int)(66 + (6.3 *weight) + (12.9* height) - (6.8 * age)) :  (int)( 655 + (4.3*weight) + (4.7 * height) - (4.7 * age));
+                int weightGoalInt = spinnerWeightGoal.getSelectedItemPosition() - 1;
+                int activityLevelInt = spinnerActivityLevel.getSelectedItemPosition() - 1;
+                int bmr = genderString.equals("Male") ? (int) (66 + (6.3 * weight) + (12.9 * height) - (6.8 * age)) : (int) (655 + (4.3 * weight) + (4.7 * height) - (4.7 * age));
                 int calorieGoal;
 
-                switch (activityLevelInt)  {
+                switch (activityLevelInt) {
                     case 0:
-                        calorieGoal = (int)(bmr * 1.2);
+                        calorieGoal = (int) (bmr * 1.2);
                         break;
                     case 1:
-                        calorieGoal = (int)(bmr*1.375);
+                        calorieGoal = (int) (bmr * 1.375);
                         break;
                     case 2:
-                        calorieGoal = (int)(bmr*1.55);
+                        calorieGoal = (int) (bmr * 1.55);
                         break;
                     case 3:
-                        calorieGoal = (int)(bmr*1.725);
+                        calorieGoal = (int) (bmr * 1.725);
                         break;
                     case 4:
-                        calorieGoal = (int)(bmr*1.9);
+                        calorieGoal = (int) (bmr * 1.9);
                         break;
                     default:
                         calorieGoal = bmr;
@@ -244,9 +225,9 @@ public class ProfileFragment extends Fragment {
                         break;
                 }
 
-                int carbs = (int)(calorieGoal * 0.4 / 4);
-                int fat = (int) (calorieGoal *.3 / 9);
-                int protein = (int) (calorieGoal *.3 / 4);
+                int carbs = (int) (calorieGoal * 0.4 / 4);
+                int fat = (int) (calorieGoal * .3 / 9);
+                int protein = (int) (calorieGoal * .3 / 4);
 
                 user.setAge(age);
                 user.setGender(genderString);
@@ -264,9 +245,9 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "Your changes were saved!" + item.getTitle(), Toast.LENGTH_SHORT).show();
                 textEditProfile.setText("Your Profile");
                 editingEnabled = false;
-                
+
             }
-            
+
         }
         return true;
     }

@@ -1,14 +1,13 @@
 package com.example.sooraj.fitnessapp;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 public class PageAdapter extends FragmentPagerAdapter {
 
-    private int numOfTabs;
     private final String username;
+    private int numOfTabs;
 
     public PageAdapter(FragmentManager fm, int numOfTabs, String username) {
         super(fm);

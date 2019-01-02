@@ -11,9 +11,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import com.example.sooraj.fitnessapp.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,17 +18,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Calendar;
+import java.util.Date;
+
 
 public class BoundService extends Service implements SensorEventListener {
 
+    FirebaseDatabase database;
+    DatabaseReference users;
     private IBinder mBinder = new MyBinder();
     private boolean isRunning = false;
     private int stepCounter = 0;
     private int counterSteps = 0;
     private int stepDetector = 0;
-
-    FirebaseDatabase database;
-    DatabaseReference users;
     private User user;
     private String username;
 
@@ -110,14 +109,14 @@ public class BoundService extends Service implements SensorEventListener {
         isRunning = false;
     }
 
+    public int getStepCounter() {
+        return stepCounter;
+    }
+
     public class MyBinder extends Binder {
         public BoundService getService() {
             return BoundService.this;
         }
-    }
-
-    public int getStepCounter() {
-        return stepCounter;
     }
 
 

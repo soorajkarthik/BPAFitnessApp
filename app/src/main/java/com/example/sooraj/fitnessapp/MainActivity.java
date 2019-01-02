@@ -2,9 +2,9 @@ package com.example.sooraj.fitnessapp;
 
 import android.app.Service;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabItem;
@@ -13,8 +13,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,6 +29,8 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    FirebaseDatabase database;
+    DatabaseReference users;
     private android.support.v7.widget.Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -41,10 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private TabItem profileTab;
     private String username;
     private User user;
-
-    FirebaseDatabase database;
-    DatabaseReference users;
-
     private boolean mServiceBound = false;
     private BoundService mBoundService;
 

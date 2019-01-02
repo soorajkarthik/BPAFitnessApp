@@ -32,13 +32,11 @@ import java.util.ArrayList;
 
 public class FoodFragment extends Fragment {
 
+    ArrayList<Food> foodResults = new ArrayList<>();
+    ArrayList<Food> filteredFoodResults = new ArrayList<>();
     private View view;
     private SearchView search;
     private ListView searchResults;
-
-    ArrayList<Food> foodResults = new ArrayList<>();
-    ArrayList<Food> filteredFoodResults = new ArrayList<>();
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
@@ -91,13 +89,26 @@ public class FoodFragment extends Fragment {
         return true;
     }
 
+    public void filterFoodArray(String newText) {
+        String fName;
+
+        filteredFoodResults.clear();
+        for (int i = 0; i < foodResults.size(); i++) {
+            fName = foodResults.get(i).getName().toLowerCase();
+            Log.d("FoodName", fName);
+            if (fName.contains(newText.toLowerCase())) {
+                filteredFoodResults.add(foodResults.get(i));
+            }
+        }
+    }
+
     class myAsyncTask extends AsyncTask<String, Void, String> {
 
 
-        private JSONArray foodList;
         String textSearch;
         RequestQueue rQueue;
         JsonObjectRequest request;
+        private JSONArray foodList;
 
         @Override
         protected void onPreExecute() {
@@ -206,25 +217,12 @@ public class FoodFragment extends Fragment {
         }
     }
 
-    public void filterFoodArray(String newText) {
-        String fName;
-
-        filteredFoodResults.clear();
-        for (int i = 0; i < foodResults.size(); i++) {
-            fName = foodResults.get(i).getName().toLowerCase();
-            Log.d("FoodName", fName);
-            if (fName.contains(newText.toLowerCase())) {
-                filteredFoodResults.add(foodResults.get(i));
-            }
-        }
-    }
-
     class SearchResultsAdapter extends BaseAdapter {
 
-        private LayoutInflater layoutInflater;
-        private ArrayList<Food> foodDetails = new ArrayList<>();
         int count;
         Context context;
+        private LayoutInflater layoutInflater;
+        private ArrayList<Food> foodDetails = new ArrayList<>();
 
         public SearchResultsAdapter(Context context, ArrayList<Food> food_details) {
             layoutInflater = LayoutInflater.from(context);
