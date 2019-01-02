@@ -65,16 +65,14 @@ public class BoundService extends Service implements SensorEventListener {
     }
 
 
-
-
     @Override
-    public void onSensorChanged (SensorEvent sensorEvent) {
+    public void onSensorChanged(SensorEvent sensorEvent) {
         switch (sensorEvent.sensor.getType()) {
             case Sensor.TYPE_STEP_DETECTOR:
                 stepDetector++;
                 break;
             case Sensor.TYPE_STEP_COUNTER:
-                if(counterSteps < 1) {
+                if (counterSteps < 1) {
                     counterSteps = (int) sensorEvent.values[0];
                 }
                 stepCounter = (int) sensorEvent.values[0];
@@ -88,7 +86,7 @@ public class BoundService extends Service implements SensorEventListener {
         Calendar c = Calendar.getInstance();
         int minute = c.get(Calendar.MINUTE);
         if (minute == 59) {
-            if(c.get(Calendar.HOUR_OF_DAY) == 23) {
+            if (c.get(Calendar.HOUR_OF_DAY) == 23) {
 
                 Date date = c.getTime();
                 String dateString = date.toString();

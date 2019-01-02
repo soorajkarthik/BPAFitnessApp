@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
 
 
-
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), username);
         viewPager.setAdapter(pageAdapter);
 
@@ -95,32 +94,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                 switch (tab.getPosition()) {
-                     case 1:
-                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                         setStepTabText();
-                         break;
+                switch (tab.getPosition()) {
+                    case 1:
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                        setStepTabText();
+                        break;
 
-                     case 2:
-                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
-                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
-                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
-                         break;
+                    case 2:
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                        break;
 
-                     case 3:
-                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                         break;
+                    case 3:
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                        break;
 
-                     default:
-                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
-                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
-                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
-                         break;
-                 }
+                    default:
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
+                        break;
+                }
             }
 
             @Override
@@ -135,7 +134,6 @@ public class MainActivity extends AppCompatActivity {
         });
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
-
 
 
     @Override
@@ -168,23 +166,23 @@ public class MainActivity extends AppCompatActivity {
 
         user.setSteps(mBoundService.getStepCounter());
 
-        Fragment stepsFragment =  getSupportFragmentManager().findFragmentById(R.id.viewPager);
+        Fragment stepsFragment = getSupportFragmentManager().findFragmentById(R.id.viewPager);
         TextView stepsText = findViewById(R.id.fragment_steps).findViewById(R.id.stepsText);
         stepsText.setText("" + user.getSteps());
 
         ProgressBar progressBar = findViewById(R.id.fragment_steps).findViewById(R.id.stepsProgressBar);
-        int percent = (user.getSteps()*100)/user.getStepGoal();
+        int percent = (user.getSteps() * 100) / user.getStepGoal();
         progressBar.setProgress(percent);
         TextView percentCompleted = findViewById(R.id.fragment_steps).findViewById(R.id.percentOfStepGoalText);
         percentCompleted.setText(percent + "% of Goal");
 
-        double milesWalked = (user.getSteps() * ((user.getHeight() * 0.413)/12)) / 5280;
+        double milesWalked = (user.getSteps() * ((user.getHeight() * 0.413) / 12)) / 5280;
         TextView distanceWalked = findViewById(R.id.fragment_steps).findViewById(R.id.distanceWalkedText);
         DecimalFormat df = new DecimalFormat("0.00");
         String milesWalkedString = df.format(milesWalked);
         distanceWalked.setText(milesWalkedString + " Miles Walked");
 
-        int caloriesBurned = (int) (0.4*user.getWeight()*milesWalked);
+        int caloriesBurned = (int) (0.4 * user.getWeight() * milesWalked);
         TextView caloriesBurnedText = findViewById(R.id.fragment_steps).findViewById(R.id.caloriesBurnedText);
         caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
         user.setCaloriesBurned(caloriesBurned);

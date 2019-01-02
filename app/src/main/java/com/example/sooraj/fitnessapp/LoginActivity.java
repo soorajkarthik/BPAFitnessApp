@@ -69,18 +69,15 @@ public class LoginActivity extends AppCompatActivity {
                 if (dataSnapshot.child(username).exists()) {
                     User login = dataSnapshot.child(username).getValue(User.class);
 
-                    if(login.getPassword().equals(password)) {
+                    if (login.getPassword().equals(password)) {
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                         myIntent.putExtra("Username", username);
                         startActivity(myIntent);
-                    }
-                    else {
+                    } else {
                         Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                     }
-                }
-                
-                else {
+                } else {
                     Toast.makeText(LoginActivity.this, "Username not registered", Toast.LENGTH_SHORT).show();
                 }
             }

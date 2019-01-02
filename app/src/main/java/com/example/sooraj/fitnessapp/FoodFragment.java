@@ -57,7 +57,7 @@ public class FoodFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu (Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_food, menu);
         search = (SearchView) menu.getItem(0).getActionView();
         search.setQueryHint("Start typing to search...");
@@ -78,12 +78,11 @@ public class FoodFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if(newText.length() > 3) {
+                if (newText.length() > 3) {
                     searchResults.setVisibility(View.VISIBLE);
                     myAsyncTask m = new myAsyncTask();
                     m.execute(newText);
-                }
-                else {
+                } else {
                     searchResults.setVisibility(View.INVISIBLE);
                 }
                 return false;
@@ -93,7 +92,7 @@ public class FoodFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.food_search) {
+        if (item.getItemId() == R.id.food_search) {
             Toast.makeText(getActivity(), "Clicked on " + item.getTitle(), Toast.LENGTH_SHORT).show();
         }
         return true;
@@ -162,59 +161,57 @@ public class FoodFragment extends Fragment {
             try {
 
                 System.out.println(foodList.length());
-                for(int i = 0; i < foodList.length(); i++) {
+                for (int i = 0; i < foodList.length(); i++) {
+
                     Food tempFood = new Food();
                     String matchFound = "N";
 
 
+                    try {
+                        JSONObject obj = foodList.getJSONObject(i);
+                        System.out.println(obj.toString());
+                        JSONObject fields = obj.getJSONObject("fields");
+                        tempFood.setCalories(fields.getInt("nf_calories"));
+                        tempFood.setFat(fields.getInt("nf_total_fat"));
+                        tempFood.setCarbs(fields.getInt("nf_total_carbohydrate"));
+                        tempFood.setProtein(fields.getInt("nf_protein"));
+                        tempFood.setId(fields.getString("item_id"));
+                        tempFood.setName(fields.getString("item_name"));
+                    } catch (Exception e) {
+                        continue;
+                    }
 
-                    JSONObject obj = foodList.getJSONObject(i);
-                    System.out.println(obj.toString());
-                    JSONObject fields = obj.getJSONObject("fields");
-                    tempFood.setCalories(fields.getInt("nf_calories"));
-                    tempFood.setFat(fields.getInt("nf_total_fat"));
-                    tempFood.setCarbs(fields.getInt("nf_total_carbohydrate"));
-                    tempFood.setProtein(fields.getInt("nf_protein"));
-                    tempFood.setId(fields.getString("item_id"));
-                    tempFood.setName(fields.getString("item_name"));
 
-
-
-                    for(int j = 0; i < foodResults.size(); j++) {
-                        if(foodResults.get(j).getId().equals(tempFood.getId())) {
+                    for (int j = 0; i < foodResults.size(); j++) {
+                        if (foodResults.get(j).getId().equals(tempFood.getId())) {
                             matchFound = "Y";
 
                         }
                     }
 
-                    if(matchFound.equals("N")) {
+                    if (matchFound.equals("N")) {
                         foodResults.add(tempFood);
                     }
-
-
                 }
 
-
-
-
-            } catch (Exception e) {e.printStackTrace(); return "Exception Caught";}
+            } catch (Exception e) {
+                e.printStackTrace();
+                return "Exception Caught";
+            }
 
             return "OK";
 
         }
 
 
-
         @Override
         protected void onPostExecute(String results) {
             super.onPostExecute(results);
 
-            if(results.equalsIgnoreCase("Exception Caught")) {
+            if (results.equalsIgnoreCase("Exception Caught")) {
                 Toast.makeText(getActivity(), "Unable to connect to server :/", Toast.LENGTH_SHORT).show();
                 pd.dismiss();
-            }
-
-            else {
+            } else {
                 Log.d("AsyncTask", "existing onPostExecute");
 
             }
@@ -228,7 +225,7 @@ public class FoodFragment extends Fragment {
         for (int i = 0; i < foodResults.size(); i++) {
             fName = foodResults.get(i).getName().toLowerCase();
             Log.d("FoodName", fName);
-            if(fName.contains(newText.toLowerCase())) {
+            if (fName.contains(newText.toLowerCase())) {
                 filteredFoodResults.add(foodResults.get(i));
             }
         }
@@ -270,7 +267,7 @@ public class FoodFragment extends Fragment {
 
             ViewHolder holder;
             Food tempFood = foodDetails.get(i);
-            if(view == null) {
+            if (view == null) {
                 view = layoutInflater.inflate(R.layout.search_results_view, null);
                 holder = new ViewHolder();
                 holder.foodName = view.findViewById(R.id.foodName);
@@ -286,8 +283,7 @@ public class FoodFragment extends Fragment {
                 holder.foodImage = view.findViewById(R.id.foodImage);
 
                 view.setTag(holder);
-            }
-            else {
+            } else {
                 holder = (ViewHolder) view.getTag();
             }
 

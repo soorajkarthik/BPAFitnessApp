@@ -17,7 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 
-
 public class SignUpActivity extends AppCompatActivity {
 
     //Firebase
@@ -54,12 +53,12 @@ public class SignUpActivity extends AppCompatActivity {
                 users.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.child(user.getUsername()).exists()) {
+                        if (dataSnapshot.child(user.getUsername()).exists()) {
                             Toast.makeText(SignUpActivity.this, "This Username is Taken!", Toast.LENGTH_SHORT).show();
                             editUsername.setText("");
                         } else {
-                            
-                            if(editConfirmPassword.getText().toString().equals(editPassword.getText().toString())) {
+
+                            if (editConfirmPassword.getText().toString().equals(editPassword.getText().toString())) {
                                 users.child(user.getUsername()).setValue(user);
                                 Toast.makeText(SignUpActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
                                 Intent myIntent = new Intent(getApplicationContext(), GetInformationActivity.class);
@@ -70,7 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 Toast.makeText(SignUpActivity.this, "Please ensure the password you have entered is consistent", Toast.LENGTH_SHORT).show();
                                 editConfirmPassword.setText("");
                             }
-                             
+
                         }
                     }
 

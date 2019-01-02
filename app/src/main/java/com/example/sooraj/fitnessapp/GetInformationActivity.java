@@ -20,7 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
-public class GetInformationActivity extends AppCompatActivity  {
+public class GetInformationActivity extends AppCompatActivity {
 
     //Firebase
     FirebaseDatabase database;
@@ -67,67 +67,63 @@ public class GetInformationActivity extends AppCompatActivity  {
         activityLevel = findViewById(R.id.spinnerActivityLevel);
 
 
-
-
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(editAge.getText().toString().equals("")) {
+                if (editAge.getText().toString().equals("")) {
                     Toast.makeText(GetInformationActivity.this, "Please enter your Age", Toast.LENGTH_SHORT).show();
                 }
 
-                if(gender.getSelectedItem().toString().equals("Sex")) {
+                if (gender.getSelectedItem().toString().equals("Sex")) {
                     Toast.makeText(GetInformationActivity.this, "Please select your Sex", Toast.LENGTH_SHORT).show();
                 }
 
-                if(heightFeet.getSelectedItem().toString().equals("Height") || heightInches.getSelectedItem().toString().equals("Height")) {
+                if (heightFeet.getSelectedItem().toString().equals("Height") || heightInches.getSelectedItem().toString().equals("Height")) {
                     Toast.makeText(GetInformationActivity.this, "Please select your Height", Toast.LENGTH_SHORT).show();
                 }
 
-                if(editWeight.getText().toString().equals("")) {
+                if (editWeight.getText().toString().equals("")) {
                     Toast.makeText(GetInformationActivity.this, "Please enter your Weight", Toast.LENGTH_SHORT).show();
                 }
 
-                if(editStepGoal.getText().toString().equals("")) {
+                if (editStepGoal.getText().toString().equals("")) {
                     Toast.makeText(GetInformationActivity.this, "Please enter your Step Goal", Toast.LENGTH_SHORT).show();
                 }
 
-                if(weightGoal.getSelectedItem().toString().equals("Weight Goal")) {
+                if (weightGoal.getSelectedItem().toString().equals("Weight Goal")) {
                     Toast.makeText(GetInformationActivity.this, "Please select your Weight Goal", Toast.LENGTH_SHORT).show();
                 }
 
-                if(activityLevel.getSelectedItem().toString().equals("Activity Level")) {
+                if (activityLevel.getSelectedItem().toString().equals("Activity Level")) {
                     Toast.makeText(GetInformationActivity.this, "Please select your Weight Goal", Toast.LENGTH_SHORT).show();
-                }
-
-                else {
+                } else {
 
                     int age = Integer.parseInt(editAge.getText().toString());
                     int height = Integer.parseInt(heightFeet.getSelectedItem().toString()) * 12 + Integer.parseInt(heightInches.getSelectedItem().toString());
                     int weight = Integer.parseInt(editWeight.getText().toString());
-                    double bmi = ((double)weight/(height*height)) * 703;
+                    double bmi = ((double) weight / (height * height)) * 703;
                     String genderString = gender.getSelectedItem().toString();
                     int stepGoal = Integer.parseInt(editStepGoal.getText().toString());
-                    int weightGoalInt = weightGoal.getSelectedItemPosition()-1;
-                    int activityLevelInt = activityLevel.getSelectedItemPosition()-1;
-                    int bmr = genderString.equals("Male") ?  (int)(66 + (6.3 *weight) + (12.9* height) - (6.8 * age)) :  (int)( 655 + (4.3*weight) + (4.7 * height) - (4.7 * age));
+                    int weightGoalInt = weightGoal.getSelectedItemPosition() - 1;
+                    int activityLevelInt = activityLevel.getSelectedItemPosition() - 1;
+                    int bmr = genderString.equals("Male") ? (int) (66 + (6.3 * weight) + (12.9 * height) - (6.8 * age)) : (int) (655 + (4.3 * weight) + (4.7 * height) - (4.7 * age));
                     int calorieGoal;
 
-                    switch (activityLevelInt)  {
+                    switch (activityLevelInt) {
                         case 0:
-                            calorieGoal = (int)(bmr * 1.2);
+                            calorieGoal = (int) (bmr * 1.2);
                             break;
                         case 1:
-                            calorieGoal = (int)(bmr*1.375);
+                            calorieGoal = (int) (bmr * 1.375);
                             break;
                         case 2:
-                            calorieGoal = (int)(bmr*1.55);
+                            calorieGoal = (int) (bmr * 1.55);
                             break;
                         case 3:
-                            calorieGoal = (int)(bmr*1.725);
+                            calorieGoal = (int) (bmr * 1.725);
                             break;
                         case 4:
-                            calorieGoal = (int)(bmr*1.9);
+                            calorieGoal = (int) (bmr * 1.9);
                             break;
                         default:
                             calorieGoal = bmr;
@@ -145,11 +141,9 @@ public class GetInformationActivity extends AppCompatActivity  {
                             break;
                     }
 
-                    int carbs = (int)(calorieGoal * 0.4 / 4);
-                    int fat = (int) (calorieGoal *.3 / 9);
-                    int protein = (int) (calorieGoal *.3 / 4);
-
-
+                    int carbs = (int) (calorieGoal * 0.4 / 4);
+                    int fat = (int) (calorieGoal * .3 / 9);
+                    int protein = (int) (calorieGoal * .3 / 4);
 
 
                     user.setAge(age);
