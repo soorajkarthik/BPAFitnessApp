@@ -54,7 +54,6 @@ public class BoundService extends Service implements SensorEventListener {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(username).getValue(User.class);
-                startingSteps = user.getSteps();
             }
 
             @Override
@@ -78,7 +77,7 @@ public class BoundService extends Service implements SensorEventListener {
                     if (counterSteps < 1) {
                         counterSteps = (int) sensorEvent.values[0];
                     }
-                    stepCounter = (int) sensorEvent.values[0] + startingSteps;
+                    stepCounter = (int) sensorEvent.values[0];
                     user.setSteps(stepCounter);
                     users.child(username).child("steps").setValue(user.getSteps());
                     break;
