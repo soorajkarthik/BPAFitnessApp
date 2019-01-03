@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         pref = getApplicationContext().getSharedPreferences("MyPref", 0);
 
-        if(pref.getString("username", null) != null) {
+        if (pref.getString("username", null) != null) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("username", pref.getString("username", null));
             startActivity(intent);
@@ -40,8 +40,6 @@ public class LoginActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_login);
-
-
 
 
         //Firebase

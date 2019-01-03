@@ -9,13 +9,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,26 +46,40 @@ public class FoodFragment extends Fragment {
     private View view;
     private SearchView search;
     private ListView searchResults;
+    ProgressBar progressCalories, progressFat, progressCarbs, progressProtein;
+    TextView textCaloriesBar, textFatBar, textCarbsBar, textProteinBar;
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
+        searchResults.setVisibility(View.INVISIBLE);
+        setProgressVisible();
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_food, container, false);
-        searchResults = view.findViewById(R.id.search_results);
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
+        searchResults = view.findViewById(R.id.search_results);
+        progressCalories = view.findViewById(R.id.progressBarCalories);
+        progressFat = view.findViewById(R.id.progressBarFat);
+        progressCarbs = view.findViewById(R.id.progressBarCarbs);
+        progressProtein = view.findViewById(R.id.progressBarProtein);
+        textCaloriesBar = view.findViewById(R.id.textCaloriesBar);
+        textFatBar = view.findViewById(R.id.textFatBar);
+        textCarbsBar = view.findViewById(R.id.textCarbsBar);
+        textProteinBar = view.findViewById(R.id.textProteinBar);
+        updateDisplay();
         return view;
     }
 
@@ -74,6 +88,8 @@ public class FoodFragment extends Fragment {
         inflater.inflate(R.menu.menu_food, menu);
         search = (SearchView) menu.getItem(0).getActionView();
         search.setQueryHint("Start typing to search...");
+
+
         search.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
@@ -92,23 +108,19 @@ public class FoodFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.length() > 3) {
+                    setProgressInvisible();
                     searchResults.setVisibility(View.VISIBLE);
                     myAsyncTask m = new myAsyncTask();
                     m.execute(newText);
                 } else {
                     searchResults.setVisibility(View.INVISIBLE);
+                    setProgressVisible();
+
                 }
                 return false;
             }
-        });
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.food_search) {
-            Toast.makeText(getActivity(), "Clicked on " + item.getTitle(), Toast.LENGTH_SHORT).show();
-        }
-        return true;
+        });
     }
 
     public void filterFoodArray(String newText) {
@@ -127,9 +139,7 @@ public class FoodFragment extends Fragment {
         return view;
     }
 
-    public void updateDisplay() {
 
-    }
 
     class myAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -161,8 +171,6 @@ public class FoodFragment extends Fragment {
 
                                 filterFoodArray(textSearch);
                                 searchResults.setAdapter(new SearchResultsAdapter(getActivity(), filteredFoodResults));
-                                //pd.dismiss();
-
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -316,7 +324,9 @@ public class FoodFragment extends Fragment {
                                 users.child(username).child("carbs").setValue(user.getCarbs());
                                 users.child(username).child("protein").setValue(user.getProtein());
                                 searchResults.setVisibility(View.INVISIBLE);
+                                setProgressVisible();
                                 updateDisplay();
+
 
                             }
                         });
@@ -363,5 +373,39 @@ public class FoodFragment extends Fragment {
             Button addFood;
 
         }
+    }
+
+    public void updateDisplay() {
+        progressCalories.setProgress((user.getCalories()*100)/user.getCalorieGoal());
+        progressFat.setProgress((user.getFat()*100)/user.getFatGoal());
+        progressCarbs.setProgress((user.getCarbs()*100)/user.getCarbGoal());
+        progressProtein.setProgress((user.getProtein()*100)/user.getProteinGoal());
+        textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
+        textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
+        textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
+        textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
+
+    }
+
+    public void setProgressVisible() {
+        progressCalories.setVisibility(View.VISIBLE);
+        progressFat.setVisibility(View.VISIBLE);
+        progressCarbs.setVisibility(View.VISIBLE);
+        progressProtein.setVisibility(View.VISIBLE);
+        textCaloriesBar.setVisibility(View.VISIBLE);
+        textFatBar.setVisibility(View.VISIBLE);
+        textCarbsBar.setVisibility(View.VISIBLE);
+        textProteinBar.setVisibility(View.VISIBLE);
+    }
+
+    public void setProgressInvisible() {
+        progressCalories.setVisibility(View.INVISIBLE);
+        progressFat.setVisibility(View.INVISIBLE);
+        progressCarbs.setVisibility(View.INVISIBLE);
+        progressProtein.setVisibility(View.INVISIBLE);
+        textCaloriesBar.setVisibility(View.INVISIBLE);
+        textFatBar.setVisibility(View.INVISIBLE);
+        textCarbsBar.setVisibility(View.INVISIBLE);
+        textProteinBar.setVisibility(View.INVISIBLE);
     }
 }

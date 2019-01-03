@@ -68,7 +68,7 @@ public class BoundService extends Service implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if(user != null) {
+        if (user != null) {
             switch (sensorEvent.sensor.getType()) {
                 case Sensor.TYPE_STEP_DETECTOR:
                     stepDetector++;
