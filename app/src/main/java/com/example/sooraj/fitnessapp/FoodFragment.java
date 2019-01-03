@@ -41,13 +41,13 @@ public class FoodFragment extends Fragment {
     DatabaseReference users;
     String username;
     User user;
+    ProgressBar progressCalories, progressFat, progressCarbs, progressProtein;
+    TextView textCaloriesBar, textFatBar, textCarbsBar, textProteinBar;
     private ArrayList<Food> foodResults = new ArrayList<>();
     private ArrayList<Food> filteredFoodResults = new ArrayList<>();
     private View view;
     private SearchView search;
     private ListView searchResults;
-    ProgressBar progressCalories, progressFat, progressCarbs, progressProtein;
-    TextView textCaloriesBar, textFatBar, textCarbsBar, textProteinBar;
 
     @Override
     public void onStart() {
@@ -139,7 +139,39 @@ public class FoodFragment extends Fragment {
         return view;
     }
 
+    public void updateDisplay() {
+        progressCalories.setProgress((user.getCalories() * 100) / user.getCalorieGoal());
+        progressFat.setProgress((user.getFat() * 100) / user.getFatGoal());
+        progressCarbs.setProgress((user.getCarbs() * 100) / user.getCarbGoal());
+        progressProtein.setProgress((user.getProtein() * 100) / user.getProteinGoal());
+        textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
+        textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
+        textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
+        textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
 
+    }
+
+    public void setProgressVisible() {
+        progressCalories.setVisibility(View.VISIBLE);
+        progressFat.setVisibility(View.VISIBLE);
+        progressCarbs.setVisibility(View.VISIBLE);
+        progressProtein.setVisibility(View.VISIBLE);
+        textCaloriesBar.setVisibility(View.VISIBLE);
+        textFatBar.setVisibility(View.VISIBLE);
+        textCarbsBar.setVisibility(View.VISIBLE);
+        textProteinBar.setVisibility(View.VISIBLE);
+    }
+
+    public void setProgressInvisible() {
+        progressCalories.setVisibility(View.INVISIBLE);
+        progressFat.setVisibility(View.INVISIBLE);
+        progressCarbs.setVisibility(View.INVISIBLE);
+        progressProtein.setVisibility(View.INVISIBLE);
+        textCaloriesBar.setVisibility(View.INVISIBLE);
+        textFatBar.setVisibility(View.INVISIBLE);
+        textCarbsBar.setVisibility(View.INVISIBLE);
+        textProteinBar.setVisibility(View.INVISIBLE);
+    }
 
     class myAsyncTask extends AsyncTask<String, Void, String> {
 
@@ -373,39 +405,5 @@ public class FoodFragment extends Fragment {
             Button addFood;
 
         }
-    }
-
-    public void updateDisplay() {
-        progressCalories.setProgress((user.getCalories()*100)/user.getCalorieGoal());
-        progressFat.setProgress((user.getFat()*100)/user.getFatGoal());
-        progressCarbs.setProgress((user.getCarbs()*100)/user.getCarbGoal());
-        progressProtein.setProgress((user.getProtein()*100)/user.getProteinGoal());
-        textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
-        textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
-        textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
-        textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
-
-    }
-
-    public void setProgressVisible() {
-        progressCalories.setVisibility(View.VISIBLE);
-        progressFat.setVisibility(View.VISIBLE);
-        progressCarbs.setVisibility(View.VISIBLE);
-        progressProtein.setVisibility(View.VISIBLE);
-        textCaloriesBar.setVisibility(View.VISIBLE);
-        textFatBar.setVisibility(View.VISIBLE);
-        textCarbsBar.setVisibility(View.VISIBLE);
-        textProteinBar.setVisibility(View.VISIBLE);
-    }
-
-    public void setProgressInvisible() {
-        progressCalories.setVisibility(View.INVISIBLE);
-        progressFat.setVisibility(View.INVISIBLE);
-        progressCarbs.setVisibility(View.INVISIBLE);
-        progressProtein.setVisibility(View.INVISIBLE);
-        textCaloriesBar.setVisibility(View.INVISIBLE);
-        textFatBar.setVisibility(View.INVISIBLE);
-        textCarbsBar.setVisibility(View.INVISIBLE);
-        textProteinBar.setVisibility(View.INVISIBLE);
     }
 }
