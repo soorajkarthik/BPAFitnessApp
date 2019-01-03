@@ -1,5 +1,7 @@
 package com.example.sooraj.fitnessapp;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,7 +30,7 @@ public class ProfileFragment extends Fragment {
     private View view;
     private EditText editNewWeight, editAge, editStepGoal;
     private Spinner spinnerGender, spinnerHeightInches, spinnerHeightFeet, spinnerActivityLevel, spinnerWeightGoal;
-    private TextView textEditProfile;
+    private TextView textEditProfile, textFeet, textInches, textStepGoal;
     private Button buttonAddWeight;
     private String username;
     private User user;
@@ -65,6 +67,9 @@ public class ProfileFragment extends Fragment {
         spinnerActivityLevel = view.findViewById(R.id.spinnerActivityLevel);
         spinnerWeightGoal = view.findViewById(R.id.weightGoal);
         buttonAddWeight = view.findViewById(R.id.buttonConfirmNewWeight);
+        textFeet = view.findViewById(R.id.textFeet);
+        textInches = view.findViewById(R.id.textInches);
+        textStepGoal = view.findViewById(R.id.textStepGoal);
 
         editAge.setText(user.getAge() + "");
         editStepGoal.setText(user.getStepGoal() + "");
@@ -110,6 +115,11 @@ public class ProfileFragment extends Fragment {
         spinnerActivityLevel.setFocusable(false);
         spinnerWeightGoal.setEnabled(false);
         spinnerWeightGoal.setFocusable(false);
+        textFeet.setAlpha(0.38F);
+        textInches.setAlpha(0.38F);
+        textStepGoal.setAlpha(0.38F);
+
+
     }
 
     @Override
@@ -120,9 +130,19 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.action_logout) {
+            SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("MyPref", 0);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.clear();
+            editor.commit();
+            Intent intent = new Intent(getActivity().getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+        }
+
         if (item.getItemId() == R.id.action_profile && !editingEnabled) {
-            Toast.makeText(getActivity(), "Edit your profile " + item.getTitle(), Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "Click \"Check\" to confirm " + item.getTitle(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Edit your profile", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Click \"Check\" to confirm ", Toast.LENGTH_SHORT).show();
             item.setIcon(R.drawable.done_white_24dp);
             editAge.setEnabled(true);
             editAge.setFocusable(true);
@@ -139,24 +159,15 @@ public class ProfileFragment extends Fragment {
             spinnerWeightGoal.setEnabled(true);
             spinnerWeightGoal.setFocusable(true);
             textEditProfile.setText("Edit Profile");
+            textFeet.setAlpha(0.87F);
+            textInches.setAlpha(0.87F);
+            textStepGoal.setAlpha(0.87F);
             editingEnabled = true;
+
+
         } else if (item.getItemId() == R.id.action_profile && editingEnabled) {
             item.setIcon(R.drawable.edit_white_24dp);
 
-            editAge.setEnabled(false);
-            editAge.setFocusable(false);
-            editStepGoal.setEnabled(false);
-            editStepGoal.setFocusable(false);
-            spinnerGender.setEnabled(false);
-            spinnerGender.setFocusable(false);
-            spinnerHeightInches.setEnabled(false);
-            spinnerHeightInches.setFocusable(false);
-            spinnerHeightFeet.setEnabled(false);
-            spinnerHeightFeet.setFocusable(false);
-            spinnerActivityLevel.setEnabled(false);
-            spinnerActivityLevel.setFocusable(false);
-            spinnerWeightGoal.setEnabled(false);
-            spinnerWeightGoal.setFocusable(false);
 
             if (editAge.getText().toString().equals("")) {
                 Toast.makeText(getActivity(), "Please enter your Age", Toast.LENGTH_SHORT).show();
@@ -186,7 +197,7 @@ public class ProfileFragment extends Fragment {
                 int height = Integer.parseInt(spinnerHeightFeet.getSelectedItem().toString()) * 12 + Integer.parseInt(spinnerHeightInches.getSelectedItem().toString());
                 int weight = user.getWeight();
                 double bmi = ((double) weight / (height * height)) * 703;
-                String genderString = spinnerWeightGoal.getSelectedItem().toString();
+                String genderString = spinnerGender.getSelectedItem().toString();
                 int stepGoal = Integer.parseInt(editStepGoal.getText().toString());
                 int weightGoalInt = spinnerWeightGoal.getSelectedItemPosition() - 1;
                 int activityLevelInt = spinnerActivityLevel.getSelectedItemPosition() - 1;
@@ -242,8 +253,26 @@ public class ProfileFragment extends Fragment {
                 user.setProteinGoal(protein);
 
                 users.child(username).setValue(user);
-                Toast.makeText(getActivity(), "Your changes were saved!" + item.getTitle(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Your changes were saved!", Toast.LENGTH_SHORT).show();
                 textEditProfile.setText("Your Profile");
+
+                editAge.setEnabled(false);
+                editAge.setFocusable(false);
+                editStepGoal.setEnabled(false);
+                editStepGoal.setFocusable(false);
+                spinnerGender.setEnabled(false);
+                spinnerGender.setFocusable(false);
+                spinnerHeightInches.setEnabled(false);
+                spinnerHeightInches.setFocusable(false);
+                spinnerHeightFeet.setEnabled(false);
+                spinnerHeightFeet.setFocusable(false);
+                spinnerActivityLevel.setEnabled(false);
+                spinnerActivityLevel.setFocusable(false);
+                spinnerWeightGoal.setEnabled(false);
+                spinnerWeightGoal.setFocusable(false);
+                textFeet.setAlpha(0.38F);
+                textInches.setAlpha(0.38F);
+                textStepGoal.setAlpha(0.38F);
                 editingEnabled = false;
 
             }

@@ -35,10 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private PageAdapter pageAdapter;
-    private TabItem stepsTab;
-    private TabItem progressTab;
-    private TabItem foodTab;
-    private TabItem profileTab;
     private String username;
     private User user;
     private boolean mServiceBound = false;
@@ -56,30 +52,14 @@ public class MainActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
-        username = Objects.requireNonNull(getIntent().getExtras()).getString("Username");
-
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.child(username).getValue(User.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
+        updateUser();
 
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString((R.string.app_name)));
         setSupportActionBar(toolbar);
 
         tabLayout = findViewById(R.id.tabLayout);
-        progressTab = findViewById(R.id.progressTab);
-
-        stepsTab = findViewById(R.id.stepsTab);
-        foodTab = findViewById(R.id.foodTab);
-        profileTab = findViewById(R.id.profileTab);
         viewPager = findViewById(R.id.viewPager);
 
 
@@ -95,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                        updateUser();
                         setStepTabText();
                         break;
 
@@ -102,30 +83,33 @@ public class MainActivity extends AppCompatActivity {
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
+                        updateUser();
                         break;
 
                     case 3:
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                        updateUser();
                         break;
 
                     default:
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
+                        updateUser();
                         break;
                 }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                updateUser();
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
+                updateUser();
             }
         });
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -136,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Intent intent = new Intent(this, BoundService.class);
-        intent.putExtra("Username", username);
+        intent.putExtra("username", username);
         startService(intent);
 
         ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -160,9 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setStepTabText() {
 
-        user.setSteps(mBoundService.getStepCounter());
-
-        Fragment stepsFragment = getSupportFragmentManager().findFragmentById(R.id.viewPager);
         TextView stepsText = findViewById(R.id.fragment_steps).findViewById(R.id.stepsText);
         stepsText.setText("" + user.getSteps());
 
@@ -183,7 +164,21 @@ public class MainActivity extends AppCompatActivity {
         caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
         user.setCaloriesBurned(caloriesBurned);
 
-        users.child(username).child("steps").setValue(user.getSteps());
+
         users.child(username).child("caloriesBurned").setValue(user.getCaloriesBurned());
+    }
+
+    private void updateUser() {
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                user = dataSnapshot.child(username).getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }

@@ -24,7 +24,7 @@
         android:layout_marginTop="8dp"
         android:entries="@array/height_inches_array"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/textFeet"
         app:layout_constraintTop_toBottomOf="@+id/editAge" />
 
     <Spinner
@@ -117,7 +117,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editNewWeight" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textFeet"
         android:layout_width="35dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"

@@ -30,6 +30,7 @@ public class BoundService extends Service implements SensorEventListener {
     private boolean isRunning = false;
     private int stepCounter = 0;
     private int counterSteps = 0;
+    private int startingSteps = 0;
     private int stepDetector = 0;
     private User user;
     private String username;
@@ -48,11 +49,12 @@ public class BoundService extends Service implements SensorEventListener {
 
     @Override
     public IBinder onBind(Intent intent) {
-        username = intent.getExtras().getString("Username");
+        username = intent.getExtras().getString("username");
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(username).getValue(User.class);
+                startingSteps = user.getSteps();
             }
 
             @Override
@@ -60,38 +62,47 @@ public class BoundService extends Service implements SensorEventListener {
 
             }
         });
+
         return mBinder;
     }
 
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        switch (sensorEvent.sensor.getType()) {
-            case Sensor.TYPE_STEP_DETECTOR:
-                stepDetector++;
-                break;
-            case Sensor.TYPE_STEP_COUNTER:
-                if (counterSteps < 1) {
-                    counterSteps = (int) sensorEvent.values[0];
+        if(user != null) {
+            switch (sensorEvent.sensor.getType()) {
+                case Sensor.TYPE_STEP_DETECTOR:
+                    stepDetector++;
+                    break;
+                case Sensor.TYPE_STEP_COUNTER:
+                    if (counterSteps < 1) {
+                        counterSteps = (int) sensorEvent.values[0];
+                    }
+                    stepCounter = (int) sensorEvent.values[0] + startingSteps;
+                    user.setSteps(stepCounter);
+                    users.child(username).child("steps").setValue(user.getSteps());
+                    break;
+
+                default:
+                    break;
+            }
+
+
+            Calendar c = Calendar.getInstance();
+            int minute = c.get(Calendar.MINUTE);
+            if (minute == 59) {
+                if (c.get(Calendar.HOUR_OF_DAY) == 23) {
+
+                    Date date = c.getTime();
+                    String dateString = date.toString();
+                    user.putStepsStorage(dateString, stepCounter);
+                    user.putCalorieStorage(dateString, user.getCalories());
+                    stepCounter = 0;
+                    startingSteps = 0;
+                    user.setSteps(0);
+                    user.resetFood();
+                    users.child(username).setValue(user);
                 }
-                stepCounter = (int) sensorEvent.values[0];
-                break;
-
-            default:
-                break;
-        }
-
-
-        Calendar c = Calendar.getInstance();
-        int minute = c.get(Calendar.MINUTE);
-        if (minute == 59) {
-            if (c.get(Calendar.HOUR_OF_DAY) == 23) {
-
-                Date date = c.getTime();
-                String dateString = date.toString();
-                user.putStepsStorage(dateString, stepCounter);
-                stepCounter = 0;
-                users.child(username).child("stepStorage").setValue(user.getStepsStorage());
             }
         }
     }
@@ -107,10 +118,6 @@ public class BoundService extends Service implements SensorEventListener {
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorManager.unregisterListener(this);
         isRunning = false;
-    }
-
-    public int getStepCounter() {
-        return stepCounter;
     }
 
     public class MyBinder extends Binder {

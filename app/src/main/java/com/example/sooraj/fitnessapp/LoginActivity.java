@@ -1,6 +1,7 @@
 package com.example.sooraj.fitnessapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,14 +23,26 @@ public class LoginActivity extends AppCompatActivity {
     //Firebase
     private FirebaseDatabase database;
     private DatabaseReference users;
-
+    private SharedPreferences pref;
     private EditText editMail, editUsername, editPassword;
     private Button btnLogIn, btnToSignUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+
+        if(pref.getString("username", null) != null) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.putExtra("username", pref.getString("username", null));
+            startActivity(intent);
+        }
+
+
         setContentView(R.layout.activity_login);
+
+
+
 
         //Firebase
         database = FirebaseDatabase.getInstance();
@@ -71,8 +84,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (login.getPassword().equals(password)) {
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("username", username);
+                        editor.commit();
                         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        myIntent.putExtra("Username", username);
+                        myIntent.putExtra("username", username);
                         startActivity(myIntent);
                     } else {
                         Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();

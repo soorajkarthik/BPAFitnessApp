@@ -244,5 +244,12 @@ public class User {
         return weightStorage;
     }
 
+    public void resetFood() {
+        calories = 0;
+        fat = 0;
+        carbs = 0;
+        protein = 0;
+    }
+
 
 }

@@ -1,10 +1,11 @@
 package com.example.sooraj.fitnessapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -35,15 +37,24 @@ import java.util.ArrayList;
 
 public class FoodFragment extends Fragment {
 
+    FirebaseDatabase database;
+    DatabaseReference users;
+    String username;
+    User user;
     private ArrayList<Food> foodResults = new ArrayList<>();
     private ArrayList<Food> filteredFoodResults = new ArrayList<>();
     private View view;
     private SearchView search;
     private ListView searchResults;
-    private FirebaseDatabase database;
-    private DatabaseReference users;
-    private String username;
-    private User user;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
+        user = ((MainActivity) getActivity()).getUser();
+        username = user.getUsername();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
@@ -106,11 +117,18 @@ public class FoodFragment extends Fragment {
         filteredFoodResults.clear();
         for (int i = 0; i < foodResults.size(); i++) {
             fName = foodResults.get(i).getName().toLowerCase();
-            Log.d("FoodName", fName);
             if (fName.contains(newText.toLowerCase())) {
                 filteredFoodResults.add(foodResults.get(i));
             }
         }
+    }
+
+    private View getMyView() {
+        return view;
+    }
+
+    public void updateDisplay() {
+
     }
 
     class myAsyncTask extends AsyncTask<String, Void, String> {
@@ -139,7 +157,6 @@ public class FoodFragment extends Fragment {
                             try {
                                 foodList = response.getJSONArray("hits");
                                 String s = getFoodList();
-                                Log.d("GetFoodList", s);
                                 textSearch = search[0];
 
                                 filterFoodArray(textSearch);
@@ -221,9 +238,6 @@ public class FoodFragment extends Fragment {
 
             if (results.equalsIgnoreCase("Exception Caught")) {
                 Toast.makeText(getActivity(), "Unable to connect to server :/", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.d("AsyncTask", "existing onPostExecute");
-
             }
         }
     }
@@ -241,7 +255,6 @@ public class FoodFragment extends Fragment {
             foodDetails.addAll(food_details);
             this.count = food_details.size();
             this.context = context;
-            Log.d("SearchAdapter", "Size: " + count);
         }
 
         @Override
@@ -263,7 +276,7 @@ public class FoodFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             ViewHolder holder;
-            Food tempFood = foodDetails.get(i);
+            final Food tempFood = foodDetails.get(i);
             if (view == null) {
                 view = layoutInflater.inflate(R.layout.search_results_view, null);
                 holder = new ViewHolder();
@@ -280,10 +293,45 @@ public class FoodFragment extends Fragment {
                 holder.addFood = view.findViewById(R.id.addFood);
 
                 holder.addFood.setOnClickListener(new View.OnClickListener() {
+
                     @Override
                     public void onClick(View view) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Servings");
+                        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.serving_number_dialog, (ViewGroup) getMyView(), false);
+                        final EditText input = (EditText) viewInflated.findViewById(R.id.servingsNumber);
+                        builder.setView(viewInflated);
+
+                        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                double numOfServings = Double.parseDouble(input.getText().toString());
+                                user.setCalories(user.getCalories() + (int) (tempFood.getCalories() * numOfServings));
+                                user.setFat(user.getFat() + (int) (tempFood.getFat() * numOfServings));
+                                user.setCarbs(user.getCarbs() + (int) (tempFood.getCarbs() * numOfServings));
+                                user.setProtein(user.getProtein() + (int) (tempFood.getProtein() * numOfServings));
+                                users.child(username).child("calories").setValue(user.getCalories());
+                                users.child(username).child("fat").setValue(user.getFat());
+                                users.child(username).child("carbs").setValue(user.getCarbs());
+                                users.child(username).child("protein").setValue(user.getProtein());
+                                searchResults.setVisibility(View.INVISIBLE);
+                                updateDisplay();
+
+                            }
+                        });
+                        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        builder.show();
 
                     }
+
+
                 });
 
                 view.setTag(holder);

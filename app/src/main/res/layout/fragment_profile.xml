@@ -25,7 +25,7 @@
         android:layout_height="50dp"
         android:entries="@array/height_inches_array"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/textFeet"
         app:layout_constraintTop_toTopOf="@+id/spinnerHeightFeet" />
 
     <Spinner
@@ -47,9 +47,7 @@
         android:inputType="number"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/textStepGoal" />
 
     <EditText
         android:id="@+id/editAge"
@@ -97,20 +95,22 @@
         app:layout_constraintStart_toStartOf="@+id/weightGoal" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textFeet"
         android:layout_width="35dp"
         android:layout_height="50dp"
         android:gravity="center_vertical"
+        android:textColor="#000000"
         android:text="Ft"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/spinnerHeightFeet"
         app:layout_constraintTop_toTopOf="@+id/spinnerHeightFeet" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/textInches"
         android:layout_width="35dp"
         android:layout_height="50dp"
         android:gravity="center_vertical"
+        android:textColor="#000000"
         android:text="In"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/spinnerHeightInches"
@@ -146,6 +146,17 @@
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/editAge"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textStepGoal"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:text="  Step Goal:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/weightGoal"
+        app:layout_constraintTop_toTopOf="@+id/editStepGoal" />
 
 
 </android.support.constraint.ConstraintLayout>
