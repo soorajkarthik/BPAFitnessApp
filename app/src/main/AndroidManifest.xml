@@ -4,6 +4,8 @@
 
     <uses-feature android:name="android.hardware.sensor.stepcounter" />
     <uses-feature android:name="android.hardware.sensor.stepdetector" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
 
     <application
         android:allowBackup="true"
@@ -23,8 +25,9 @@
         <activity android:name=".MainActivity" />
 
         <service android:name=".BoundService" />
+        <receiver android:name=".BoundService$MyAlarm" android:enabled="true"/>
+        <activity android:name=".GetInformationActivity"/>
 
-        <activity android:name=".GetInformationActivity"></activity>
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
 

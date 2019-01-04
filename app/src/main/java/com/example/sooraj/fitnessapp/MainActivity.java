@@ -1,5 +1,6 @@
 package com.example.sooraj.fitnessapp;
 
+
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -22,7 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
+
 import java.util.Objects;
+
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,22 +40,102 @@ public class MainActivity extends AppCompatActivity {
     private User user;
     private boolean mServiceBound = false;
     private BoundService mBoundService;
-
-    public User getUser() {
-        return user;
-    }
+    private ServiceConnection mServiceConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
         updateUser();
+        setUpTabView();
 
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startBoundService();
+    }
+
+    public void setStepTabText() {
+
+        TextView stepsText = findViewById(R.id.fragment_steps).findViewById(R.id.stepsText);
+        stepsText.setText("" + user.getSteps());
+
+        ProgressBar progressBar = findViewById(R.id.fragment_steps).findViewById(R.id.stepsProgressBar);
+        int percent = (user.getSteps() * 100) / user.getStepGoal();
+        progressBar.setProgress(percent);
+        TextView percentCompleted = findViewById(R.id.fragment_steps).findViewById(R.id.percentOfStepGoalText);
+        percentCompleted.setText(percent + "% of Goal");
+
+        double milesWalked = (user.getSteps() * ((user.getHeight() * 0.413) / 12)) / 5280;
+        TextView distanceWalked = findViewById(R.id.fragment_steps).findViewById(R.id.distanceWalkedText);
+        DecimalFormat df = new DecimalFormat("0.00");
+        String milesWalkedString = df.format(milesWalked);
+        distanceWalked.setText(milesWalkedString + " Miles Walked");
+
+        int caloriesBurned = (int) (0.4 * user.getWeight() * milesWalked);
+        TextView caloriesBurnedText = findViewById(R.id.fragment_steps).findViewById(R.id.caloriesBurnedText);
+        caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
+        user.setCaloriesBurned(caloriesBurned);
+
+
+        users.child(username).child("caloriesBurned").setValue(user.getCaloriesBurned());
+    }
+
+    private void updateUser() {
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                user = dataSnapshot.child(username).getValue(User.class);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void startBoundService() {
+        Intent intent = new Intent(this, BoundService.class);
+        intent.putExtra("username", username);
+        startService(intent);
+
+         mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder service) {
+                BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
+                mBoundService = myBinder.getService();
+                mServiceBound = true;
+
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                startBoundService();
+
+            }
+        };
+
+        bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
+    }
+
+
+    public void stopBoundService() {
+        unbindService(mServiceConnection);
+    }
+
+    public void setUpTabView() {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(getResources().getString((R.string.app_name)));
         setSupportActionBar(toolbar);
@@ -114,69 +197,4 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Intent intent = new Intent(this, BoundService.class);
-        intent.putExtra("username", username);
-        startService(intent);
-
-        ServiceConnection mServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder service) {
-                BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
-                mBoundService = myBinder.getService();
-                mServiceBound = true;
-
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-                mServiceBound = false;
-
-            }
-        };
-
-        bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
-    }
-
-    public void setStepTabText() {
-
-        TextView stepsText = findViewById(R.id.fragment_steps).findViewById(R.id.stepsText);
-        stepsText.setText("" + user.getSteps());
-
-        ProgressBar progressBar = findViewById(R.id.fragment_steps).findViewById(R.id.stepsProgressBar);
-        int percent = (user.getSteps() * 100) / user.getStepGoal();
-        progressBar.setProgress(percent);
-        TextView percentCompleted = findViewById(R.id.fragment_steps).findViewById(R.id.percentOfStepGoalText);
-        percentCompleted.setText(percent + "% of Goal");
-
-        double milesWalked = (user.getSteps() * ((user.getHeight() * 0.413) / 12)) / 5280;
-        TextView distanceWalked = findViewById(R.id.fragment_steps).findViewById(R.id.distanceWalkedText);
-        DecimalFormat df = new DecimalFormat("0.00");
-        String milesWalkedString = df.format(milesWalked);
-        distanceWalked.setText(milesWalkedString + " Miles Walked");
-
-        int caloriesBurned = (int) (0.4 * user.getWeight() * milesWalked);
-        TextView caloriesBurnedText = findViewById(R.id.fragment_steps).findViewById(R.id.caloriesBurnedText);
-        caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
-        user.setCaloriesBurned(caloriesBurned);
-
-
-        users.child(username).child("caloriesBurned").setValue(user.getCaloriesBurned());
-    }
-
-    private void updateUser() {
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.child(username).getValue(User.class);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 }

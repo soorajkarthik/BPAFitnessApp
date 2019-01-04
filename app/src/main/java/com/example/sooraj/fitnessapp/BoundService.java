@@ -1,6 +1,9 @@
 package com.example.sooraj.fitnessapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -18,22 +21,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
 
 public class BoundService extends Service implements SensorEventListener {
 
     private FirebaseDatabase database;
-    private DatabaseReference users;
+    private static DatabaseReference users;
     private IBinder mBinder = new MyBinder();
     private boolean isRunning = false;
-    private int stepCounter = 0;
-    private int counterSteps = 0;
-    private int startingSteps = 0;
-    private int stepDetector = 0;
-    private User user;
-    private String username;
+    private static User user;
+    private static String username;
 
     @Override
     public void onCreate() {
@@ -41,7 +40,7 @@ public class BoundService extends Service implements SensorEventListener {
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        Sensor sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
         isRunning = true;
     }
@@ -61,47 +60,20 @@ public class BoundService extends Service implements SensorEventListener {
 
             }
         });
-
+        setAlarm(getApplicationContext());
         return mBinder;
     }
 
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if (user != null) {
+
+        if (user != null ) {
             switch (sensorEvent.sensor.getType()) {
                 case Sensor.TYPE_STEP_DETECTOR:
-                    stepDetector++;
-                    break;
-                case Sensor.TYPE_STEP_COUNTER:
-                    if (counterSteps < 1) {
-                        counterSteps = (int) sensorEvent.values[0];
-                    }
-                    stepCounter = (int) sensorEvent.values[0];
-                    user.setSteps(stepCounter);
+                    user.setSteps(user.getSteps()+1);
                     users.child(username).child("steps").setValue(user.getSteps());
                     break;
-
-                default:
-                    break;
-            }
-
-
-            Calendar c = Calendar.getInstance();
-            int minute = c.get(Calendar.MINUTE);
-            if (minute == 59) {
-                if (c.get(Calendar.HOUR_OF_DAY) == 23) {
-
-                    Date date = c.getTime();
-                    String dateString = date.toString();
-                    user.putStepsStorage(dateString, stepCounter);
-                    user.putCalorieStorage(dateString, user.getCalories());
-                    stepCounter = 0;
-                    startingSteps = 0;
-                    user.setSteps(0);
-                    user.resetFood();
-                    users.child(username).setValue(user);
-                }
             }
         }
     }
@@ -125,5 +97,47 @@ public class BoundService extends Service implements SensorEventListener {
         }
     }
 
+    public static class MyAlarm extends BroadcastReceiver {
 
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            users.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    user = dataSnapshot.child(username).getValue(User.class);
+                    Calendar c = Calendar.getInstance();
+                    Date date = c.getTime();
+                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                    String dateString = df.format(date);
+                    user.putStepsStorage(dateString, user.getSteps());
+                    user.putCalorieStorage(dateString, user.getCalories());
+                    user.setSteps(0);
+                    user.resetFood();
+                    users.child(username).setValue(user);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+        public MyAlarm() {
+            super();
+        }
+    }
+
+    public void setAlarm(Context context) {
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(context, MyAlarm.class);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 17);
+        calendar.set(Calendar.MINUTE, 30);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+    }
 }
