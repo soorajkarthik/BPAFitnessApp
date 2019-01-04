@@ -27,12 +27,12 @@ import java.util.Date;
 
 public class BoundService extends Service implements SensorEventListener {
 
-    private FirebaseDatabase database;
     private static DatabaseReference users;
-    private IBinder mBinder = new MyBinder();
-    private boolean isRunning = false;
     private static User user;
     private static String username;
+    private FirebaseDatabase database;
+    private IBinder mBinder = new MyBinder();
+    private boolean isRunning = false;
 
     @Override
     public void onCreate() {
@@ -68,10 +68,10 @@ public class BoundService extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-        if (user != null ) {
+        if (user != null) {
             switch (sensorEvent.sensor.getType()) {
                 case Sensor.TYPE_STEP_DETECTOR:
-                    user.setSteps(user.getSteps()+1);
+                    user.setSteps(user.getSteps() + 1);
                     users.child(username).child("steps").setValue(user.getSteps());
                     break;
             }
@@ -91,14 +91,23 @@ public class BoundService extends Service implements SensorEventListener {
         isRunning = false;
     }
 
-    public class MyBinder extends Binder {
-        public BoundService getService() {
-            return BoundService.this;
-        }
+    public void setAlarm(Context context) {
+        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent i = new Intent(context, MyAlarm.class);
+        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
     }
 
     public static class MyAlarm extends BroadcastReceiver {
 
+
+        public MyAlarm() {
+            super();
+        }
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -124,20 +133,11 @@ public class BoundService extends Service implements SensorEventListener {
                 }
             });
         }
-
-        public MyAlarm() {
-            super();
-        }
     }
 
-    public void setAlarm(Context context) {
-        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent i = new Intent(context, MyAlarm.class);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+    public class MyBinder extends Binder {
+        public BoundService getService() {
+            return BoundService.this;
+        }
     }
 }

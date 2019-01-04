@@ -23,9 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
-
 import java.util.Objects;
-
 
 
 public class MainActivity extends AppCompatActivity {
@@ -111,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("username", username);
         startService(intent);
 
-         mServiceConnection = new ServiceConnection() {
+        mServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder service) {
                 BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
@@ -123,16 +121,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
                 startBoundService();
-
             }
         };
 
         bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
-    }
-
-
-    public void stopBoundService() {
-        unbindService(mServiceConnection);
     }
 
     public void setUpTabView() {
