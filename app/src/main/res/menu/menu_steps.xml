@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_steps"
-        android:icon="@drawable/settings_white_24dp"
+        android:icon="@drawable/edit_white_24dp"
         android:title="Edit Step Goal"
         app:showAsAction="ifRoom" />
 

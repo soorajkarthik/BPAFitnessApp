@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -140,14 +142,30 @@ public class FoodFragment extends Fragment {
     }
 
     public void updateDisplay() {
-        progressCalories.setProgress((user.getCalories() * 100) / user.getCalorieGoal());
-        progressFat.setProgress((user.getFat() * 100) / user.getFatGoal());
-        progressCarbs.setProgress((user.getCarbs() * 100) / user.getCarbGoal());
-        progressProtein.setProgress((user.getProtein() * 100) / user.getProteinGoal());
-        textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
-        textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
-        textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
-        textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            progressCalories.setProgress((user.getCalories() * 100) / user.getCalorieGoal(), true);
+            progressFat.setProgress((user.getFat() * 100) / user.getFatGoal(), true);
+            progressCarbs.setProgress((user.getCarbs() * 100) / user.getCarbGoal(), true);
+            progressProtein.setProgress((user.getProtein() * 100) / user.getProteinGoal(), true);
+            textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
+            textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
+            textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
+            textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
+        }
+
+        else {
+            progressCalories.setProgress((user.getCalories() * 100) / user.getCalorieGoal());
+            progressFat.setProgress((user.getFat() * 100) / user.getFatGoal());
+            progressCarbs.setProgress((user.getCarbs() * 100) / user.getCarbGoal());
+            progressProtein.setProgress((user.getProtein() * 100) / user.getProteinGoal());
+            textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
+            textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
+            textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
+            textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
+        }
+
 
     }
 
@@ -160,6 +178,7 @@ public class FoodFragment extends Fragment {
         textFatBar.setVisibility(View.VISIBLE);
         textCarbsBar.setVisibility(View.VISIBLE);
         textProteinBar.setVisibility(View.VISIBLE);
+        updateDisplay();
     }
 
     public void setProgressInvisible() {

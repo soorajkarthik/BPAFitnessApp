@@ -20,6 +20,7 @@ import com.example.sooraj.fitnessapp.Model.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
@@ -44,7 +45,6 @@ public class ProfileFragment extends Fragment {
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
@@ -52,6 +52,7 @@ public class ProfileFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_profile, container, false);
         return view;
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle saveInstanceState) {
@@ -92,10 +93,10 @@ public class ProfileFragment extends Fragment {
                     Toast.makeText(getActivity(), "This weight is your current weight", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getActivity(), "Please only add new weights once your weight has changed", Toast.LENGTH_SHORT).show();
                 } else {
-
-                    user.putWeightStorage(Calendar.getInstance().getTime().toString(), user.getWeight());
-                    user.setWeight(Integer.parseInt(editNewWeight.getText().toString()));
+                    int newWeight = Integer.parseInt(editNewWeight.getText().toString());
+                    user.setWeight(newWeight);
                     users.child(username).child("weight").setValue(user.getWeight());
+                    editNewWeight.setText("");
                     Toast.makeText(getActivity(), "Your new weight has been set!", Toast.LENGTH_SHORT).show();
                 }
             }

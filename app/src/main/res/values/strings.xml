@@ -52,7 +52,23 @@
         <item>Hard exercise/sports 6–7 days a week</item>
         <item>Very hard exercise/sports and/or physical job</item>
     </string-array>
-    
+
+    <string-array name="chart_types_array">
+        <item>Steps</item>
+        <item>Calories</item>
+        <item>Weight</item>
+    </string-array>
+
+    <string-array name="time_frame_array">
+        <item>1 Week</item>
+        <item>2 Weeks</item>
+        <item>1 Month</item>
+        <item>3 Months</item>
+        <item>6 Months</item>
+        <item>1 Year</item>
+        <item>Full History</item>
+    </string-array>
+
     <string name="Application_ID">b2f7efb9</string>
     <string name="Application_Key">6c6117ee833ec15cb3018340a39e5d3b</string>
 

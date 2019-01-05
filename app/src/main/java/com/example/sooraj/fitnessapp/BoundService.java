@@ -49,7 +49,7 @@ public class BoundService extends Service implements SensorEventListener {
     @Override
     public IBinder onBind(Intent intent) {
         username = intent.getExtras().getString("username");
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(username).getValue(User.class);
@@ -98,7 +98,7 @@ public class BoundService extends Service implements SensorEventListener {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.MINUTE, 55);
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
     }
 
@@ -122,6 +122,7 @@ public class BoundService extends Service implements SensorEventListener {
                     String dateString = df.format(date);
                     user.putStepsStorage(dateString, user.getSteps());
                     user.putCalorieStorage(dateString, user.getCalories());
+                    user.putWeightStorage(dateString, user.getWeight());
                     user.setSteps(0);
                     user.resetFood();
                     users.child(username).setValue(user);

@@ -1,10 +1,10 @@
 package com.example.sooraj.fitnessapp;
 
-
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DecimalFormat;
 import java.util.Objects;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mServiceBound = false;
     private BoundService mBoundService;
     private ServiceConnection mServiceConnection;
+    private boolean tabViewSetUpDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +49,12 @@ public class MainActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
+        tabViewSetUpDone = false;
         updateUser();
-        setUpTabView();
+
+
 
     }
-
 
     @Override
     protected void onStart() {
@@ -60,37 +62,15 @@ public class MainActivity extends AppCompatActivity {
         startBoundService();
     }
 
-    public void setStepTabText() {
-
-        TextView stepsText = findViewById(R.id.fragment_steps).findViewById(R.id.stepsText);
-        stepsText.setText("" + user.getSteps());
-
-        ProgressBar progressBar = findViewById(R.id.fragment_steps).findViewById(R.id.stepsProgressBar);
-        int percent = (user.getSteps() * 100) / user.getStepGoal();
-        progressBar.setProgress(percent);
-        TextView percentCompleted = findViewById(R.id.fragment_steps).findViewById(R.id.percentOfStepGoalText);
-        percentCompleted.setText(percent + "% of Goal");
-
-        double milesWalked = (user.getSteps() * ((user.getHeight() * 0.413) / 12)) / 5280;
-        TextView distanceWalked = findViewById(R.id.fragment_steps).findViewById(R.id.distanceWalkedText);
-        DecimalFormat df = new DecimalFormat("0.00");
-        String milesWalkedString = df.format(milesWalked);
-        distanceWalked.setText(milesWalkedString + " Miles Walked");
-
-        int caloriesBurned = (int) (0.4 * user.getWeight() * milesWalked);
-        TextView caloriesBurnedText = findViewById(R.id.fragment_steps).findViewById(R.id.caloriesBurnedText);
-        caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
-        user.setCaloriesBurned(caloriesBurned);
-
-
-        users.child(username).child("caloriesBurned").setValue(user.getCaloriesBurned());
-    }
-
     private void updateUser() {
-        users.addListenerForSingleValueEvent(new ValueEventListener() {
+        users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(username).getValue(User.class);
+
+                if(!tabViewSetUpDone) {
+                    setUpTabView();
+                }
             }
 
             @Override
@@ -98,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     public User getUser() {
@@ -129,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setUpTabView() {
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle(getResources().getString((R.string.app_name)));
         setSupportActionBar(toolbar);
 
         tabLayout = findViewById(R.id.tabLayout);
@@ -138,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), username);
         viewPager.setAdapter(pageAdapter);
+        viewPager.setCurrentItem(1);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -148,44 +130,48 @@ public class MainActivity extends AppCompatActivity {
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                        updateUser();
-                        setStepTabText();
+                        toolbar.setTitle("View Activity");
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
                         break;
 
                     case 2:
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, android.R.color.darker_gray));
-                        updateUser();
+                        toolbar.setTitle("Track Diet");
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                         break;
 
                     case 3:
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                        updateUser();
+                        toolbar.setTitle("Your Profile");
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                         break;
 
                     default:
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimaryDark));
-                        updateUser();
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                         break;
                 }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                updateUser();
+
             }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                updateUser();
+            public void onTabReselected(TabLayout.Tab tab){
             }
         });
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabViewSetUpDone = true;
+
     }
 
 
