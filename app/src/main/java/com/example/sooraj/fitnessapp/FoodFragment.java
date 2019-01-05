@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -153,9 +152,7 @@ public class FoodFragment extends Fragment {
             textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
             textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
             textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
-        }
-
-        else {
+        } else {
             progressCalories.setProgress((user.getCalories() * 100) / user.getCalorieGoal());
             progressFat.setProgress((user.getFat() * 100) / user.getFatGoal());
             progressCarbs.setProgress((user.getCarbs() * 100) / user.getCarbGoal());

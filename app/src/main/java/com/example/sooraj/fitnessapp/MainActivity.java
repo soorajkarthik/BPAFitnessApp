@@ -12,9 +12,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.example.sooraj.fitnessapp.Model.User;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +20,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DecimalFormat;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -53,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         updateUser();
 
 
-
     }
 
     @Override
@@ -68,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(username).getValue(User.class);
 
-                if(!tabViewSetUpDone) {
+                if (!tabViewSetUpDone) {
                     setUpTabView();
                 }
             }
@@ -166,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab){
+            public void onTabReselected(TabLayout.Tab tab) {
             }
         });
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

@@ -20,9 +20,6 @@ import com.example.sooraj.fitnessapp.Model.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 
 public class ProfileFragment extends Fragment {
 
@@ -45,6 +42,7 @@ public class ProfileFragment extends Fragment {
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 

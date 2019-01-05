@@ -85,7 +85,7 @@ public class ProgressFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Data Type");
             View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.select_chart_type, (ViewGroup) view, false);
-            final Spinner input =  viewInflated.findViewById(R.id.chartType);
+            final Spinner input = viewInflated.findViewById(R.id.chartType);
             builder.setView(viewInflated);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -108,7 +108,7 @@ public class ProgressFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Time Frame");
             View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.change_time_frame, (ViewGroup) view, false);
-            final Spinner input =  viewInflated.findViewById(R.id.timeFrame);
+            final Spinner input = viewInflated.findViewById(R.id.timeFrame);
             builder.setView(viewInflated);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -156,7 +156,7 @@ public class ProgressFragment extends Fragment {
     }
 
     public void draw() {
-        switch(chartType) {
+        switch (chartType) {
             case 0:
                 setStepsChart();
                 break;
@@ -187,14 +187,14 @@ public class ProgressFragment extends Fragment {
         barChart.getAxisLeft().setDrawLabels(false);
         toolbar.setTitle("Steps History");
 
-        for(int i = timeFrame; i > 0; i--) {
+        for (int i = timeFrame; i > 0; i--) {
             int position = timeFrame - i;
             long subtract = (long) i * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = sdf.format(date);
 
-            if(stepData.containsKey(dateString)) {
+            if (stepData.containsKey(dateString)) {
                 int steps = stepData.get(dateString);
                 barEntries.add(new BarEntry(steps, position));
             } else {
@@ -205,7 +205,7 @@ public class ProgressFragment extends Fragment {
         BarDataSet dataSet = new BarDataSet(barEntries, "Steps");
 
 
-        for(int j = timeFrame; j > 0; j--) {
+        for (int j = timeFrame; j > 0; j--) {
             long subtract = (long) j * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
@@ -233,14 +233,14 @@ public class ProgressFragment extends Fragment {
         barChart.getAxisLeft().setDrawLabels(false);
         toolbar.setTitle("Eating History");
 
-        for(int i = timeFrame; i > 0; i--) {
+        for (int i = timeFrame; i > 0; i--) {
             int position = timeFrame - i;
             long subtract = (long) i * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = sdf.format(date);
 
-            if(calorieData.containsKey(dateString)) {
+            if (calorieData.containsKey(dateString)) {
                 int steps = calorieData.get(dateString);
                 barEntries.add(new BarEntry(steps, position));
             } else {
@@ -251,7 +251,7 @@ public class ProgressFragment extends Fragment {
         BarDataSet dataSet = new BarDataSet(barEntries, "Calories");
 
 
-        for(int j = timeFrame; j > 0; j--) {
+        for (int j = timeFrame; j > 0; j--) {
             long subtract = (long) j * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
@@ -278,14 +278,14 @@ public class ProgressFragment extends Fragment {
         lineChart.getAxisRight().setDrawLabels(false);
         lineChart.getAxisLeft().setDrawLabels(false);
 
-        for(int i = timeFrame; i > 0; i--) {
+        for (int i = timeFrame; i > 0; i--) {
             int position = timeFrame - i;
             long subtract = (long) i * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = sdf.format(date);
 
-            if(calorieData.containsKey(dateString)) {
+            if (calorieData.containsKey(dateString)) {
                 int steps = calorieData.get(dateString);
                 entries.add(new Entry(steps, position));
             } else {
@@ -296,7 +296,7 @@ public class ProgressFragment extends Fragment {
         LineDataSet dataSet = new LineDataSet(entries, "Calories");
 
 
-        for(int j = timeFrame; j > 0; j--) {
+        for (int j = timeFrame; j > 0; j--) {
             long subtract = (long) j * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
@@ -308,7 +308,6 @@ public class ProgressFragment extends Fragment {
         LineData lineData = new LineData(dates, dataSet);
         lineChart.setData(lineData);
         lineChart.getLineData().setValueTextSize(10f);
-
 
 
         toolbar.setTitle("Weight History");

@@ -1,7 +1,6 @@
 package com.example.sooraj.fitnessapp;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sooraj.fitnessapp.Model.User;
 import com.google.firebase.database.DatabaseReference;
