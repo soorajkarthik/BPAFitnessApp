@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private EditText editMail, editUsername, editPassword;
     private Button btnLogIn, btnToSignUp;
+    private CheckBox checkStaySignedIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         users = database.getReference("Users");
 
 
-        editUsername = (EditText) findViewById(R.id.editUsername);
-        editPassword = (EditText) findViewById(R.id.editPassword);
-        btnLogIn = (Button) findViewById(R.id.btnLogIn);
-        btnToSignUp = (Button) findViewById(R.id.btnToSignUp);
+        editUsername = findViewById(R.id.editUsername);
+        editPassword = findViewById(R.id.editPassword);
+        btnLogIn = findViewById(R.id.btnLogIn);
+        btnToSignUp = findViewById(R.id.btnToSignUp);
+
+        checkStaySignedIn = findViewById(R.id.checkStaySignedIn);
 
 
         btnLogIn.setOnClickListener(new View.OnClickListener() {
@@ -82,9 +86,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (login.getPassword().equals(password)) {
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("username", username);
-                        editor.commit();
+
+                        if (checkStaySignedIn.isChecked()) {
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("username", username);
+                            editor.commit();
+                        }
+
                         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                         myIntent.putExtra("username", username);
                         startActivity(myIntent);

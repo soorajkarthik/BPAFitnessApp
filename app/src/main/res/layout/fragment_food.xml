@@ -27,7 +27,7 @@
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:layout_marginBottom="110dp"
-        android:progress="95"
+        android:max="10000"
         android:progressDrawable="@drawable/progress"
         android:progressTint="#e53320"
         app:layout_constraintBottom_toBottomOf="@+id/progressBarFat"
@@ -41,7 +41,7 @@
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:layout_marginBottom="32dp"
-        android:progress="27"
+        android:max="10000"
         android:progressDrawable="@drawable/progress"
         android:progressTint="#f9cf13"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -52,7 +52,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="400dp"
         android:layout_height="250dp"
-        android:progress="65"
+        android:max="10000"
         android:progressDrawable="@drawable/progress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -65,7 +65,7 @@
         android:layout_width="200dp"
         android:layout_height="150dp"
         android:layout_marginBottom="32dp"
-        android:progress="58"
+        android:max="10000"
         android:progressDrawable="@drawable/progress"
         android:progressTint="#c15d00"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,7 +76,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="calories/total\nCalories"
         app:layout_constraintBottom_toBottomOf="@+id/progressBarCalories"
         app:layout_constraintEnd_toEndOf="@+id/progressBarCalories"
         app:layout_constraintStart_toStartOf="@+id/progressBarCalories"
@@ -90,8 +89,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/progressBarCarbs"
         app:layout_constraintEnd_toEndOf="@+id/progressBarCarbs"
         app:layout_constraintStart_toStartOf="@+id/progressBarCarbs"
-        app:layout_constraintTop_toTopOf="@+id/progressBarCarbs"
-        android:text="carbs/total\nCarbs" />
+        app:layout_constraintTop_toTopOf="@+id/progressBarCarbs" />
 
     <TextView
         android:id="@+id/textFatBar"
@@ -103,14 +101,12 @@
         app:layout_constraintBottom_toBottomOf="@+id/progressBarFat"
         app:layout_constraintEnd_toEndOf="@+id/progressBarFat"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/progressBarFat"
-        android:text="fat/total\nFat" />
+        app:layout_constraintTop_toTopOf="@+id/progressBarFat" />
 
     <TextView
         android:id="@+id/textProteinBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="prot/total\nProtein"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/progressBarProtein"
         app:layout_constraintEnd_toEndOf="@+id/progressBarProtein"

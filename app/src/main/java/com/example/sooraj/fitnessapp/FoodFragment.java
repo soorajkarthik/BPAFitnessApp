@@ -1,10 +1,10 @@
 package com.example.sooraj.fitnessapp;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -57,8 +57,7 @@ public class FoodFragment extends Fragment {
         users = database.getReference("Users");
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
-        searchResults.setVisibility(View.INVISIBLE);
-        setProgressVisible();
+
     }
 
 
@@ -80,7 +79,7 @@ public class FoodFragment extends Fragment {
         textFatBar = view.findViewById(R.id.textFatBar);
         textCarbsBar = view.findViewById(R.id.textCarbsBar);
         textProteinBar = view.findViewById(R.id.textProteinBar);
-        updateDisplay();
+        searchResults.setVisibility(View.INVISIBLE);
         return view;
     }
 
@@ -110,11 +109,9 @@ public class FoodFragment extends Fragment {
 
                 if (newText.length() > 3) {
                     setProgressInvisible();
-                    searchResults.setVisibility(View.VISIBLE);
                     myAsyncTask m = new myAsyncTask();
                     m.execute(newText);
                 } else {
-                    searchResults.setVisibility(View.INVISIBLE);
                     setProgressVisible();
 
                 }
@@ -122,6 +119,10 @@ public class FoodFragment extends Fragment {
             }
 
         });
+
+        updateDisplay();
+        setProgressVisible();
+
     }
 
     public void filterFoodArray(String newText) {
@@ -142,31 +143,26 @@ public class FoodFragment extends Fragment {
 
     public void updateDisplay() {
 
+        textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
+        textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
+        textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
+        textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            progressCalories.setProgress((user.getCalories() * 100) / user.getCalorieGoal(), true);
-            progressFat.setProgress((user.getFat() * 100) / user.getFatGoal(), true);
-            progressCarbs.setProgress((user.getCarbs() * 100) / user.getCarbGoal(), true);
-            progressProtein.setProgress((user.getProtein() * 100) / user.getProteinGoal(), true);
-            textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
-            textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
-            textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
-            textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
-        } else {
-            progressCalories.setProgress((user.getCalories() * 100) / user.getCalorieGoal());
-            progressFat.setProgress((user.getFat() * 100) / user.getFatGoal());
-            progressCarbs.setProgress((user.getCarbs() * 100) / user.getCarbGoal());
-            progressProtein.setProgress((user.getProtein() * 100) / user.getProteinGoal());
-            textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
-            textFatBar.setText(user.getFat() + "/" + user.getFatGoal() + "\nFat");
-            textCarbsBar.setText(user.getCarbs() + "/" + user.getCarbGoal() + "\nCarbs");
-            textProteinBar.setText(user.getProtein() + "/" + user.getProteinGoal() + "\nProtein");
-        }
+        progressCalories.setProgress(0);
+        progressFat.setProgress(0);
+        progressCarbs.setProgress(0);
+        progressProtein.setProgress(0);
+
+        ObjectAnimator.ofInt(progressCalories, "progress", ((user.getCalories() * 10000) / user.getCalorieGoal())).setDuration(1000).start();
+        ObjectAnimator.ofInt(progressFat, "progress", ((user.getFat() * 10000) / user.getFatGoal())).setDuration(1000).start();
+        ObjectAnimator.ofInt(progressCarbs, "progress", ((user.getCarbs() * 10000) / user.getCarbGoal())).setDuration(1000).start();
+        ObjectAnimator.ofInt(progressProtein, "progress", ((user.getProtein() * 10000) / user.getProteinGoal())).setDuration(1000).start();
 
 
     }
 
     public void setProgressVisible() {
+        searchResults.setVisibility(View.INVISIBLE);
         progressCalories.setVisibility(View.VISIBLE);
         progressFat.setVisibility(View.VISIBLE);
         progressCarbs.setVisibility(View.VISIBLE);
@@ -175,10 +171,10 @@ public class FoodFragment extends Fragment {
         textFatBar.setVisibility(View.VISIBLE);
         textCarbsBar.setVisibility(View.VISIBLE);
         textProteinBar.setVisibility(View.VISIBLE);
-        updateDisplay();
     }
 
     public void setProgressInvisible() {
+        searchResults.setVisibility(View.VISIBLE);
         progressCalories.setVisibility(View.INVISIBLE);
         progressFat.setVisibility(View.INVISIBLE);
         progressCarbs.setVisibility(View.INVISIBLE);
@@ -355,7 +351,7 @@ public class FoodFragment extends Fragment {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Servings");
                         View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.serving_number_dialog, (ViewGroup) getMyView(), false);
-                        final EditText input = (EditText) viewInflated.findViewById(R.id.servingsNumber);
+                        final EditText input = viewInflated.findViewById(R.id.servingsNumber);
                         builder.setView(viewInflated);
 
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -371,10 +367,9 @@ public class FoodFragment extends Fragment {
                                 users.child(username).child("fat").setValue(user.getFat());
                                 users.child(username).child("carbs").setValue(user.getCarbs());
                                 users.child(username).child("protein").setValue(user.getProtein());
-                                searchResults.setVisibility(View.INVISIBLE);
-                                setProgressVisible();
                                 updateDisplay();
-
+                                search.setQuery("", false);
+                                search.clearFocus();
 
                             }
                         });

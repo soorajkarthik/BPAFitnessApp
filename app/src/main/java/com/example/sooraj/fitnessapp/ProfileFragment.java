@@ -143,6 +143,8 @@ public class ProfileFragment extends Fragment {
             Toast.makeText(getActivity(), "Edit your profile", Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Click \"Check\" to confirm ", Toast.LENGTH_SHORT).show();
             item.setIcon(R.drawable.done_white_24dp);
+            editNewWeight.setEnabled(false);
+            editNewWeight.setFocusable(false);
             editAge.setEnabled(true);
             editAge.setFocusable(true);
             editStepGoal.setEnabled(true);
@@ -255,6 +257,8 @@ public class ProfileFragment extends Fragment {
                 Toast.makeText(getActivity(), "Your changes were saved!", Toast.LENGTH_SHORT).show();
                 textEditProfile.setText("Your Profile");
 
+                editNewWeight.setEnabled(true);
+                editNewWeight.setEnabled(true);
                 editAge.setEnabled(false);
                 editAge.setFocusable(false);
                 editStepGoal.setEnabled(false);

@@ -1,8 +1,8 @@
 package com.example.sooraj.fitnessapp;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -38,7 +38,7 @@ public class StepsFragment extends Fragment {
         users = database.getReference("Users");
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
-        updateDisplay();
+
     }
 
     @Override
@@ -59,6 +59,7 @@ public class StepsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_steps, menu);
+        updateDisplay();
     }
 
     @Override
@@ -67,7 +68,7 @@ public class StepsFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Edit Step Goal");
             View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.edit_stepgoal_dialog, (ViewGroup) view, false);
-            final EditText input = (EditText) viewInflated.findViewById(R.id.newStepGoal);
+            final EditText input = viewInflated.findViewById(R.id.newStepGoal);
             builder.setView(viewInflated);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -108,12 +109,9 @@ public class StepsFragment extends Fragment {
         caloriesBurnedText.setText(caloriesBurned + " Calories Burned");
         stepsText.setText("" + user.getSteps());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            progressBar.setProgress(percent, true);
-        } else {
-            progressBar.setProgress(percent);
-        }
+        progressBar.setProgress(0);
 
+        ObjectAnimator.ofInt(progressBar, "progress", ((user.getSteps() * 10000) / user.getStepGoal())).setDuration(1000).start();
         user.setCaloriesBurned(caloriesBurned);
         users.child(username).child("caloriesBurned").setValue(user.getCaloriesBurned());
     }

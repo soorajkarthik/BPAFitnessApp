@@ -84,6 +84,8 @@ public class ProgressFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_progress, menu);
+        barChart.animateXY(2000, 2000);
+        lineChart.animateXY(2000, 2000);
     }
 
     @Override
@@ -136,6 +138,7 @@ public class ProgressFragment extends Fragment {
             View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.change_time_frame, (ViewGroup) view, false);
             final Spinner input = viewInflated.findViewById(R.id.timeFrame);
             builder.setView(viewInflated);
+            input.setSelection(timeFramePosition);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
@@ -246,7 +249,7 @@ public class ProgressFragment extends Fragment {
             } else if (steps < user.getStepGoal()) {
                 colors[position] = Color.parseColor("#ff9926");
             } else {
-                colors[position] = Color.parseColor("#53ff49");
+                colors[position] = Color.parseColor("#3fc138");
             }
         }
 
@@ -265,6 +268,7 @@ public class ProgressFragment extends Fragment {
         BarData barData = new BarData(dates, dataSet);
         barData.setHighlightEnabled(false);
         barChart.setData(barData);
+        barChart.animateXY(2000, 2000);
         barChart.getBarData().setValueTextSize(10f);
 
     }
@@ -291,17 +295,18 @@ public class ProgressFragment extends Fragment {
 
             barEntries.add(new BarEntry(calories, position));
 
-            if (calories < user.getCalorieGoal() * .5 || calories > user.getCalorieGoal() * 1.3) {
+            if (calories < user.getCalorieGoal() * .8 || calories > user.getCalorieGoal() * 1.2) {
                 colors[position] = Color.parseColor("#ff3838");
-            } else if (calories < user.getCalorieGoal() * .9 || calories > user.getCalorieGoal() * 1.1) {
+            } else if (calories < user.getCalorieGoal() * .95 || calories > user.getCalorieGoal() * 1.05) {
                 colors[position] = Color.parseColor("#ff9926");
             } else {
-                colors[position] = Color.parseColor("#53ff49");
+                colors[position] = Color.parseColor("#3fc138");
             }
         }
 
         BarDataSet dataSet = new BarDataSet(barEntries, "Calories");
         dataSet.setValueFormatter(new MyValueFormatter());
+        dataSet.setColors(colors);
 
 
         for (int j = timeFrame; j > 0; j--) {
@@ -314,8 +319,11 @@ public class ProgressFragment extends Fragment {
 
         BarData barData = new BarData(dates, dataSet);
         barData.setHighlightEnabled(false);
+
         barChart.setData(barData);
+        barChart.animateXY(2000, 2000);
         barChart.getBarData().setValueTextSize(10f);
+
     }
 
     public void setWeightChart() {
@@ -356,6 +364,7 @@ public class ProgressFragment extends Fragment {
         LineData lineData = new LineData(dates, dataSet);
         lineData.setHighlightEnabled(false);
         lineChart.setData(lineData);
+        lineChart.animateXY(2000, 2000);
         lineChart.getLineData().setValueTextSize(10f);
 
     }
