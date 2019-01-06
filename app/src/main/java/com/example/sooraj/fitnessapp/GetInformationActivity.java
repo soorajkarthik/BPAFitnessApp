@@ -39,7 +39,7 @@ public class GetInformationActivity extends AppCompatActivity {
         //Firebase
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
-        final String username = Objects.requireNonNull(getIntent().getExtras()).getString("Username");
+        final String username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
 
 
         users.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -55,7 +55,7 @@ public class GetInformationActivity extends AppCompatActivity {
             }
         });
 
-        confirmButton = (Button) findViewById(R.id.buttonConfirmProfile);
+        confirmButton = findViewById(R.id.buttonConfirmProfile);
         editAge = findViewById(R.id.editAge);
         editWeight = findViewById(R.id.editNewWeight);
         editStepGoal = findViewById(R.id.editStepGoal);
@@ -165,7 +165,7 @@ public class GetInformationActivity extends AppCompatActivity {
                     Toast.makeText(GetInformationActivity.this, "Profile Setup Completed!", Toast.LENGTH_SHORT).show();
 
                     Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-                    myIntent.putExtra("Username", username);
+                    myIntent.putExtra("username", username);
                     startActivity(myIntent);
                 }
 

@@ -36,12 +36,12 @@ public class SignUpActivity extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
 
-        editMail = (EditText) findViewById(R.id.editMail);
-        editUsername = (EditText) findViewById(R.id.editUsername);
-        editPassword = (EditText) findViewById(R.id.editPassword);
-        editConfirmPassword = (EditText) findViewById(R.id.editConfirmPassword);
-        btnSignUp = (Button) findViewById(R.id.btnSignUp);
-        btnToLogIn = (Button) findViewById(R.id.btnToLogIn);
+        editMail = findViewById(R.id.editMail);
+        editUsername = findViewById(R.id.editUsername);
+        editPassword = findViewById(R.id.editPassword);
+        editConfirmPassword = findViewById(R.id.editConfirmPassword);
+        btnSignUp = findViewById(R.id.btnSignUp);
+        btnToLogIn = findViewById(R.id.btnToLogIn);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
                                 users.child(user.getUsername()).setValue(user);
                                 Toast.makeText(SignUpActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
                                 Intent myIntent = new Intent(getApplicationContext(), GetInformationActivity.class);
-                                myIntent.putExtra("Username", user.getUsername());
+                                myIntent.putExtra("username", user.getUsername());
                                 startActivity(myIntent);
 
                             } else {
