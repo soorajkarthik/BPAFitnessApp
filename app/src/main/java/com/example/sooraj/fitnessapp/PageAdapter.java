@@ -26,6 +26,8 @@ public class PageAdapter extends FragmentPagerAdapter {
             case 2:
                 return new FoodFragment();
             case 3:
+                return new SocialFragment();
+            case 4:
                 return new ProfileFragment();
             default:
                 return null;

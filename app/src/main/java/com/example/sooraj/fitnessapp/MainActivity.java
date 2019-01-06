@@ -144,6 +144,13 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case 3:
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                        toolbar.setTitle("Social");
+                        break;
+
+                    case 4:
                         toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
                         tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
                         getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));

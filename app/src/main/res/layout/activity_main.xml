@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        app:tabMode="scrollable"
         app:tabSelectedTextColor="@android:color/white"
         app:tabTextColor="@android:color/black">
 
@@ -44,6 +45,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Food" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/socialTab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Social" />
 
         <android.support.design.widget.TabItem
             android:id="@+id/profileTab"
