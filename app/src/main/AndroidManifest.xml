@@ -22,7 +22,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" android:screenOrientation="locked"/>
-        <activity android:name=".MainActivity" android:configChanges = "orientation" android:screenOrientation="nosensor"/>
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="locked" />
 
         <service android:name=".BoundService" />
         <receiver android:name=".BoundService$MyAlarm" android:enabled="true"/>

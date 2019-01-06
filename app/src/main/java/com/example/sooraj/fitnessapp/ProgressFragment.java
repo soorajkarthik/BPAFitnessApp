@@ -3,9 +3,9 @@ package com.example.sooraj.fitnessapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,9 +23,12 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,22 +48,25 @@ public class ProgressFragment extends Fragment {
     private HashMap<String, Integer> weightData;
     private android.support.v7.widget.Toolbar toolbar;
     private int timeFrame;
-    private int chartType;
+    private static int chartType;
+    private int timeFramePosition;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        database = FirebaseDatabase.getInstance();
-        users = database.getReference("Users");
-        user = ((MainActivity) getActivity()).getUser();
-        username = user.getUsername();
-        stepData = user.getStepsStorage();
-        calorieData = user.getCalorieStorage();
-        weightData = user.getWeightStorage();
-        timeFrame = 7;
-        chartType = 0;
-        draw();
+    public static void setToolbarText(Toolbar toolbar) {
+        switch (chartType) {
+            case 0:
+                toolbar.setTitle("Steps History");
+                break;
+            case 1:
+                toolbar.setTitle("Eating History");
+                break;
+            case 2:
+                toolbar.setTitle("Weight History");
+                break;
+            default:
+                break;
 
+
+        }
     }
 
     @Override
@@ -80,6 +86,23 @@ public class ProgressFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        database = FirebaseDatabase.getInstance();
+        users = database.getReference("Users");
+        user = ((MainActivity) getActivity()).getUser();
+        username = user.getUsername();
+        stepData = user.getStepsStorage();
+        calorieData = user.getCalorieStorage();
+        weightData = user.getWeightStorage();
+        timeFrame = 7;
+        timeFramePosition = 0;
+        chartType = 0;
+        configureCharts();
+        draw();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_change_chart) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -87,6 +110,7 @@ public class ProgressFragment extends Fragment {
             View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.select_chart_type, (ViewGroup) view, false);
             final Spinner input = viewInflated.findViewById(R.id.chartType);
             builder.setView(viewInflated);
+            input.setSelection(chartType);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
@@ -94,6 +118,7 @@ public class ProgressFragment extends Fragment {
                     dialog.dismiss();
                     chartType = input.getSelectedItemPosition();
                     draw();
+                    setToolbarText(toolbar);
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -115,7 +140,8 @@ public class ProgressFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
-                    switch (input.getSelectedItemPosition()) {
+                    timeFramePosition = input.getSelectedItemPosition();
+                    switch (timeFramePosition) {
                         case 0:
                             timeFrame = 7;
                             break;
@@ -141,6 +167,7 @@ public class ProgressFragment extends Fragment {
                             break;
                     }
                     draw();
+                    setToolbarText(toolbar);
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -171,21 +198,29 @@ public class ProgressFragment extends Fragment {
         }
     }
 
+    public void configureCharts() {
+        barChart.setDescription("");
+        barChart.getAxisRight().setDrawGridLines(false);
+        barChart.getAxisLeft().setDrawGridLines(false);
+        barChart.getXAxis().setDrawGridLines(false);
+        barChart.getAxisRight().setDrawLabels(false);
+        barChart.getAxisLeft().setDrawLabels(false);
+
+        lineChart.setDescription("");
+        lineChart.getAxisRight().setDrawGridLines(false);
+        lineChart.getAxisLeft().setDrawGridLines(false);
+        lineChart.getXAxis().setDrawGridLines(false);
+        lineChart.getAxisRight().setDrawLabels(false);
+        lineChart.getAxisLeft().setDrawLabels(false);
+    }
+
     public void setStepsChart() {
 
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         ArrayList<String> dates = new ArrayList<>();
         barChart.setVisibility(View.VISIBLE);
         lineChart.setVisibility(View.INVISIBLE);
-        barChart.setBackgroundColor(Color.parseColor("#ededed"));
         barChart.setDescription("");
-        barChart.setGridBackgroundColor(Color.parseColor("#FFFFFF"));
-        barChart.getAxisRight().setDrawGridLines(false);
-        barChart.getAxisLeft().setDrawGridLines(false);
-        barChart.getXAxis().setDrawGridLines(false);
-        barChart.getAxisRight().setDrawLabels(false);
-        barChart.getAxisLeft().setDrawLabels(false);
-        toolbar.setTitle("Steps History");
 
         for (int i = timeFrame; i > 0; i--) {
             int position = timeFrame - i;
@@ -203,7 +238,7 @@ public class ProgressFragment extends Fragment {
         }
 
         BarDataSet dataSet = new BarDataSet(barEntries, "Steps");
-
+        dataSet.setValueFormatter(new MyValueFormatter());
 
         for (int j = timeFrame; j > 0; j--) {
             long subtract = (long) j * 24 * 60 * 60 * 1000;
@@ -214,6 +249,7 @@ public class ProgressFragment extends Fragment {
         }
 
         BarData barData = new BarData(dates, dataSet);
+        barData.setHighlightEnabled(false);
         barChart.setData(barData);
         barChart.getBarData().setValueTextSize(10f);
 
@@ -224,14 +260,7 @@ public class ProgressFragment extends Fragment {
         ArrayList<String> dates = new ArrayList<>();
         barChart.setVisibility(View.VISIBLE);
         lineChart.setVisibility(View.INVISIBLE);
-        barChart.setBackgroundColor(Color.parseColor("#ededed"));
-        barChart.setDescription("");
-        barChart.getAxisRight().setDrawGridLines(false);
-        barChart.getAxisLeft().setDrawGridLines(false);
-        barChart.getXAxis().setDrawGridLines(false);
-        barChart.getAxisRight().setDrawLabels(false);
-        barChart.getAxisLeft().setDrawLabels(false);
-        toolbar.setTitle("Eating History");
+
 
         for (int i = timeFrame; i > 0; i--) {
             int position = timeFrame - i;
@@ -249,6 +278,7 @@ public class ProgressFragment extends Fragment {
         }
 
         BarDataSet dataSet = new BarDataSet(barEntries, "Calories");
+        dataSet.setValueFormatter(new MyValueFormatter());
 
 
         for (int j = timeFrame; j > 0; j--) {
@@ -260,6 +290,7 @@ public class ProgressFragment extends Fragment {
         }
 
         BarData barData = new BarData(dates, dataSet);
+        barData.setHighlightEnabled(false);
         barChart.setData(barData);
         barChart.getBarData().setValueTextSize(10f);
     }
@@ -270,13 +301,6 @@ public class ProgressFragment extends Fragment {
         ArrayList<String> dates = new ArrayList<>();
         lineChart.setVisibility(View.VISIBLE);
         barChart.setVisibility(View.INVISIBLE);
-        lineChart.setBackgroundColor(Color.parseColor("#ededed"));
-        lineChart.setDescription("");
-        lineChart.getAxisRight().setDrawGridLines(false);
-        lineChart.getAxisLeft().setDrawGridLines(false);
-        lineChart.getXAxis().setDrawGridLines(false);
-        lineChart.getAxisRight().setDrawLabels(false);
-        lineChart.getAxisLeft().setDrawLabels(false);
 
         for (int i = timeFrame; i > 0; i--) {
             int position = timeFrame - i;
@@ -294,7 +318,7 @@ public class ProgressFragment extends Fragment {
         }
 
         LineDataSet dataSet = new LineDataSet(entries, "Calories");
-
+        dataSet.setValueFormatter(new MyValueFormatter());
 
         for (int j = timeFrame; j > 0; j--) {
             long subtract = (long) j * 24 * 60 * 60 * 1000;
@@ -306,10 +330,23 @@ public class ProgressFragment extends Fragment {
         }
 
         LineData lineData = new LineData(dates, dataSet);
+        lineData.setHighlightEnabled(false);
         lineChart.setData(lineData);
         lineChart.getLineData().setValueTextSize(10f);
 
+    }
 
-        toolbar.setTitle("Weight History");
+    private class MyValueFormatter implements ValueFormatter {
+
+        private DecimalFormat df;
+
+        public MyValueFormatter() {
+            df = new DecimalFormat("#");
+        }
+
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return df.format(value);
+        }
     }
 }
