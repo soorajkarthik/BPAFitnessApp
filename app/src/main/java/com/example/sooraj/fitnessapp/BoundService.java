@@ -117,7 +117,7 @@ public class BoundService extends Service implements SensorEventListener {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     user = dataSnapshot.child(username).getValue(User.class);
                     Calendar c = Calendar.getInstance();
-                    Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+                    Date date = new Date(System.currentTimeMillis() - 12 * 60 * 60 * 1000);
                     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
                     String dateString = df.format(date);
                     user.putStepsStorage(dateString, user.getSteps());

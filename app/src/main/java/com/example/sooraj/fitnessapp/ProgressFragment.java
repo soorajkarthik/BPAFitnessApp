@@ -37,6 +37,7 @@ import java.util.HashMap;
 
 public class ProgressFragment extends Fragment {
 
+    private static int chartType;
     private View view;
     private BarChart barChart;
     private LineChart lineChart;
@@ -49,7 +50,6 @@ public class ProgressFragment extends Fragment {
     private HashMap<String, Integer> weightData;
     private android.support.v7.widget.Toolbar toolbar;
     private int timeFrame;
-    private static int chartType;
     private int timeFramePosition;
 
     public static void setToolbarText(Toolbar toolbar) {
