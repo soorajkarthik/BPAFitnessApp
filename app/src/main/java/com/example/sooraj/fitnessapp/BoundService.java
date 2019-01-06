@@ -98,7 +98,7 @@ public class BoundService extends Service implements SensorEventListener {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 55);
+        calendar.set(Calendar.MINUTE, 59);
         am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
     }
 
@@ -117,7 +117,7 @@ public class BoundService extends Service implements SensorEventListener {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     user = dataSnapshot.child(username).getValue(User.class);
                     Calendar c = Calendar.getInstance();
-                    Date date = c.getTime();
+                    Date date = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
                     SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
                     String dateString = df.format(date);
                     user.putStepsStorage(dateString, user.getSteps());
