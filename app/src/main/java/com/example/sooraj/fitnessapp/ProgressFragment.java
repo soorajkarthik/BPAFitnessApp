@@ -3,6 +3,7 @@ package com.example.sooraj.fitnessapp;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
@@ -205,6 +206,7 @@ public class ProgressFragment extends Fragment {
         barChart.getXAxis().setDrawGridLines(false);
         barChart.getAxisRight().setDrawLabels(false);
         barChart.getAxisLeft().setDrawLabels(false);
+        barChart.getLegend().setEnabled(false);
 
         lineChart.setDescription("");
         lineChart.getAxisRight().setDrawGridLines(false);
@@ -212,6 +214,7 @@ public class ProgressFragment extends Fragment {
         lineChart.getXAxis().setDrawGridLines(false);
         lineChart.getAxisRight().setDrawLabels(false);
         lineChart.getAxisLeft().setDrawLabels(false);
+        lineChart.getLegend().setEnabled(false);
     }
 
     public void setStepsChart() {
@@ -221,6 +224,8 @@ public class ProgressFragment extends Fragment {
         barChart.setVisibility(View.VISIBLE);
         lineChart.setVisibility(View.INVISIBLE);
         barChart.setDescription("");
+        int colors[] = new int[timeFrame];
+
 
         for (int i = timeFrame; i > 0; i--) {
             int position = timeFrame - i;
@@ -228,17 +233,26 @@ public class ProgressFragment extends Fragment {
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = sdf.format(date);
-
+            int steps = 0;
             if (stepData.containsKey(dateString)) {
-                int steps = stepData.get(dateString);
-                barEntries.add(new BarEntry(steps, position));
+                steps = stepData.get(dateString);
+
+            }
+
+            barEntries.add(new BarEntry(steps, position));
+
+            if (steps < user.getStepGoal() * .5) {
+                colors[position] = Color.parseColor("#ff3838");
+            } else if (steps < user.getStepGoal()) {
+                colors[position] = Color.parseColor("#ff9926");
             } else {
-                barEntries.add(new BarEntry(0, position));
+                colors[position] = Color.parseColor("#53ff49");
             }
         }
 
         BarDataSet dataSet = new BarDataSet(barEntries, "Steps");
         dataSet.setValueFormatter(new MyValueFormatter());
+        dataSet.setColors(colors);
 
         for (int j = timeFrame; j > 0; j--) {
             long subtract = (long) j * 24 * 60 * 60 * 1000;
@@ -260,6 +274,7 @@ public class ProgressFragment extends Fragment {
         ArrayList<String> dates = new ArrayList<>();
         barChart.setVisibility(View.VISIBLE);
         lineChart.setVisibility(View.INVISIBLE);
+        int colors[] = new int[timeFrame];
 
 
         for (int i = timeFrame; i > 0; i--) {
@@ -268,12 +283,20 @@ public class ProgressFragment extends Fragment {
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = sdf.format(date);
-
+            int calories = 0;
             if (calorieData.containsKey(dateString)) {
-                int steps = calorieData.get(dateString);
-                barEntries.add(new BarEntry(steps, position));
+                calories = calorieData.get(dateString);
+
+            }
+
+            barEntries.add(new BarEntry(calories, position));
+
+            if (calories < user.getCalorieGoal() * .5 || calories > user.getCalorieGoal() * 1.3) {
+                colors[position] = Color.parseColor("#ff3838");
+            } else if (calories < user.getCalorieGoal() * .9 || calories > user.getCalorieGoal() * 1.1) {
+                colors[position] = Color.parseColor("#ff9926");
             } else {
-                barEntries.add(new BarEntry(0, position));
+                colors[position] = Color.parseColor("#53ff49");
             }
         }
 
@@ -308,17 +331,18 @@ public class ProgressFragment extends Fragment {
             Date date = new Date(System.currentTimeMillis() - subtract);
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             String dateString = sdf.format(date);
-
-            if (calorieData.containsKey(dateString)) {
-                int steps = calorieData.get(dateString);
-                entries.add(new Entry(steps, position));
-            } else {
-                entries.add(new Entry(0, position));
+            int weight = 0;
+            if (weightData.containsKey(dateString)) {
+                weight = weightData.get(dateString);
             }
+
+            entries.add(new Entry(weight, position));
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "Calories");
+        LineDataSet dataSet = new LineDataSet(entries, "Weight");
         dataSet.setValueFormatter(new MyValueFormatter());
+        dataSet.setCircleColor(Color.parseColor("#ff3838"));
+        dataSet.setColor(Color.parseColor("#ff3838"));
 
         for (int j = timeFrame; j > 0; j--) {
             long subtract = (long) j * 24 * 60 * 60 * 1000;
@@ -346,6 +370,9 @@ public class ProgressFragment extends Fragment {
 
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            if (value == 0f) {
+                return "";
+            }
             return df.format(value);
         }
     }
