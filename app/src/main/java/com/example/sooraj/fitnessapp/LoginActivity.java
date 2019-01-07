@@ -81,7 +81,7 @@ public class LoginActivity extends AppCompatActivity {
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child(username).exists()) {
+                if (dataSnapshot.child(username).exists() && !username.isEmpty()) {
                     User login = dataSnapshot.child(username).getValue(User.class);
 
                     if (login.getPassword().equals(password)) {

@@ -23,6 +23,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Fields
     private FirebaseDatabase database;
     private DatabaseReference users;
     private android.support.v7.widget.Toolbar toolbar;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //Gets reference to database
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
@@ -57,11 +59,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUser() {
+
+        //Updates local reference to user every time user is updated in Firebase
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(username).getValue(User.class);
 
+                //Ensures that tablayout is set up after initial reference to user is received
+                //Ensures tablayout is only set up once
+                //Sets the tab that is seen when the app is opened to the step counter tab
                 if (!tabViewSetUpDone) {
                     setUpTabView();
                     viewPager.setCurrentItem(1);
@@ -82,10 +89,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startBoundService() {
+
+        //Starts bound service which counts steps and resets users steps and calories at midnight
+        //Binds bound service to this activity
         Intent intent = new Intent(this, BoundService.class);
         intent.putExtra("username", username);
         startService(intent);
 
+        //Setup a service connection which is connected to the bound service
+        //Used to monitor the state of the service
         mServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder service) {
@@ -101,21 +113,23 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //Binds bound service to this activity
         bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
     public void setUpTabView() {
+
+        //Gets reference to views
+        //Sets up viewpager which allows user to scroll through tablayout
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
-
-
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), username);
         viewPager.setAdapter(pageAdapter);
 
 
+        //Changes toolbar text and color when a new tab is selected
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -171,6 +185,8 @@ public class MainActivity extends AppCompatActivity {
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
+        //Connects viewpager to tab layout
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabViewSetUpDone = true;
 

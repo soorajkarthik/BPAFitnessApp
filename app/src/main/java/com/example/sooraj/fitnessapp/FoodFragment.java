@@ -253,6 +253,11 @@ public class FoodFragment extends Fragment {
                         tempFood.setId(fields.getString("item_id"));
                         tempFood.setName(fields.getString("item_name"));
                         tempFood.setBrand(fields.getString("brand_name"));
+                        if (fields.getInt("nf_serving_size_qty") == 0) {
+                            tempFood.setServingSize("1 serving(s)");
+                        } else {
+                            tempFood.setServingSize(fields.getInt("nf_serving_size_qty") + " " + fields.getString("nf_serving_size_unit") + "(s)");
+                        }
                     } catch (Exception e) {
                         continue;
                     }
@@ -338,10 +343,7 @@ public class FoodFragment extends Fragment {
                 holder.textCarbs = view.findViewById(R.id.textCarbs);
                 holder.textProtein = view.findViewById(R.id.textProtein);
                 holder.brandText = view.findViewById(R.id.brandText);
-                holder.cals = view.findViewById(R.id.cals);
-                holder.fat = view.findViewById(R.id.fat);
-                holder.carbs = view.findViewById(R.id.carbs);
-                holder.protein = view.findViewById(R.id.protein);
+                holder.servingSize = view.findViewById(R.id.servingSize);
                 holder.addFood = view.findViewById(R.id.addFood);
 
                 holder.addFood.setOnClickListener(new View.OnClickListener() {
@@ -397,6 +399,7 @@ public class FoodFragment extends Fragment {
             holder.textFat.setText(tempFood.getFat() + "");
             holder.textCarbs.setText(tempFood.getCarbs() + "");
             holder.textProtein.setText(tempFood.getProtein() + "");
+            holder.servingSize.setText(tempFood.getServingSize());
             holder.brandText.setText(tempFood.getBrand());
 
             return view;
@@ -409,10 +412,7 @@ public class FoodFragment extends Fragment {
             TextView textCarbs;
             TextView textProtein;
             TextView brandText;
-            TextView cals;
-            TextView fat;
-            TextView carbs;
-            TextView protein;
+            TextView servingSize;
             Button addFood;
 
         }

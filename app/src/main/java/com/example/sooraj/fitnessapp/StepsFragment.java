@@ -74,12 +74,15 @@ public class StepsFragment extends Fragment {
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                    int newStepGoal = Integer.parseInt(input.getText().toString());
-                    user.setStepGoal(newStepGoal);
-                    users.child(username).child("stepGoal").setValue(user.getStepGoal());
-                    updateDisplay();
 
+                    if (!input.getText().toString().isEmpty()) {
+                        dialog.dismiss();
+                        int newStepGoal = Integer.parseInt(input.getText().toString());
+                        user.setStepGoal(newStepGoal);
+                        users.child(username).child("stepGoal").setValue(user.getStepGoal());
+                        updateDisplay();
+
+                    }
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {

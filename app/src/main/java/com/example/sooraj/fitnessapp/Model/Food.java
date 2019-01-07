@@ -12,6 +12,7 @@ public class Food {
     private Image image;
     private String name;
     private String brand;
+    private String servingSize;
 
     public Food(int calories, int fat, int carbs, int protein, Image image) {
         this.calories = calories;
@@ -94,5 +95,13 @@ public class Food {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public String getServingSize() {
+        return servingSize;
+    }
+
+    public void setServingSize(String servingSize) {
+        this.servingSize = servingSize;
     }
 }

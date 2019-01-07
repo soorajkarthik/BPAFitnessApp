@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="Cals:"
         app:layout_constraintStart_toStartOf="@+id/brand"
-        app:layout_constraintTop_toBottomOf="@+id/brand" />
+        app:layout_constraintTop_toBottomOf="@+id/servings" />
 
     <TextView
         android:id="@+id/fat"
@@ -60,24 +59,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="____ cals"
-        app:layout_constraintStart_toStartOf="@+id/textCarbs"
-        app:layout_constraintTop_toBottomOf="@+id/brandText" />
+        app:layout_constraintStart_toStartOf="@+id/servingSize"
+        app:layout_constraintTop_toBottomOf="@+id/servingSize" />
 
     <TextView
         android:id="@+id/textFat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="__ grams"
-        app:layout_constraintStart_toStartOf="@+id/textCarbs"
+        app:layout_constraintStart_toStartOf="@+id/textCalories"
         app:layout_constraintTop_toBottomOf="@+id/textCalories" />
 
     <TextView
         android:id="@+id/textCarbs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
         android:text="__ grams"
-        app:layout_constraintStart_toEndOf="@+id/carbs"
+        app:layout_constraintStart_toStartOf="@+id/textFat"
         app:layout_constraintTop_toBottomOf="@+id/textFat" />
 
     <TextView
@@ -103,7 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Brand Name"
-        app:layout_constraintStart_toStartOf="@+id/textCarbs"
+        app:layout_constraintStart_toStartOf="@+id/servingSize"
         app:layout_constraintTop_toTopOf="@+id/brand" />
 
     <Space
@@ -126,6 +124,23 @@
         android:text="Add \nFood"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/brandText" />
+
+    <TextView
+        android:id="@+id/servings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Serving Size:"
+        app:layout_constraintStart_toStartOf="@+id/brand"
+        app:layout_constraintTop_toBottomOf="@+id/brand" />
+
+    <TextView
+        android:id="@+id/servingSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="___ cups"
+        app:layout_constraintStart_toEndOf="@+id/servings"
         app:layout_constraintTop_toBottomOf="@+id/brandText" />
 
 

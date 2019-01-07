@@ -56,6 +56,9 @@ public class SignUpActivity extends AppCompatActivity {
                         if (dataSnapshot.child(user.getUsername()).exists()) {
                             Toast.makeText(SignUpActivity.this, "This Username is Taken!", Toast.LENGTH_SHORT).show();
                             editUsername.setText("");
+                        } else if (user.getUsername().isEmpty() || user.getUsername().contains(" ") || user.getUsername().length() < 6) {
+                            Toast.makeText(SignUpActivity.this, "That username is not valid", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this, "Please select a username without any spaces with at least six characters", Toast.LENGTH_SHORT).show();
                         } else {
 
                             if (editConfirmPassword.getText().toString().equals(editPassword.getText().toString())) {

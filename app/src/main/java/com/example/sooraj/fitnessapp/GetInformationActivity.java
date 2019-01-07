@@ -158,8 +158,6 @@ public class GetInformationActivity extends AppCompatActivity {
                     user.setFatGoal(fat);
                     user.setProteinGoal(protein);
                     user.setSetUpCompleted(true);
-                    //user.putStepsStorage(Calendar.getInstance().getTime().toString(), 1000);
-
 
                     users.child(username).setValue(user);
                     Toast.makeText(GetInformationActivity.this, "Profile Setup Completed!", Toast.LENGTH_SHORT).show();

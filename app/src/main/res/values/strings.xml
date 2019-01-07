@@ -45,8 +45,8 @@
 
 
     <string-array name="activity_level_array">
-        <item>Activity level</item>
-        <item>little or no exercise</item>
+        <item>Activity Level</item>
+        <item>Little to no exercise</item>
         <item>Light exercise/sports 1–3 days/week</item>
         <item>Moderate exercise/sports 3–5 days/week</item>
         <item>Hard exercise/sports 6–7 days a week</item>
