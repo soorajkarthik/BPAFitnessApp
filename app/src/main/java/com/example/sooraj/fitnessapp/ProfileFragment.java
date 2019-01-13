@@ -101,7 +101,7 @@ public class ProfileFragment extends Fragment {
                 } else if (!editNewWeight.getText().toString().isEmpty()) {
 
                     int newWeight = Integer.parseInt(editNewWeight.getText().toString());
-                    user.setWeight(newWeight);
+
 
                     int age = Integer.parseInt(editAge.getText().toString());
                     int height = Integer.parseInt(spinnerHeightFeet.getSelectedItem().toString()) * 12 + Integer.parseInt(spinnerHeightInches.getSelectedItem().toString());
@@ -109,9 +109,12 @@ public class ProfileFragment extends Fragment {
                     int weightGoalInt = spinnerWeightGoal.getSelectedItemPosition() - 1;
                     int activityLevelInt = spinnerActivityLevel.getSelectedItemPosition() - 1;
                     int bmr = genderString.equals("Male") ? (int) (66 + (6.3 * newWeight) + (12.9 * height) - (6.8 * age)) : (int) (655 + (4.3 * newWeight) + (4.7 * height) - (4.7 * age));
+                    double bmi = ((double) newWeight / (height * height)) * 703;
 
                     calculateCalorieGoal(weightGoalInt, activityLevelInt, bmr);
 
+                    user.setWeight(newWeight);
+                    user.setBmi(bmi);
                     users.child(username).setValue(user);
                     editNewWeight.setText("");
                     Toast.makeText(getActivity(), "Your new weight has been set!", Toast.LENGTH_SHORT).show();

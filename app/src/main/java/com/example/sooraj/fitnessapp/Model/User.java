@@ -1,5 +1,6 @@
 package com.example.sooraj.fitnessapp.Model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class User {
@@ -25,9 +26,16 @@ public class User {
     private int fatGoal;//
     private int proteinGoal;//
     private int activityLevel;//0 = sedentary, 1 = light, 2 = moderate, 3 = heavy, 4 = very heavy
+    private String lastSeen;
     private HashMap<String, Integer> stepsStorage;
     private HashMap<String, Integer> calorieStorage;
     private HashMap<String, Integer> weightStorage;
+    private ArrayList<String> friendList;
+    private HashMap<String, ArrayList<String>> workoutInvites;
+    private HashMap<String, ArrayList<String>> workoutCalendar;
+    private ArrayList<String> friendRequests;
+
+
     private boolean setUpCompleted = false;
 
     public User(String email, String username, String password) {
@@ -35,13 +43,22 @@ public class User {
         this.username = username;
         this.password = password;
         stepsStorage = new HashMap<>();
+        weightStorage = new HashMap<>();
         calorieStorage = new HashMap<>();
+        friendList = new ArrayList<>();
+        workoutInvites = new HashMap<>();
+        workoutCalendar = new HashMap<>();
+        friendRequests = new ArrayList<>();
     }
 
     public User() {
         stepsStorage = new HashMap<>();
         calorieStorage = new HashMap<>();
         weightStorage = new HashMap<>();
+        friendList = new ArrayList<>();
+        workoutInvites = new HashMap<>();
+        workoutCalendar = new HashMap<>();
+        friendRequests = new ArrayList<>();
     }
 
     public String getEmail() {
@@ -251,5 +268,53 @@ public class User {
         protein = 0;
     }
 
+    public void addFriend(String username) {
+        friendList.add(username);
+    }
+
+    public ArrayList<String> getFriendList() {
+        return friendList;
+    }
+
+    public String getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(String lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public void addWorkoutInvite(String username, String date, String location) {
+
+        ArrayList<String> details = new ArrayList<>();
+        details.add(date);
+        details.add(location);
+        workoutInvites.put(username, details);
+    }
+
+    public void acceptWorkoutInvite(String username) {
+
+        ArrayList<String> details = new ArrayList<>();
+        details.addAll(workoutInvites.get(username));
+
+
+    }
+
+    public HashMap<String, ArrayList<String>> getWorkoutInvites() {
+        return workoutInvites;
+    }
+
+    public HashMap<String, ArrayList<String>> getWorkoutCalendar() {
+        return workoutCalendar;
+    }
+
+    public ArrayList<String> getFriendRequests() {
+        return friendRequests;
+    }
+
+    public void addFriendRequest(String username) {
+        friendRequests.add(username);
+
+    }
 
 }

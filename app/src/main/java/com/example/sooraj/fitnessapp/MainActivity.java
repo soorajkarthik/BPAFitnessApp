@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(username).getValue(User.class);
 
+
                 //Ensures that tablayout is set up after initial reference to user is received
                 //Ensures tablayout is only set up once
                 //Sets the tab that is seen when the app is opened to the step counter tab

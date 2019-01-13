@@ -93,8 +93,11 @@ public class FoodFragment extends Fragment {
         search.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
-            public void onFocusChange(View view, boolean b) {
-
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus)
+                    setProgressInvisible();
+                else
+                    setProgressVisible();
             }
         });
 
@@ -108,12 +111,8 @@ public class FoodFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.length() > 3) {
-                    setProgressInvisible();
                     myAsyncTask m = new myAsyncTask();
                     m.execute(newText);
-                } else {
-                    setProgressVisible();
-
                 }
                 return false;
             }
