@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp.Model;
+package com.example.sooraj.getfit.Model;
 
 import java.util.ArrayList;
 import java.util.HashMap;

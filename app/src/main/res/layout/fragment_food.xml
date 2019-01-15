@@ -5,7 +5,7 @@
     android:id="@+id/fragment_food"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FoodFragment">
+    tools:context="com.example.sooraj.getfit.FoodFragment">
 
     <ListView
         android:id="@+id/search_results"

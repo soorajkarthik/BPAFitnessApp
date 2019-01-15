@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 
 import android.app.AlertDialog;
@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 
-import com.example.sooraj.fitnessapp.Model.User;
+import com.example.sooraj.getfit.Model.User;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.BarData;
@@ -74,16 +74,16 @@ public class ProgressFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
         setHasOptionsMenu(true);
-        view = inflater.inflate(R.layout.fragment_progress, container, false);
-        barChart = view.findViewById(R.id.barChart);
-        lineChart = view.findViewById(R.id.lineChart);
-        toolbar = getActivity().findViewById(R.id.toolbar);
+        view = inflater.inflate(com.example.sooraj.getfit.R.layout.fragment_progress, container, false);
+        barChart = view.findViewById(com.example.sooraj.getfit.R.id.barChart);
+        lineChart = view.findViewById(com.example.sooraj.getfit.R.id.lineChart);
+        toolbar = getActivity().findViewById(com.example.sooraj.getfit.R.id.toolbar);
         return view;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_progress, menu);
+        inflater.inflate(com.example.sooraj.getfit.R.menu.menu_progress, menu);
         barChart.animateXY(2000, 2000);
         lineChart.animateXY(2000, 2000);
     }
@@ -107,11 +107,11 @@ public class ProgressFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_change_chart) {
+        if (item.getItemId() == com.example.sooraj.getfit.R.id.action_change_chart) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Data Type");
-            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.select_chart_type, (ViewGroup) view, false);
-            final Spinner input = viewInflated.findViewById(R.id.chartType);
+            View viewInflated = LayoutInflater.from(getContext()).inflate(com.example.sooraj.getfit.R.layout.select_chart_type, (ViewGroup) view, false);
+            final Spinner input = viewInflated.findViewById(com.example.sooraj.getfit.R.id.chartType);
             builder.setView(viewInflated);
             input.setSelection(chartType);
 
@@ -132,11 +132,11 @@ public class ProgressFragment extends Fragment {
             });
 
             builder.show();
-        } else if (item.getItemId() == R.id.action_change_time) {
+        } else if (item.getItemId() == com.example.sooraj.getfit.R.id.action_change_time) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Time Frame");
-            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.change_time_frame, (ViewGroup) view, false);
-            final Spinner input = viewInflated.findViewById(R.id.timeFrame);
+            View viewInflated = LayoutInflater.from(getContext()).inflate(com.example.sooraj.getfit.R.layout.change_time_frame, (ViewGroup) view, false);
+            final Spinner input = viewInflated.findViewById(com.example.sooraj.getfit.R.id.timeFrame);
             builder.setView(viewInflated);
             input.setSelection(timeFramePosition);
 

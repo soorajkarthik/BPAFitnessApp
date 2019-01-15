@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

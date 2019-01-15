@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.sooraj.fitnessapp.Model.User;
+import com.example.sooraj.getfit.Model.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -49,7 +49,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
         setHasOptionsMenu(true);
-        view = inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(com.example.sooraj.getfit.R.layout.fragment_profile, container, false);
         return view;
     }
 
@@ -60,19 +60,19 @@ public class ProfileFragment extends Fragment {
         super.onViewCreated(view, saveInstanceState);
 
         //Get references to views
-        textEditProfile = view.findViewById(R.id.textEditProfile);
-        editNewWeight = view.findViewById(R.id.editNewWeight);
-        editAge = view.findViewById(R.id.editAge);
-        editStepGoal = view.findViewById(R.id.editStepGoal);
-        spinnerGender = view.findViewById(R.id.spinnerGender);
-        spinnerHeightInches = view.findViewById(R.id.spinnerHeightInches);
-        spinnerHeightFeet = view.findViewById(R.id.spinnerHeightFeet);
-        spinnerActivityLevel = view.findViewById(R.id.spinnerActivityLevel);
-        spinnerWeightGoal = view.findViewById(R.id.weightGoal);
-        buttonAddWeight = view.findViewById(R.id.buttonConfirmNewWeight);
-        textFeet = view.findViewById(R.id.textFeet);
-        textInches = view.findViewById(R.id.textInches);
-        textStepGoal = view.findViewById(R.id.textStepGoal);
+        textEditProfile = view.findViewById(com.example.sooraj.getfit.R.id.textEditProfile);
+        editNewWeight = view.findViewById(com.example.sooraj.getfit.R.id.editNewWeight);
+        editAge = view.findViewById(com.example.sooraj.getfit.R.id.editAge);
+        editStepGoal = view.findViewById(com.example.sooraj.getfit.R.id.editStepGoal);
+        spinnerGender = view.findViewById(com.example.sooraj.getfit.R.id.spinnerGender);
+        spinnerHeightInches = view.findViewById(com.example.sooraj.getfit.R.id.spinnerHeightInches);
+        spinnerHeightFeet = view.findViewById(com.example.sooraj.getfit.R.id.spinnerHeightFeet);
+        spinnerActivityLevel = view.findViewById(com.example.sooraj.getfit.R.id.spinnerActivityLevel);
+        spinnerWeightGoal = view.findViewById(com.example.sooraj.getfit.R.id.weightGoal);
+        buttonAddWeight = view.findViewById(com.example.sooraj.getfit.R.id.buttonConfirmNewWeight);
+        textFeet = view.findViewById(com.example.sooraj.getfit.R.id.textFeet);
+        textInches = view.findViewById(com.example.sooraj.getfit.R.id.textInches);
+        textStepGoal = view.findViewById(com.example.sooraj.getfit.R.id.textStepGoal);
 
         //Set values to what are currently stored in Firebase for current user
         editAge.setText(user.getAge() + "");
@@ -130,14 +130,14 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
-        inflater.inflate(R.menu.menu_profile, menu);
+        inflater.inflate(com.example.sooraj.getfit.R.menu.menu_profile, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         //Logs out user and deletes the stored username from device
-        if (item.getItemId() == R.id.action_logout) {
+        if (item.getItemId() == com.example.sooraj.getfit.R.id.action_logout) {
             SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("MyPref", 0);
             SharedPreferences.Editor editor = pref.edit();
             editor.clear();
@@ -149,13 +149,13 @@ public class ProfileFragment extends Fragment {
         //Check to see whether or not profile editing is enabled
         //If disabled, then enable profile editing
         //If enabled, check to see if all values are valid, and if so, update the user in Firebase
-        else if (item.getItemId() == R.id.action_profile && !editingEnabled) {
+        else if (item.getItemId() == com.example.sooraj.getfit.R.id.action_profile && !editingEnabled) {
             Toast.makeText(getActivity(), "Edit your profile", Toast.LENGTH_SHORT).show();
             Toast.makeText(getActivity(), "Click \"Check\" to confirm ", Toast.LENGTH_SHORT).show();
-            item.setIcon(R.drawable.done_white_24dp);
+            item.setIcon(com.example.sooraj.getfit.R.drawable.done_white_24dp);
             setFocusEditingEnabled();
 
-        } else if (item.getItemId() == R.id.action_profile && editingEnabled) {
+        } else if (item.getItemId() == com.example.sooraj.getfit.R.id.action_profile && editingEnabled) {
 
 
             //Check to make sure all values are valid
@@ -201,7 +201,7 @@ public class ProfileFragment extends Fragment {
 
                 Toast.makeText(getActivity(), "Your changes were saved!", Toast.LENGTH_SHORT).show();
                 setFocusEditingDisabled();
-                item.setIcon(R.drawable.edit_white_24dp);
+                item.setIcon(com.example.sooraj.getfit.R.drawable.edit_white_24dp);
 
             }
 

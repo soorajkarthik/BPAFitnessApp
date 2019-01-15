@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
@@ -26,8 +26,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.sooraj.fitnessapp.Model.Food;
-import com.example.sooraj.fitnessapp.Model.User;
+import com.example.sooraj.getfit.Model.Food;
+import com.example.sooraj.getfit.Model.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -65,27 +65,27 @@ public class FoodFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
         setHasOptionsMenu(true);
-        view = inflater.inflate(R.layout.fragment_food, container, false);
+        view = inflater.inflate(com.example.sooraj.getfit.R.layout.fragment_food, container, false);
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
-        searchResults = view.findViewById(R.id.search_results);
-        progressCalories = view.findViewById(R.id.progressBarCalories);
-        progressFat = view.findViewById(R.id.progressBarFat);
-        progressCarbs = view.findViewById(R.id.progressBarCarbs);
-        progressProtein = view.findViewById(R.id.progressBarProtein);
-        textCaloriesBar = view.findViewById(R.id.textCaloriesBar);
-        textFatBar = view.findViewById(R.id.textFatBar);
-        textCarbsBar = view.findViewById(R.id.textCarbsBar);
-        textProteinBar = view.findViewById(R.id.textProteinBar);
+        searchResults = view.findViewById(com.example.sooraj.getfit.R.id.search_results);
+        progressCalories = view.findViewById(com.example.sooraj.getfit.R.id.progressBarCalories);
+        progressFat = view.findViewById(com.example.sooraj.getfit.R.id.progressBarFat);
+        progressCarbs = view.findViewById(com.example.sooraj.getfit.R.id.progressBarCarbs);
+        progressProtein = view.findViewById(com.example.sooraj.getfit.R.id.progressBarProtein);
+        textCaloriesBar = view.findViewById(com.example.sooraj.getfit.R.id.textCaloriesBar);
+        textFatBar = view.findViewById(com.example.sooraj.getfit.R.id.textFatBar);
+        textCarbsBar = view.findViewById(com.example.sooraj.getfit.R.id.textCarbsBar);
+        textProteinBar = view.findViewById(com.example.sooraj.getfit.R.id.textProteinBar);
         searchResults.setVisibility(View.INVISIBLE);
         return view;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_food, menu);
+        inflater.inflate(com.example.sooraj.getfit.R.menu.menu_food, menu);
         search = (SearchView) menu.getItem(0).getActionView();
         search.setQueryHint("Start typing to search...");
 
@@ -94,7 +94,7 @@ public class FoodFragment extends Fragment {
 
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus)
+                if (hasFocus || search.getQuery().length() > 0)
                     setProgressInvisible();
                 else
                     setProgressVisible();
@@ -334,16 +334,16 @@ public class FoodFragment extends Fragment {
             ViewHolder holder;
             final Food tempFood = foodDetails.get(i);
             if (view == null) {
-                view = layoutInflater.inflate(R.layout.search_results_view, null);
+                view = layoutInflater.inflate(com.example.sooraj.getfit.R.layout.search_results_view, null);
                 holder = new ViewHolder();
-                holder.foodName = view.findViewById(R.id.foodName);
-                holder.textCalories = view.findViewById(R.id.textCalories);
-                holder.textFat = view.findViewById(R.id.textFat);
-                holder.textCarbs = view.findViewById(R.id.textCarbs);
-                holder.textProtein = view.findViewById(R.id.textProtein);
-                holder.brandText = view.findViewById(R.id.brandText);
-                holder.servingSize = view.findViewById(R.id.servingSize);
-                holder.addFood = view.findViewById(R.id.addFood);
+                holder.foodName = view.findViewById(com.example.sooraj.getfit.R.id.foodName);
+                holder.textCalories = view.findViewById(com.example.sooraj.getfit.R.id.textCalories);
+                holder.textFat = view.findViewById(com.example.sooraj.getfit.R.id.textFat);
+                holder.textCarbs = view.findViewById(com.example.sooraj.getfit.R.id.textCarbs);
+                holder.textProtein = view.findViewById(com.example.sooraj.getfit.R.id.textProtein);
+                holder.brandText = view.findViewById(com.example.sooraj.getfit.R.id.brandText);
+                holder.servingSize = view.findViewById(com.example.sooraj.getfit.R.id.servingSize);
+                holder.addFood = view.findViewById(com.example.sooraj.getfit.R.id.addFood);
 
                 holder.addFood.setOnClickListener(new View.OnClickListener() {
 
@@ -351,8 +351,8 @@ public class FoodFragment extends Fragment {
                     public void onClick(View view) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Servings");
-                        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.serving_number_dialog, (ViewGroup) getMyView(), false);
-                        final EditText input = viewInflated.findViewById(R.id.servingsNumber);
+                        View viewInflated = LayoutInflater.from(getContext()).inflate(com.example.sooraj.getfit.R.layout.serving_number_dialog, (ViewGroup) getMyView(), false);
+                        final EditText input = viewInflated.findViewById(com.example.sooraj.getfit.R.id.servingsNumber);
                         builder.setView(viewInflated);
 
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

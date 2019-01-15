@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,7 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.sooraj.fitnessapp.Model.User;
+import com.example.sooraj.getfit.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,18 +30,18 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(com.example.sooraj.getfit.R.layout.activity_signup);
 
         //Firebase
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
 
-        editMail = findViewById(R.id.editMail);
-        editUsername = findViewById(R.id.editUsername);
-        editPassword = findViewById(R.id.editPassword);
-        editConfirmPassword = findViewById(R.id.editConfirmPassword);
-        btnSignUp = findViewById(R.id.btnSignUp);
-        btnToLogIn = findViewById(R.id.btnToLogIn);
+        editMail = findViewById(com.example.sooraj.getfit.R.id.editMail);
+        editUsername = findViewById(com.example.sooraj.getfit.R.id.editUsername);
+        editPassword = findViewById(com.example.sooraj.getfit.R.id.editPassword);
+        editConfirmPassword = findViewById(com.example.sooraj.getfit.R.id.editConfirmPassword);
+        btnSignUp = findViewById(com.example.sooraj.getfit.R.id.btnSignUp);
+        btnToLogIn = findViewById(com.example.sooraj.getfit.R.id.btnToLogIn);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -12,7 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.sooraj.fitnessapp.Model.User;
+import com.example.sooraj.getfit.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(com.example.sooraj.getfit.R.layout.activity_main);
 
         //Gets reference to database
         database = FirebaseDatabase.getInstance();
@@ -122,10 +122,10 @@ public class MainActivity extends AppCompatActivity {
 
         //Gets reference to views
         //Sets up viewpager which allows user to scroll through tablayout
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(com.example.sooraj.getfit.R.id.toolbar);
         setSupportActionBar(toolbar);
-        tabLayout = findViewById(R.id.tabLayout);
-        viewPager = findViewById(R.id.viewPager);
+        tabLayout = findViewById(com.example.sooraj.getfit.R.id.tabLayout);
+        viewPager = findViewById(com.example.sooraj.getfit.R.id.viewPager);
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), username);
         viewPager.setAdapter(pageAdapter);
 
@@ -144,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case 1:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, com.example.sooraj.getfit.R.color.colorAccent));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, com.example.sooraj.getfit.R.color.colorAccent));
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, com.example.sooraj.getfit.R.color.colorAccent));
                         toolbar.setTitle("View Activity");
 
                         break;
@@ -166,9 +166,9 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case 4:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, com.example.sooraj.getfit.R.color.colorPrimary));
+                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, com.example.sooraj.getfit.R.color.colorPrimary));
+                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, com.example.sooraj.getfit.R.color.colorPrimary));
                         toolbar.setTitle("Your Profile");
                         break;
 

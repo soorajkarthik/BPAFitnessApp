@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sooraj.fitnessapp">
+    package="com.example.sooraj.getfit">
 
     <uses-feature android:name="android.hardware.sensor.stepcounter" />
     <uses-feature android:name="android.hardware.sensor.stepdetector" />
@@ -14,21 +14,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity" android:screenOrientation="locked">
+        <activity
+            android:name="com.example.sooraj.getfit.LoginActivity"
+            android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity" android:screenOrientation="locked"/>
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.sooraj.getfit.SignUpActivity"
+            android:screenOrientation="locked" />
+        <activity
+            android:name="com.example.sooraj.getfit.MainActivity"
             android:screenOrientation="locked" />
 
-        <service android:name=".BoundService" />
-        <receiver android:name=".BoundService$MyAlarm" android:enabled="true"/>
-        <activity android:name=".GetInformationActivity" android:screenOrientation="locked"/>
+        <service android:name="com.example.sooraj.getfit.BoundService" />
+        <receiver
+            android:name="com.example.sooraj.getfit.BoundService$MyAlarm"
+            android:enabled="true" />
+        <activity
+            android:name="com.example.sooraj.getfit.GetInformationActivity"
+            android:screenOrientation="locked" />
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

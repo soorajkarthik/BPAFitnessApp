@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.sooraj.fitnessapp.Model.User;
+import com.example.sooraj.getfit.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-        setContentView(R.layout.activity_login);
+        setContentView(com.example.sooraj.getfit.R.layout.activity_login);
 
 
         //Firebase
@@ -49,12 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         users = database.getReference("Users");
 
 
-        editUsername = findViewById(R.id.editUsername);
-        editPassword = findViewById(R.id.editPassword);
-        btnLogIn = findViewById(R.id.btnLogIn);
-        btnToSignUp = findViewById(R.id.btnToSignUp);
+        editUsername = findViewById(com.example.sooraj.getfit.R.id.editUsername);
+        editPassword = findViewById(com.example.sooraj.getfit.R.id.editPassword);
+        btnLogIn = findViewById(com.example.sooraj.getfit.R.id.btnLogIn);
+        btnToSignUp = findViewById(com.example.sooraj.getfit.R.id.btnToSignUp);
 
-        checkStaySignedIn = findViewById(R.id.checkStaySignedIn);
+        checkStaySignedIn = findViewById(com.example.sooraj.getfit.R.id.checkStaySignedIn);
 
 
         btnLogIn.setOnClickListener(new View.OnClickListener() {

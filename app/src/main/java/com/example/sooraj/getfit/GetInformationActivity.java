@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.sooraj.fitnessapp.Model.User;
+import com.example.sooraj.getfit.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +34,7 @@ public class GetInformationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_getinformation);
+        setContentView(com.example.sooraj.getfit.R.layout.activity_getinformation);
 
         //Firebase
         database = FirebaseDatabase.getInstance();
@@ -55,15 +55,15 @@ public class GetInformationActivity extends AppCompatActivity {
             }
         });
 
-        confirmButton = findViewById(R.id.buttonConfirmProfile);
-        editAge = findViewById(R.id.editAge);
-        editWeight = findViewById(R.id.editNewWeight);
-        editStepGoal = findViewById(R.id.editStepGoal);
-        gender = findViewById(R.id.spinnerGender);
-        heightFeet = findViewById(R.id.spinnerHeightFeet);
-        heightInches = findViewById(R.id.spinnerHeightInches);
-        weightGoal = findViewById(R.id.weightGoal);
-        activityLevel = findViewById(R.id.spinnerActivityLevel);
+        confirmButton = findViewById(com.example.sooraj.getfit.R.id.buttonConfirmProfile);
+        editAge = findViewById(com.example.sooraj.getfit.R.id.editAge);
+        editWeight = findViewById(com.example.sooraj.getfit.R.id.editNewWeight);
+        editStepGoal = findViewById(com.example.sooraj.getfit.R.id.editStepGoal);
+        gender = findViewById(com.example.sooraj.getfit.R.id.spinnerGender);
+        heightFeet = findViewById(com.example.sooraj.getfit.R.id.spinnerHeightFeet);
+        heightInches = findViewById(com.example.sooraj.getfit.R.id.spinnerHeightInches);
+        weightGoal = findViewById(com.example.sooraj.getfit.R.id.weightGoal);
+        activityLevel = findViewById(com.example.sooraj.getfit.R.id.spinnerActivityLevel);
 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {

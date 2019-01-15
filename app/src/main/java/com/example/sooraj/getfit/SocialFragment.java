@@ -1,4 +1,4 @@
-package com.example.sooraj.fitnessapp;
+package com.example.sooraj.getfit;
 
 
 import android.app.AlertDialog;
@@ -20,7 +20,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
-import com.example.sooraj.fitnessapp.Model.User;
+import com.example.sooraj.getfit.Model.User;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -57,15 +57,15 @@ public class SocialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
-        view = inflater.inflate(R.layout.fragment_social, container, false);
-        friendList = view.findViewById(R.id.friendsList);
-        searchList = view.findViewById(R.id.searchList);
+        view = inflater.inflate(com.example.sooraj.getfit.R.layout.fragment_social, container, false);
+        friendList = view.findViewById(com.example.sooraj.getfit.R.id.friendsList);
+        searchList = view.findViewById(com.example.sooraj.getfit.R.id.searchList);
         return view;
     }
 
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_social, menu);
+        inflater.inflate(com.example.sooraj.getfit.R.menu.menu_social, menu);
         search = (SearchView) menu.getItem(2).getActionView();
         search.setQueryHint("Start typing to search");
 
@@ -98,9 +98,9 @@ public class SocialFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.workout_requests) {
+        if (item.getItemId() == com.example.sooraj.getfit.R.id.workout_requests) {
             //accept workout requests
-        } else if (item.getItemId() == R.id.friend_requests) {
+        } else if (item.getItemId() == com.example.sooraj.getfit.R.id.friend_requests) {
             //accept friend requests
         }
 
@@ -200,11 +200,11 @@ public class SocialFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             final int index = i;
-            final View thisView = layoutInflater.inflate(R.layout.friends_view, null);
+            final View thisView = layoutInflater.inflate(com.example.sooraj.getfit.R.layout.friends_view, null);
             final FriendListHolder holder = new FriendListHolder();
-            holder.usernameText = thisView.findViewById(R.id.usernameText);
-            holder.lastSeen = thisView.findViewById(R.id.lastSeenText);
-            holder.inviteToWorkout = thisView.findViewById(R.id.inviteToWorkout);
+            holder.usernameText = thisView.findViewById(com.example.sooraj.getfit.R.id.usernameText);
+            holder.lastSeen = thisView.findViewById(com.example.sooraj.getfit.R.id.lastSeenText);
+            holder.inviteToWorkout = thisView.findViewById(com.example.sooraj.getfit.R.id.inviteToWorkout);
 
             users.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -219,9 +219,9 @@ public class SocialFragment extends Fragment {
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Schedule Workout");
-                            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.workout_invite_dialog, (ViewGroup) getMyView(), false);
-                            final EditText date = viewInflated.findViewById(R.id.date);
-                            final EditText location = viewInflated.findViewById(R.id.location);
+                            View viewInflated = LayoutInflater.from(getContext()).inflate(com.example.sooraj.getfit.R.layout.workout_invite_dialog, (ViewGroup) getMyView(), false);
+                            final EditText date = viewInflated.findViewById(com.example.sooraj.getfit.R.id.date);
+                            final EditText location = viewInflated.findViewById(com.example.sooraj.getfit.R.id.location);
                             builder.setView(viewInflated);
 
                             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -305,11 +305,11 @@ public class SocialFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             final int index = i;
-            final View thisView = layoutInflater.inflate(R.layout.user_search_view, null);
+            final View thisView = layoutInflater.inflate(com.example.sooraj.getfit.R.layout.user_search_view, null);
             final FriendSearchHolder holder = new FriendSearchHolder();
-            holder.usernameText = thisView.findViewById(R.id.usernameText);
-            holder.requestStatusText = thisView.findViewById(R.id.requestStatusText);
-            holder.updateFriendStatus = thisView.findViewById(R.id.updateFriendStatus);
+            holder.usernameText = thisView.findViewById(com.example.sooraj.getfit.R.id.usernameText);
+            holder.requestStatusText = thisView.findViewById(com.example.sooraj.getfit.R.id.requestStatusText);
+            holder.updateFriendStatus = thisView.findViewById(com.example.sooraj.getfit.R.id.updateFriendStatus);
 
             users.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
