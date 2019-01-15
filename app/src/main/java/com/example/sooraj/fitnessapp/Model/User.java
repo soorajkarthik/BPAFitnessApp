@@ -312,9 +312,25 @@ public class User {
         return friendRequests;
     }
 
+    public boolean hasFriendRequestFromUser(String username) {
+        return friendRequests.contains(username);
+    }
+
+    public boolean isFriendOfUser(String username) {
+        return friendList.contains(username);
+    }
+
     public void addFriendRequest(String username) {
         friendRequests.add(username);
 
+    }
+
+    public void removeFriendRequestFromUser(String username) {
+        friendRequests.remove(username);
+    }
+
+    public void removeFriend(String username) {
+        friendList.remove(username);
     }
 
 }
