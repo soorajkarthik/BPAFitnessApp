@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -63,9 +64,9 @@ public class SocialFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_social, menu);
-        search = (SearchView) menu.getItem(0).getActionView();
+        search = (SearchView) menu.getItem(2).getActionView();
         search.setQueryHint("Start typing to search");
 
 
@@ -92,6 +93,19 @@ public class SocialFragment extends Fragment {
         });
 
         setFriendListVisible();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.workout_requests) {
+            //accept workout requests
+        } else if (item.getItemId() == R.id.friend_requests) {
+            //accept friend requests
+        }
+
+
+        return false;
     }
 
     public void searchForUsers(final String searchText) {

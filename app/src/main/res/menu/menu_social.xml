@@ -3,9 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/workout_requests"
+        android:icon="@drawable/fitness_center_white_24dp"
+        android:title="Workout Requests"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/friend_requests"
+        android:icon="@drawable/insert_emoticon_24dp"
+        android:title="Friend Requests"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/friends_search"
         android:icon="@drawable/ic_search_white_24dp"
         android:title="Search"
         app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 </menu>
