@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/usernameText"
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Username"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dateAndTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:text="Date/Time:"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/usernameText"
+        app:layout_constraintTop_toBottomOf="@id/usernameText" />
+
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:text="Location:"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/usernameText"
+        app:layout_constraintTop_toBottomOf="@id/dateAndTime" />
+
+    <TextView
+        android:id="@+id/dateAndTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="0dp"
+        android:text="01/25/19 6:55am"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@id/dateAndTime"
+        app:layout_constraintTop_toTopOf="@id/dateAndTime" />
+
+    <TextView
+        android:id="@+id/locationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:text="Anytime Fitness"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@id/dateAndTimeText"
+        app:layout_constraintTop_toTopOf="@id/location" />
+
+    <Button
+        android:id="@+id/acceptRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginEnd="24dp"
+        android:text="Accept"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/usernameText" />
+
+    <Button
+        android:id="@+id/declineRequest"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="0dp"
+        android:text="Decline"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/locationText"
+        app:layout_constraintStart_toStartOf="@+id/acceptRequest" />
+
+</android.support.constraint.ConstraintLayout>

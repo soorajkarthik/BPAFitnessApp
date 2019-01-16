@@ -32,7 +32,7 @@ public class User {
     private HashMap<String, Integer> weightStorage;
     private ArrayList<String> friendList;
     private HashMap<String, ArrayList<String>> workoutInvites;
-    private HashMap<String, ArrayList<String>> workoutCalendar;
+    private HashMap<String, ArrayList<String>> acceptedWorkouts;
     private ArrayList<String> friendRequests;
 
 
@@ -47,7 +47,7 @@ public class User {
         calorieStorage = new HashMap<>();
         friendList = new ArrayList<>();
         workoutInvites = new HashMap<>();
-        workoutCalendar = new HashMap<>();
+        acceptedWorkouts = new HashMap<>();
         friendRequests = new ArrayList<>();
     }
 
@@ -57,7 +57,7 @@ public class User {
         weightStorage = new HashMap<>();
         friendList = new ArrayList<>();
         workoutInvites = new HashMap<>();
-        workoutCalendar = new HashMap<>();
+        acceptedWorkouts = new HashMap<>();
         friendRequests = new ArrayList<>();
     }
 
@@ -292,20 +292,13 @@ public class User {
         workoutInvites.put(username, details);
     }
 
-    public void acceptWorkoutInvite(String username) {
-
-        ArrayList<String> details = new ArrayList<>();
-        details.addAll(workoutInvites.get(username));
-
-
-    }
 
     public HashMap<String, ArrayList<String>> getWorkoutInvites() {
         return workoutInvites;
     }
 
-    public HashMap<String, ArrayList<String>> getWorkoutCalendar() {
-        return workoutCalendar;
+    public HashMap<String, ArrayList<String>> getAcceptedWorkouts() {
+        return acceptedWorkouts;
     }
 
     public ArrayList<String> getFriendRequests() {
@@ -333,4 +326,11 @@ public class User {
         friendList.remove(username);
     }
 
+    public void acceptWorkoutInviteFromUser(String username) {
+        acceptedWorkouts.put(username, workoutInvites.remove(username));
+    }
+
+    public void declineWorkoutRequestFromUser(String username) {
+        workoutInvites.remove(username);
+    }
 }

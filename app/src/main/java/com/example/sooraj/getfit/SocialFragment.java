@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 
@@ -38,7 +39,7 @@ public class SocialFragment extends Fragment {
     String username;
     User user;
     private View view;
-    private ListView friendList, searchList;
+    private ListView friendList, searchList, workoutInviteList;
     private SearchView search;
     String searchText;
 
@@ -99,7 +100,22 @@ public class SocialFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == com.example.sooraj.getfit.R.id.workout_requests) {
-            //accept workout requests
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Workout Requests");
+            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.workout_request_view, (ViewGroup) getMyView(), false);
+            workoutInviteList = viewInflated.findViewById(R.id.workoutRequestList);
+            workoutInviteList.setAdapter(new WorkoutInviteAdapter(getActivity(), user.getWorkoutInvites()));
+            builder.setView(viewInflated);
+
+            builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            builder.show();
+
         } else if (item.getItemId() == com.example.sooraj.getfit.R.id.friend_requests) {
             //accept friend requests
         }
@@ -200,7 +216,7 @@ public class SocialFragment extends Fragment {
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             final int index = i;
-            final View thisView = layoutInflater.inflate(com.example.sooraj.getfit.R.layout.friends_view, null);
+            final View thisView = layoutInflater.inflate(R.layout.friends_view, null);
             final FriendListHolder holder = new FriendListHolder();
             holder.usernameText = thisView.findViewById(com.example.sooraj.getfit.R.id.usernameText);
             holder.lastSeen = thisView.findViewById(com.example.sooraj.getfit.R.id.lastSeenText);
@@ -397,4 +413,104 @@ public class SocialFragment extends Fragment {
 
         }
     }
+
+    class WorkoutInviteAdapter extends BaseAdapter {
+
+        int count;
+        Context context;
+        private LayoutInflater layoutInflater;
+        private HashMap<String, ArrayList<String>> workoutInvites = new HashMap<>();
+        private ArrayList<String> inviteSenders = new ArrayList<>();
+
+        public WorkoutInviteAdapter(Context context, HashMap<String, ArrayList<String>> workoutInvites) {
+            layoutInflater = LayoutInflater.from(context);
+            this.workoutInvites.putAll(workoutInvites);
+            inviteSenders.addAll(workoutInvites.keySet());
+            count = inviteSenders.size();
+            this.context = context;
+        }
+
+        @Override
+        public int getCount() {
+            return count;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return inviteSenders.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+
+            final int index = i;
+            final View thisView = layoutInflater.inflate(R.layout.workout_request_list_element, null);
+            final WorkoutInviteHolder holder = new WorkoutInviteHolder();
+            holder.usernameText = thisView.findViewById(R.id.usernameText);
+            holder.dateAndTimeText = thisView.findViewById(R.id.dateAndTimeText);
+            holder.locationText = thisView.findViewById(R.id.locationText);
+            holder.acceptRequest = thisView.findViewById(R.id.acceptRequest);
+            holder.declineRequest = thisView.findViewById(R.id.declineRequest);
+            final String inviteSenderUsername = inviteSenders.get(i);
+
+            users.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    final User inviteSender = dataSnapshot.child(inviteSenderUsername).getValue(User.class);
+
+                    holder.usernameText.setText(inviteSenderUsername);
+                    holder.dateAndTimeText.setText(workoutInvites.get(inviteSenderUsername).get(0));
+                    holder.locationText.setText(workoutInvites.get(inviteSenderUsername).get(1));
+
+                    holder.acceptRequest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            user.acceptWorkoutInviteFromUser(inviteSenderUsername);
+                            inviteSender.acceptWorkoutInviteFromUser(username);
+                            users.child(username).child("acceptedWorkouts").setValue(user.getAcceptedWorkouts());
+                            users.child(username).child("workoutInvites").setValue(user.getWorkoutInvites());
+                            users.child(inviteSenderUsername).child("acceptedWorkouts").setValue(user.getAcceptedWorkouts());
+                            workoutInviteList.setAdapter(new WorkoutInviteAdapter(getActivity(), user.getWorkoutInvites()));
+
+                        }
+                    });
+
+                    holder.declineRequest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            user.declineWorkoutRequestFromUser(inviteSenderUsername);
+                            users.child(username).child("workoutInvites").setValue(user.getWorkoutInvites());
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            thisView.setTag(holder);
+            view = thisView;
+
+            return view;
+        }
+
+        class WorkoutInviteHolder {
+            TextView usernameText;
+            TextView dateAndTimeText;
+            TextView locationText;
+            Button acceptRequest;
+            Button declineRequest;
+        }
+    }
+
 }
