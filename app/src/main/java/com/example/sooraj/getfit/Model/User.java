@@ -26,7 +26,7 @@ public class User {
     private int fatGoal;//
     private int proteinGoal;//
     private int activityLevel;//0 = sedentary, 1 = light, 2 = moderate, 3 = heavy, 4 = very heavy
-    private String lastSeen;
+    private long lastSeen;
     private HashMap<String, Integer> stepsStorage;
     private HashMap<String, Integer> calorieStorage;
     private HashMap<String, Integer> weightStorage;
@@ -34,7 +34,6 @@ public class User {
     private HashMap<String, ArrayList<String>> workoutInvites;
     private HashMap<String, ArrayList<String>> acceptedWorkouts;
     private ArrayList<String> friendRequests;
-
 
     private boolean setUpCompleted = false;
 
@@ -276,11 +275,11 @@ public class User {
         return friendList;
     }
 
-    public String getLastSeen() {
+    public long getLastSeen() {
         return lastSeen;
     }
 
-    public void setLastSeen(String lastSeen) {
+    public void setLastSeen(long lastSeen) {
         this.lastSeen = lastSeen;
     }
 

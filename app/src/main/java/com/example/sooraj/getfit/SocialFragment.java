@@ -39,7 +39,7 @@ public class SocialFragment extends Fragment {
     String username;
     User user;
     private View view;
-    private ListView friendList, searchList, workoutInviteList;
+    private ListView friendList, searchList, workoutInviteList, friendRequestList;
     private SearchView search;
     String searchText;
 
@@ -117,7 +117,21 @@ public class SocialFragment extends Fragment {
             builder.show();
 
         } else if (item.getItemId() == com.example.sooraj.getfit.R.id.friend_requests) {
-            //accept friend requests
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Friend Requests");
+            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.friend_request_view, (ViewGroup) getMyView(), false);
+            friendRequestList = viewInflated.findViewById(R.id.friendRequestList);
+            friendRequestList.setAdapter(new FriendRequestAdapter(getActivity(), user.getFriendRequests()));
+            builder.setView(viewInflated);
+
+            builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            builder.show();
         }
 
 
@@ -227,8 +241,10 @@ public class SocialFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     final User friend = dataSnapshot.child(friends.get(index)).getValue(User.class);
 
+                    String lastSeenText = getLastSeenText(friend);
+
                     holder.usernameText.setText(friend.getUsername());
-                    holder.lastSeen.setText(friend.getLastSeen());
+                    holder.lastSeen.setText(lastSeenText);
                     holder.inviteToWorkout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -277,6 +293,36 @@ public class SocialFragment extends Fragment {
             return view;
         }
 
+        private String getLastSeenText(User friend) {
+
+            String lastSeen = "Just now";
+            long currentTime = System.currentTimeMillis();
+            long timeSeen = friend.getLastSeen();
+            long difference = currentTime - timeSeen;
+
+            long months = difference / ((long) 30 * 24 * 60 * 60 * 1000);
+            long weeks = difference / (7 * 24 * 60 * 60 * 1000);
+            long days = difference / (24 * 60 * 60 * 1000);
+            long hours = difference / (24 * 60 * 60 * 1000);
+            long minutes = difference / (60 * 60 * 1000);
+
+            if (months > 0)
+                lastSeen = months + " months ago";
+
+            else if (weeks > 0)
+                lastSeen = weeks + " weeks ago";
+
+            else if (days > 0)
+                lastSeen = days + " days ago";
+
+            else if (hours > 0)
+                lastSeen = hours + " hours ago";
+
+            else if (minutes > 0)
+                lastSeen = minutes + " minutes ago";
+
+            return lastSeen;
+        }
 
         class FriendListHolder {
 
@@ -371,6 +417,7 @@ public class SocialFragment extends Fragment {
                                     users.child(searchedUser.getUsername()).child("friendList").setValue(searchedUser.getFriendList());
                                     users.child(username).child("friendList").setValue(user.getFriendList());
                                     updateSearchResults(searchText, filteredUsernameList);
+                                    friendList.setAdapter(new FriendListAdapter(getActivity(), user.getFriendList()));
                                 }
                             });
 
@@ -383,6 +430,7 @@ public class SocialFragment extends Fragment {
                                     searchedUser.addFriendRequest(username);
                                     users.child(searchedUser.getUsername()).child("friendRequests").setValue(searchedUser.getFriendRequests());
                                     updateSearchResults(searchText, filteredUsernameList);
+                                    friendRequestList.setAdapter(new FriendRequestAdapter(getActivity(), user.getFriendRequests()));
                                 }
                             });
 
@@ -487,6 +535,7 @@ public class SocialFragment extends Fragment {
 
                             user.declineWorkoutRequestFromUser(inviteSenderUsername);
                             users.child(username).child("workoutInvites").setValue(user.getWorkoutInvites());
+                            workoutInviteList.setAdapter(new WorkoutInviteAdapter(getActivity(), user.getWorkoutInvites()));
                         }
                     });
 
@@ -512,5 +561,100 @@ public class SocialFragment extends Fragment {
             Button declineRequest;
         }
     }
+
+    class FriendRequestAdapter extends BaseAdapter {
+
+        int count;
+        Context context;
+        private LayoutInflater layoutInflater;
+        private ArrayList<String> friendRequests = new ArrayList<>();
+
+        public FriendRequestAdapter(Context context, ArrayList<String> friendRequests) {
+
+            this.context = context;
+            this.friendRequests.addAll(friendRequests);
+            layoutInflater = LayoutInflater.from(context);
+            count = friendRequests.size();
+
+        }
+
+        @Override
+        public int getCount() {
+            return count;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return friendRequests.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+
+            final int index = i;
+            final View thisView = layoutInflater.inflate(R.layout.friend_request_list_element, null);
+            final FriendRequestHolder holder = new FriendRequestHolder();
+            final String requestSenderUsername = friendRequests.get(index);
+            holder.usernameText = thisView.findViewById(R.id.usernameText);
+            holder.acceptRequest = thisView.findViewById(R.id.acceptRequest);
+            holder.declineRequest = thisView.findViewById(R.id.declineRequest);
+
+            holder.usernameText.setText(requestSenderUsername);
+
+            users.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    final User requestSender = dataSnapshot.child(requestSenderUsername).getValue(User.class);
+
+                    holder.acceptRequest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            user.addFriend(requestSenderUsername);
+                            user.removeFriendRequestFromUser(requestSenderUsername);
+                            requestSender.addFriend(username);
+                            users.child(username).child("friendList").setValue(user.getFriendList());
+                            users.child(requestSenderUsername).child("friendList").setValue(requestSender.getFriendList());
+                            friendRequestList.setAdapter(new FriendRequestAdapter(getActivity(), user.getFriendRequests()));
+                            friendList.setAdapter(new FriendListAdapter(getActivity(), user.getFriendList()));
+
+                        }
+                    });
+
+                    holder.declineRequest.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            user.removeFriendRequestFromUser(requestSenderUsername);
+                            users.child(username).child("friendRequests").setValue(user.getFriendRequests());
+                            friendRequestList.setAdapter(new FriendRequestAdapter(getActivity(), user.getFriendRequests()));
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            thisView.setTag(holder);
+            view = thisView;
+
+            return view;
+        }
+
+        class FriendRequestHolder {
+            TextView usernameText;
+            Button acceptRequest;
+            Button declineRequest;
+        }
+    }
+
 
 }

@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="@id/acceptRequest" />
 
     <Space
-        android:layout_width="0dp"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"

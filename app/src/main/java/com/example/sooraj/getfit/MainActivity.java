@@ -48,14 +48,25 @@ public class MainActivity extends AppCompatActivity {
         username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
         tabViewSetUpDone = false;
         updateUser();
-
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         startBoundService();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (user != null) {
+            updateLastSeen();
+        }
+    }
+
+    private void updateLastSeen() {
+        user.setLastSeen(System.currentTimeMillis());
+        users.child(username).child("lastSeen").setValue(user.getLastSeen());
     }
 
     private void updateUser() {
@@ -73,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!tabViewSetUpDone) {
                     setUpTabView();
                     viewPager.setCurrentItem(1);
+                    updateLastSeen();
                 }
             }
 
@@ -81,8 +93,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public User getUser() {
@@ -190,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
         //Connects viewpager to tab layout
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabViewSetUpDone = true;
-
     }
 
 
