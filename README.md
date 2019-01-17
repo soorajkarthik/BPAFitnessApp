@@ -18,7 +18,7 @@ GetFit is an application that’s designed to keep track of your of your physica
 #### Features:
 - Measures daily steps
 - Track daily food intake
-- Invite to workout by specifying date, time, and location
+- Invite your friends to workout together
 - Graphical Statistics
 
 #### Application Uses:
