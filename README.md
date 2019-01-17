@@ -22,11 +22,11 @@ GetFit is an application that’s designed to keep track of your of your physica
 - Graphical Statistics
 
 #### Application Uses:
-- Database                  : Firebase
-- Login and Authentication  : Firebase
-- Food API                  : Nutritionix
-- Step Counter              : In-built Sensor
-- Animations                : AppIntro, ProgressView
+- Database: Firebase
+- Login and Authentication: Firebase
+- Food API: Nutritionix
+- Step Counter: In-built Sensor
+- Animations: AppIntro, ProgressView
 
 
 #### Functionalities this app consists of:
