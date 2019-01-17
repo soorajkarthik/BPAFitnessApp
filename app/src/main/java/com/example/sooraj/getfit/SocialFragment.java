@@ -18,7 +18,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sooraj.getfit.Model.User;
 import com.google.firebase.database.DataSnapshot;
@@ -27,7 +29,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -251,17 +256,34 @@ public class SocialFragment extends Fragment {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Schedule Workout");
                             View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.workout_invite_dialog, (ViewGroup) getMyView(), false);
-                            final EditText date = viewInflated.findViewById(R.id.date);
+                            final EditText day = viewInflated.findViewById(R.id.day);
+                            final EditText month = viewInflated.findViewById(R.id.month);
+                            final EditText year = viewInflated.findViewById(R.id.year);
+                            final EditText hour = viewInflated.findViewById(R.id.hour);
+                            final EditText minute = viewInflated.findViewById(R.id.minute);
+                            final Spinner timeOfDay = viewInflated.findViewById(R.id.timeOfDaySpinner);
+
                             final EditText location = viewInflated.findViewById(R.id.location);
                             builder.setView(viewInflated);
 
                             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    friend.addWorkoutInvite(username, date.getText().toString(), location.getText().toString());
-                                    users.child(friend.getUsername()).child("workoutInvites").setValue(friend.getWorkoutInvites());
 
+                                    String dateString = day.getText().toString() + "/"
+                                            + month.getText().toString() + "/"
+                                            + year.getText().toString() + " "
+                                            + hour.getText().toString() + ":"
+                                            + minute.getText().toString()
+                                            + ((TextView)timeOfDay.getSelectedView()).getText().toString();
+
+                                    if(isDateValid(dateString)) {
+                                        dialog.dismiss();
+                                        friend.addWorkoutInvite(username, dateString, location.getText().toString());
+                                        users.child(friend.getUsername()).child("workoutInvites").setValue(friend.getWorkoutInvites());
+                                    } else {
+                                        Toast.makeText(getActivity(), "Please ensure your date is entered is valid and in the correct format and try again", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
                             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -294,7 +316,6 @@ public class SocialFragment extends Fragment {
 
         private String getLastSeenText(User friend) {
 
-            String lastSeen = "Just now";
             long currentTime = System.currentTimeMillis();
             long timeSeen = friend.getLastSeen();
             long difference = currentTime - timeSeen;
@@ -306,21 +327,36 @@ public class SocialFragment extends Fragment {
             long minutes = difference / (60 * 60 * 1000);
 
             if (months > 0)
-                lastSeen = months + " months ago";
+                return months + " months ago";
 
             else if (weeks > 0)
-                lastSeen = weeks + " weeks ago";
+                return weeks + " weeks ago";
 
             else if (days > 0)
-                lastSeen = days + " days ago";
+                return days + " days ago";
 
             else if (hours > 0)
-                lastSeen = hours + " hours ago";
+                return hours + " hours ago";
 
             else if (minutes > 0)
-                lastSeen = minutes + " minutes ago";
+                return minutes + " minutes ago";
 
-            return lastSeen;
+            else
+                return "Just now";
+
+        }
+
+        private boolean isDateValid(String dateString) {
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mma");
+            simpleDateFormat.setLenient(false);
+            try {
+                simpleDateFormat.parse(dateString.trim());
+            } catch (ParseException pe) {
+                return false;
+            }
+            return true;
+
         }
 
         class FriendListHolder {

@@ -69,6 +69,11 @@
         <item>Full History</item>
     </string-array>
 
+    <string-array name="time_of_day_array">
+        <item>AM</item>
+        <item>PM</item>
+    </string-array>
+
     <string name="Application_ID">b2f7efb9</string>
     <string name="Application_Key">6c6117ee833ec15cb3018340a39e5d3b</string>
 
