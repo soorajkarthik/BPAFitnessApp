@@ -46,29 +46,29 @@ public class StepsFragment extends Fragment {
 
 
         setHasOptionsMenu(true);
-        view = inflater.inflate(com.example.sooraj.getfit.R.layout.fragment_steps, container, false);
-        stepsText = view.findViewById(com.example.sooraj.getfit.R.id.stepsText);
-        progressBar = view.findViewById(com.example.sooraj.getfit.R.id.stepsProgressBar);
-        distanceWalked = view.findViewById(com.example.sooraj.getfit.R.id.distanceWalkedText);
-        caloriesBurnedText = view.findViewById(com.example.sooraj.getfit.R.id.caloriesBurnedText);
-        percentCompleted = view.findViewById(com.example.sooraj.getfit.R.id.percentOfStepGoalText);
+        view = inflater.inflate(R.layout.fragment_steps, container, false);
+        stepsText = view.findViewById(R.id.stepsText);
+        progressBar = view.findViewById(R.id.stepsProgressBar);
+        distanceWalked = view.findViewById(R.id.distanceWalkedText);
+        caloriesBurnedText = view.findViewById(R.id.caloriesBurnedText);
+        percentCompleted = view.findViewById(R.id.percentOfStepGoalText);
         return view;
     }
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(com.example.sooraj.getfit.R.menu.menu_steps, menu);
+        inflater.inflate(R.menu.menu_steps, menu);
         updateDisplay();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == com.example.sooraj.getfit.R.id.action_steps) {
+        if (item.getItemId() == R.id.action_steps) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Edit Step Goal");
-            View viewInflated = LayoutInflater.from(getContext()).inflate(com.example.sooraj.getfit.R.layout.edit_stepgoal_dialog, (ViewGroup) view, false);
-            final EditText input = viewInflated.findViewById(com.example.sooraj.getfit.R.id.newStepGoal);
+            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.edit_stepgoal_dialog, (ViewGroup) view, false);
+            final EditText input = viewInflated.findViewById(R.id.newStepGoal);
             builder.setView(viewInflated);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

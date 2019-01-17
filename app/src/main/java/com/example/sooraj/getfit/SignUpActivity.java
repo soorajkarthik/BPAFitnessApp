@@ -30,18 +30,18 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(com.example.sooraj.getfit.R.layout.activity_signup);
+        setContentView(R.layout.activity_signup);
 
         //Firebase
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
 
-        editMail = findViewById(com.example.sooraj.getfit.R.id.editMail);
-        editUsername = findViewById(com.example.sooraj.getfit.R.id.editUsername);
-        editPassword = findViewById(com.example.sooraj.getfit.R.id.editPassword);
-        editConfirmPassword = findViewById(com.example.sooraj.getfit.R.id.editConfirmPassword);
-        btnSignUp = findViewById(com.example.sooraj.getfit.R.id.btnSignUp);
-        btnToLogIn = findViewById(com.example.sooraj.getfit.R.id.btnToLogIn);
+        editMail = findViewById(R.id.editMail);
+        editUsername = findViewById(R.id.editUsername);
+        editPassword = findViewById(R.id.editPassword);
+        editConfirmPassword = findViewById(R.id.editConfirmPassword);
+        btnSignUp = findViewById(R.id.btnSignUp);
+        btnToLogIn = findViewById(R.id.btnToLogIn);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override

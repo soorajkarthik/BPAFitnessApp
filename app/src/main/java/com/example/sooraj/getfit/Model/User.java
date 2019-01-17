@@ -291,7 +291,6 @@ public class User {
         workoutInvites.put(username, details);
     }
 
-
     public HashMap<String, ArrayList<String>> getWorkoutInvites() {
         return workoutInvites;
     }

@@ -2,10 +2,10 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.sooraj.getfit.ProfileFragment"
-    android:id="@+id/fragment_profile"
     tools:layout_editor_absoluteY="25dp">
 
 
@@ -99,8 +99,8 @@
         android:layout_width="35dp"
         android:layout_height="50dp"
         android:gravity="center_vertical"
-        android:textColor="#000000"
         android:text="Ft"
+        android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/spinnerHeightFeet"
         app:layout_constraintTop_toTopOf="@+id/spinnerHeightFeet" />
@@ -110,8 +110,8 @@
         android:layout_width="35dp"
         android:layout_height="50dp"
         android:gravity="center_vertical"
-        android:textColor="#000000"
         android:text="In"
+        android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/spinnerHeightInches"
         app:layout_constraintTop_toTopOf="@+id/spinnerHeightFeet" />

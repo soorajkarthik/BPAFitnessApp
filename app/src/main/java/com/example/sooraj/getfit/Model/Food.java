@@ -4,6 +4,7 @@ import android.media.Image;
 
 public class Food {
 
+    //Fields
     private int calories;
     private int fat;
     private int carbs;

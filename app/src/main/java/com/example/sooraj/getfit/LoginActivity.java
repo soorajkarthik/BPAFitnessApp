@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-        setContentView(com.example.sooraj.getfit.R.layout.activity_login);
+        setContentView(R.layout.activity_login);
 
 
         //Firebase
@@ -49,12 +49,12 @@ public class LoginActivity extends AppCompatActivity {
         users = database.getReference("Users");
 
 
-        editUsername = findViewById(com.example.sooraj.getfit.R.id.editUsername);
-        editPassword = findViewById(com.example.sooraj.getfit.R.id.editPassword);
-        btnLogIn = findViewById(com.example.sooraj.getfit.R.id.btnLogIn);
-        btnToSignUp = findViewById(com.example.sooraj.getfit.R.id.btnToSignUp);
+        editUsername = findViewById(R.id.editUsername);
+        editPassword = findViewById(R.id.editPassword);
+        btnLogIn = findViewById(R.id.btnLogIn);
+        btnToSignUp = findViewById(R.id.btnToSignUp);
 
-        checkStaySignedIn = findViewById(com.example.sooraj.getfit.R.id.checkStaySignedIn);
+        checkStaySignedIn = findViewById(R.id.checkStaySignedIn);
 
 
         btnLogIn.setOnClickListener(new View.OnClickListener() {

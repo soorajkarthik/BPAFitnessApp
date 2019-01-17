@@ -121,8 +121,8 @@
         android:layout_width="35dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
-        android:text="Ft"
         android:gravity="center_vertical"
+        android:text="Ft"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/spinnerHeightFeet"
         app:layout_constraintTop_toBottomOf="@+id/editAge" />
@@ -132,8 +132,8 @@
         android:layout_width="35dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
-        android:text="In"
         android:gravity="center_vertical"
+        android:text="In"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/spinnerHeightInches"
         app:layout_constraintTop_toBottomOf="@+id/spinnerGender" />

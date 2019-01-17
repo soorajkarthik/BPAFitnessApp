@@ -15,27 +15,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.example.sooraj.getfit.LoginActivity"
+            android:name="LoginActivity"
             android:screenOrientation="locked">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.sooraj.getfit.SignUpActivity"
+            android:name="SignUpActivity"
             android:screenOrientation="locked" />
         <activity
-            android:name="com.example.sooraj.getfit.MainActivity"
+            android:name="MainActivity"
             android:screenOrientation="locked" />
 
-        <service android:name="com.example.sooraj.getfit.BoundService" />
+        <service android:name="BoundService" />
         <receiver
-            android:name="com.example.sooraj.getfit.BoundService$MyAlarm"
+            android:name="BoundService$MyAlarm"
             android:enabled="true" />
         <activity
-            android:name="com.example.sooraj.getfit.GetInformationActivity"
+            android:name="GetInformationActivity"
             android:screenOrientation="locked" />
 
     </application>
