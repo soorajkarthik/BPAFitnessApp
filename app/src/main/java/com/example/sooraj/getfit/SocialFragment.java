@@ -304,9 +304,9 @@ public class SocialFragment extends Fragment {
                                             + year.getText().toString() + " "
                                             + hour.getText().toString() + ":"
                                             + minute.getText().toString()
-                                            + ((TextView)timeOfDay.getSelectedView()).getText().toString();
+                                            + ((TextView) timeOfDay.getSelectedView()).getText().toString();
 
-                                    if(isDateValid(dateString)) {
+                                    if (isDateValid(dateString)) {
                                         dialog.dismiss();
                                         friend.addWorkoutInvite(username, dateString, location.getText().toString());
                                         users.child(friend.getUsername()).child("workoutInvites").setValue(friend.getWorkoutInvites());
