@@ -1,6 +1,5 @@
 package com.example.sooraj.getfit;
 
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,9 +31,15 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 
 public class SocialFragment extends Fragment {
@@ -45,7 +50,7 @@ public class SocialFragment extends Fragment {
     User user;
     String searchText;
     private View view;
-    private ListView friendList, searchList, workoutInviteList, friendRequestList;
+    private ListView friendList, searchList, workoutInviteList, friendRequestList, workoutCalendarList;
     private SearchView search;
 
     @Override
@@ -71,9 +76,17 @@ public class SocialFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_social, menu);
-        search = (SearchView) menu.getItem(2).getActionView();
+        search = (SearchView) menu.getItem(3).getActionView();
         search.setQueryHint("Start typing to search");
 
+        search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus)
+                    getActivity().getActionBar().hide();
+            }
+        });
 
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -103,11 +116,27 @@ public class SocialFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.workout_requests) {
+        if (item.getItemId() == R.id.workout_calendar) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Workout Calendar");
+            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.list_view, (ViewGroup) getMyView(), false);
+            workoutCalendarList = viewInflated.findViewById(R.id.listView);
+            workoutCalendarList.setAdapter(new WorkoutCalendarAdapter(getActivity(), user.getAcceptedWorkouts()));
+            builder.setView(viewInflated);
+
+            builder.setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            builder.show();
+        } else if (item.getItemId() == R.id.workout_requests) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Workout Requests");
-            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.workout_request_view, (ViewGroup) getMyView(), false);
-            workoutInviteList = viewInflated.findViewById(R.id.workoutRequestList);
+            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.list_view, (ViewGroup) getMyView(), false);
+            workoutInviteList = viewInflated.findViewById(R.id.listView);
             workoutInviteList.setAdapter(new WorkoutInviteAdapter(getActivity(), user.getWorkoutInvites()));
             builder.setView(viewInflated);
 
@@ -123,8 +152,8 @@ public class SocialFragment extends Fragment {
         } else if (item.getItemId() == R.id.friend_requests) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Friend Requests");
-            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.friend_request_view, (ViewGroup) getMyView(), false);
-            friendRequestList = viewInflated.findViewById(R.id.friendRequestList);
+            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.list_view, (ViewGroup) getMyView(), false);
+            friendRequestList = viewInflated.findViewById(R.id.listView);
             friendRequestList.setAdapter(new FriendRequestAdapter(getActivity(), user.getFriendRequests()));
             builder.setView(viewInflated);
 
@@ -270,8 +299,8 @@ public class SocialFragment extends Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
-                                    String dateString = day.getText().toString() + "/"
-                                            + month.getText().toString() + "/"
+                                    String dateString = month.getText().toString() + "/"
+                                            + day.getText().toString() + "/"
                                             + year.getText().toString() + " "
                                             + hour.getText().toString() + ":"
                                             + minute.getText().toString()
@@ -348,15 +377,18 @@ public class SocialFragment extends Fragment {
 
         private boolean isDateValid(String dateString) {
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mma");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mma");
             simpleDateFormat.setLenient(false);
             try {
-                simpleDateFormat.parse(dateString.trim());
+                Date date = simpleDateFormat.parse(dateString.trim());
+                if (date.getTime() < System.currentTimeMillis()) {
+                    return false;
+                }
             } catch (ParseException pe) {
                 return false;
             }
-            return true;
 
+            return true;
         }
 
         class FriendListHolder {
@@ -465,7 +497,7 @@ public class SocialFragment extends Fragment {
                                     searchedUser.addFriendRequest(username);
                                     users.child(searchedUser.getUsername()).child("friendRequests").setValue(searchedUser.getFriendRequests());
                                     updateSearchResults(searchText, filteredUsernameList);
-                                    friendRequestList.setAdapter(new FriendRequestAdapter(getActivity(), user.getFriendRequests()));
+                                    //friendRequestList.setAdapter(new FriendRequestAdapter(getActivity(), user.getFriendRequests()));
                                 }
                             });
 
@@ -508,9 +540,31 @@ public class SocialFragment extends Fragment {
         public WorkoutInviteAdapter(Context context, HashMap<String, ArrayList<String>> workoutInvites) {
             layoutInflater = LayoutInflater.from(context);
             this.workoutInvites.putAll(workoutInvites);
+            deleteExpiredInvites();
             inviteSenders.addAll(workoutInvites.keySet());
             count = inviteSenders.size();
             this.context = context;
+        }
+
+        public void deleteExpiredInvites() {
+            ArrayList<String> oldWorkoutKeys = new ArrayList<>();
+
+            for (Map.Entry<String, ArrayList<String>> entry : workoutInvites.entrySet()) {
+
+                try {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mma");
+                    Date date = simpleDateFormat.parse(entry.getValue().get(0));
+
+                    if (date.getTime() < System.currentTimeMillis()) {
+                        oldWorkoutKeys.add(entry.getKey());
+                    }
+                } catch (ParseException e) {
+                }
+            }
+
+            for (String oldKey : oldWorkoutKeys) {
+                workoutInvites.remove(oldKey);
+            }
         }
 
         @Override
@@ -541,15 +595,16 @@ public class SocialFragment extends Fragment {
             holder.declineRequest = thisView.findViewById(R.id.declineRequest);
             final String inviteSenderUsername = inviteSenders.get(i);
 
+            holder.usernameText.setText(inviteSenderUsername);
+            System.out.println(workoutInvites.toString());
+            holder.dateAndTimeText.setText(workoutInvites.get(inviteSenderUsername).get(0));
+            holder.locationText.setText(workoutInvites.get(inviteSenderUsername).get(1));
+
             users.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                     final User inviteSender = dataSnapshot.child(inviteSenderUsername).getValue(User.class);
-
-                    holder.usernameText.setText(inviteSenderUsername);
-                    holder.dateAndTimeText.setText(workoutInvites.get(inviteSenderUsername).get(0));
-                    holder.locationText.setText(workoutInvites.get(inviteSenderUsername).get(1));
 
                     holder.acceptRequest.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -654,6 +709,7 @@ public class SocialFragment extends Fragment {
                             user.removeFriendRequestFromUser(requestSenderUsername);
                             requestSender.addFriend(username);
                             users.child(username).child("friendList").setValue(user.getFriendList());
+                            users.child(username).child("friendRequests").setValue(user.getFriendRequests());
                             users.child(requestSenderUsername).child("friendList").setValue(requestSender.getFriendList());
                             friendRequestList.setAdapter(new FriendRequestAdapter(getActivity(), user.getFriendRequests()));
                             friendList.setAdapter(new FriendListAdapter(getActivity(), user.getFriendList()));
@@ -691,5 +747,142 @@ public class SocialFragment extends Fragment {
         }
     }
 
+    class WorkoutCalendarAdapter extends BaseAdapter {
 
+        private Context context;
+        private HashMap<String, ArrayList<String>> acceptedWorkouts = new HashMap<>();
+        private ArrayList<String> workoutPartners = new ArrayList<>();
+        private LayoutInflater layoutInflater;
+        private int count;
+
+        public WorkoutCalendarAdapter(Context context, HashMap<String, ArrayList<String>> acceptedWorkouts) {
+            layoutInflater = LayoutInflater.from(context);
+            this.context = context;
+            this.acceptedWorkouts.putAll(acceptedWorkouts);
+            sortAcceptedWorkoutsByDate();
+            deleteOldWorkouts();
+            workoutPartners.addAll(this.acceptedWorkouts.keySet());
+            count = workoutPartners.size();
+
+        }
+
+        public void sortAcceptedWorkoutsByDate() {
+            List<Map.Entry<String, ArrayList<String>>> list = new LinkedList<>(acceptedWorkouts.entrySet());
+
+            Collections.sort(list, new Comparator<Map.Entry<String, ArrayList<String>>>() {
+                @Override
+                public int compare(Map.Entry<String, ArrayList<String>> pair1, Map.Entry<String, ArrayList<String>> pair2) {
+
+                    Date date1 = new Date(), date2 = new Date();
+
+                    try {
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mma");
+                        date1 = simpleDateFormat.parse(pair1.getValue().get(0));
+                        date2 = simpleDateFormat.parse(pair2.getValue().get(0));
+                    } catch (ParseException e) {
+                    }
+
+                    return date1.compareTo(date2);
+                }
+            });
+
+            HashMap<String, ArrayList<String>> temp = new LinkedHashMap<>();
+            for (Map.Entry<String, ArrayList<String>> entry : list) {
+                temp.put(entry.getKey(), entry.getValue());
+            }
+
+            acceptedWorkouts.clear();
+            acceptedWorkouts.putAll(temp);
+        }
+
+        public void deleteOldWorkouts() {
+            ArrayList<String> oldWorkoutKeys = new ArrayList<>();
+
+            for (Map.Entry<String, ArrayList<String>> entry : acceptedWorkouts.entrySet()) {
+
+                try {
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy hh:mma");
+                    Date date = simpleDateFormat.parse(entry.getValue().get(0));
+
+                    if (date.getTime() < System.currentTimeMillis()) {
+                        oldWorkoutKeys.add(entry.getKey());
+                    }
+                } catch (ParseException e) {
+                }
+            }
+
+            for (String oldKey : oldWorkoutKeys) {
+                acceptedWorkouts.remove(oldKey);
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return count;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return workoutPartners.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            final int index = i;
+            final View thisView = layoutInflater.inflate(R.layout.accepted_workout_list_element, null);
+            final WorkoutCalendarHolder holder = new WorkoutCalendarHolder();
+            holder.usernameText = thisView.findViewById(R.id.usernameText);
+            holder.dateAndTimeText = thisView.findViewById(R.id.dateAndTimeText);
+            holder.locationText = thisView.findViewById(R.id.locationText);
+            holder.cancelWorkout = thisView.findViewById(R.id.cancelWorkout);
+            final String workoutPartnerUsername = workoutPartners.get(i);
+
+            holder.usernameText.setText(workoutPartnerUsername);
+            holder.dateAndTimeText.setText(acceptedWorkouts.get(workoutPartnerUsername).get(0));
+            holder.locationText.setText(acceptedWorkouts.get(workoutPartnerUsername).get(1));
+
+            users.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    final User workoutPartner = dataSnapshot.child(workoutPartnerUsername).getValue(User.class);
+
+
+                    holder.cancelWorkout.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            user.cancelWorkoutFromUser(workoutPartnerUsername);
+                            workoutPartner.cancelWorkoutFromUser(username);
+                            users.child(username).child("acceptedWorkouts").setValue(user.getAcceptedWorkouts());
+                            users.child(workoutPartnerUsername).child("acceptedWorkouts").setValue(workoutPartner.getAcceptedWorkouts());
+                            workoutCalendarList.setAdapter(new WorkoutCalendarAdapter(getActivity(), user.getAcceptedWorkouts()));
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+            thisView.setTag(holder);
+            view = thisView;
+
+            return view;
+        }
+
+        class WorkoutCalendarHolder {
+            TextView usernameText;
+            TextView dateAndTimeText;
+            TextView locationText;
+            Button cancelWorkout;
+        }
+    }
 }

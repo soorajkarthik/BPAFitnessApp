@@ -134,7 +134,7 @@ public class BoundService extends Service implements SensorEventListener {
                     //12 hours subtracted to ensure correct date is stored
                     //Receiver was triggered past midnight due to its low priority among other system tasks
                     Date date = new Date(System.currentTimeMillis() - 12 * 60 * 60 * 1000);
-                    SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                    SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");
                     String dateString = df.format(date);
 
                     //Stores amount of steps taken, calories eaten, and weight that day

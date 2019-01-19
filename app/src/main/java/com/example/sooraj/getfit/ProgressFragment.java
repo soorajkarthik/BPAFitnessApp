@@ -234,7 +234,7 @@ public class ProgressFragment extends Fragment {
             int position = timeFrame - i;
             long subtract = (long) i * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
             String dateString = sdf.format(date);
             int steps = 0;
             if (stepData.containsKey(dateString)) {
@@ -285,7 +285,7 @@ public class ProgressFragment extends Fragment {
             int position = timeFrame - i;
             long subtract = (long) i * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
             String dateString = sdf.format(date);
             int calories = 0;
             if (calorieData.containsKey(dateString)) {
@@ -337,7 +337,7 @@ public class ProgressFragment extends Fragment {
             int position = timeFrame - i;
             long subtract = (long) i * 24 * 60 * 60 * 1000;
             Date date = new Date(System.currentTimeMillis() - subtract);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
             String dateString = sdf.format(date);
             int weight = 0;
             if (weightData.containsKey(dateString)) {

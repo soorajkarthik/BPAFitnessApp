@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/workout_calendar"
+        android:icon="@drawable/ic_date_range_white_24dp"
+        android:title="Workout Calendar"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/workout_requests"
         android:icon="@drawable/fitness_center_white_24dp"
         android:title="Workout Requests"

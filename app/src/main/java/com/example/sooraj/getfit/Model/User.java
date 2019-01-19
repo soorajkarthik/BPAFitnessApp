@@ -331,4 +331,8 @@ public class User {
     public void declineWorkoutRequestFromUser(String username) {
         workoutInvites.remove(username);
     }
+
+    public void cancelWorkoutFromUser(String username) {
+        acceptedWorkouts.remove(username);
+    }
 }

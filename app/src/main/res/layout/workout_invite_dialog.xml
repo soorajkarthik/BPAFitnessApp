@@ -5,13 +5,13 @@
     android:layout_height="wrap_content">
 
     <EditText
-        android:id="@+id/day"
+        android:id="@+id/month"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:gravity="center"
-        android:hint="DD"
+        android:hint="MM"
         android:inputType="date"
         android:maxLength="2"
         android:padding="10dp"
@@ -24,32 +24,32 @@
         android:layout_height="wrap_content"
         android:text="/"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/day"
-        app:layout_constraintStart_toEndOf="@+id/day"
-        app:layout_constraintTop_toTopOf="@+id/day" />
+        app:layout_constraintBottom_toBottomOf="@+id/month"
+        app:layout_constraintStart_toEndOf="@+id/month"
+        app:layout_constraintTop_toTopOf="@+id/month" />
 
     <EditText
-        android:id="@+id/month"
+        android:id="@+id/day"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:gravity="center"
-        android:hint="MM"
+        android:hint="DD"
         android:inputType="date"
         android:maxLength="2"
         android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/day"
+        app:layout_constraintBottom_toBottomOf="@+id/month"
         app:layout_constraintStart_toEndOf="@+id/textView1"
-        app:layout_constraintTop_toTopOf="@+id/day" />
+        app:layout_constraintTop_toTopOf="@+id/month" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="15dp"
+        android:layout_width="11dp"
         android:layout_height="wrap_content"
         android:text="/"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/month"
-        app:layout_constraintStart_toEndOf="@+id/month"
+        app:layout_constraintStart_toEndOf="@+id/day"
         app:layout_constraintTop_toTopOf="@+id/month" />
 
     <EditText
@@ -62,9 +62,9 @@
         android:inputType="date"
         android:maxLength="4"
         android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/day"
+        app:layout_constraintBottom_toBottomOf="@+id/month"
         app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="@+id/day" />
+        app:layout_constraintTop_toTopOf="@+id/month" />
 
     <EditText
         android:id="@+id/hour"
@@ -78,7 +78,7 @@
         android:maxLength="2"
         android:padding="10dp"
         app:layout_constraintStart_toStartOf="@+id/location"
-        app:layout_constraintTop_toBottomOf="@+id/day" />
+        app:layout_constraintTop_toBottomOf="@+id/month" />
 
     <EditText
         android:id="@+id/minute"
