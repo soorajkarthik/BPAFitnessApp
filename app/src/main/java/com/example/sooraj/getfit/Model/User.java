@@ -41,7 +41,6 @@ public class User {
 
     /**
      * Constructor
-     *
      * @param email    email of user
      * @param username username of user
      * @param password password of user
@@ -97,13 +96,6 @@ public class User {
 
     public int getAge() {
         return age;
-    }
-
-    /**
-     * Start of "setter" methods
-     */
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public int getSteps() {
@@ -186,16 +178,23 @@ public class User {
         return workoutInvites;
     }
 
-    /**
-     * End of "getter" methods
-     */
-
     public HashMap<String, ArrayList<String>> getAcceptedWorkouts() {
         return acceptedWorkouts;
     }
 
     public ArrayList<String> getFriendRequests() {
         return friendRequests;
+    }
+
+    /**
+     * End of "getter" methods
+     */
+
+    /**
+     * Start of "setter" methods
+     */
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setGender(String gender) {
@@ -206,7 +205,6 @@ public class User {
         this.weight = weight;
     }
 
-
     public void setAge(int age) {
         this.age = age;
     }
@@ -215,66 +213,53 @@ public class User {
         this.bmi = bmi;
     }
 
-
     public void setSteps(int steps) {
         this.steps = steps;
     }
-
 
     public void setStepGoal(int stepGoal) {
         this.stepGoal = stepGoal;
     }
 
-
     public void setWeightGoal(int weightGoal) {
         this.weightGoal = weightGoal;
     }
-
 
     public void setCaloriesBurned(int caloriesBurned) {
         this.caloriesBurned = caloriesBurned;
     }
 
-
     public void setCalories(int calories) {
         this.calories = calories;
     }
-
 
     public void setCalorieGoal(int calorieGoal) {
         this.calorieGoal = calorieGoal;
     }
 
-
     public void setCarbs(int carbs) {
         this.carbs = carbs;
     }
-
 
     public void setFat(int fat) {
         this.fat = fat;
     }
 
-
     public void setProtein(int protein) {
         this.protein = protein;
     }
-
 
     public void setCarbGoal(int carbGoal) {
         this.carbGoal = carbGoal;
     }
 
-
     public void setFatGoal(int fatGoal) {
         this.fatGoal = fatGoal;
     }
 
-
     public void setProteinGoal(int proteinGoal) {
         this.proteinGoal = proteinGoal;
     }
-
 
     public void setActivityLevel(int activityLevel) {
         this.activityLevel = activityLevel;
@@ -287,6 +272,7 @@ public class User {
     public void setHeight(int height) {
         this.height = height;
     }
+
     /**
      * End of "setter" methods
      */
@@ -320,7 +306,6 @@ public class User {
 
     /**
      * Adds a specified user to the current user's friend list
-     *
      * @param username username of the specified user
      */
     public void addFriend(String username) {
@@ -351,7 +336,6 @@ public class User {
         details.add(location);
         workoutInvites.put(username, details);
     }
-
 
     /**
      * Check to see if user has a friend request from another specified user
