@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileFragment extends Fragment {
 
+    //TODO: DOCUMENTATION
     /**
      * Fields
      */
