@@ -38,6 +38,9 @@ import java.util.ArrayList;
 
 public class FoodFragment extends Fragment {
 
+    /**
+     * Fields
+     */
     FirebaseDatabase database;
     DatabaseReference users;
     String username;
@@ -50,17 +53,15 @@ public class FoodFragment extends Fragment {
     private SearchView search;
     private ListView searchResults;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        database = FirebaseDatabase.getInstance();
-        users = database.getReference("Users");
-        user = ((MainActivity) getActivity()).getUser();
-        username = user.getUsername();
-
-    }
-
-
+    /**
+     * Get reference to all components of the fragment's view
+     * Get reference to Firebase Database, and the "Users" node
+     * Get reference to current user from the current activity
+     * @param inflater the LayoutInflater used by the MainActivity
+     * @param container ViewGroup that this fragment is a part of
+     * @param saveInstanceState state of the application the last time it was closed
+     * @return the view corresponding to this fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
@@ -83,6 +84,11 @@ public class FoodFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Inflates options menu and configures search bar
+     * @param menu Menu used by the current activity
+     * @param inflater MenuInflater used by the current activity
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_food, menu);
@@ -124,6 +130,10 @@ public class FoodFragment extends Fragment {
 
     }
 
+    /**
+     * Filters search results based on user's input
+     * @param newText user's input
+     */
     public void filterFoodArray(String newText) {
         String fName;
 
@@ -136,10 +146,17 @@ public class FoodFragment extends Fragment {
         }
     }
 
+    /**
+     * @return returns view corresponding to this fragment
+     */
     private View getMyView() {
         return view;
     }
 
+    /**
+     * Updates progress bars and text to match values stored in Firebase
+     * Animates progress bars
+     */
     public void updateDisplay() {
 
         textCaloriesBar.setText(user.getCalories() + "/" + user.getCalorieGoal() + "\nCalories");
@@ -160,6 +177,10 @@ public class FoodFragment extends Fragment {
 
     }
 
+    /**
+     * Sets search result's visibility to invisible
+     * Sets progress bars and texts' visibility to visible
+     */
     public void setProgressVisible() {
         searchResults.setVisibility(View.INVISIBLE);
         progressCalories.setVisibility(View.VISIBLE);
@@ -172,6 +193,10 @@ public class FoodFragment extends Fragment {
         textProteinBar.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Sets search result's visibility to visible
+     * Sets progress bars and texts' visibility to invisible
+     */
     public void setProgressInvisible() {
         searchResults.setVisibility(View.VISIBLE);
         progressCalories.setVisibility(View.INVISIBLE);
@@ -184,6 +209,9 @@ public class FoodFragment extends Fragment {
         textProteinBar.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Custom AsyncTask used to retrieve data from Nutritionix API
+     */
     class myAsyncTask extends AsyncTask<String, Void, String> {
 
 
@@ -192,14 +220,23 @@ public class FoodFragment extends Fragment {
         JsonObjectRequest request;
         private JSONArray foodList;
 
+        /**
+         * Creates and gets reference to a RequestQueue which is to be used to request JSONObjects from the Nutritionix API
+         */
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             rQueue = Volley.newRequestQueue(getActivity().getApplicationContext());
         }
 
+        /**
+         * Searches Nutritionix API for food whose name contains the users input
+         * @param sText array of user input into search bar
+         * @return "Done" if search was successful
+         *         "Exception Caught" if search was unsuccessful
+         */
         @Override
-        protected String doInBackground(String... sText) {
+        protected String doInBackground(String[] sText) {
 
             final String[] search = sText;
             String url = "https://api.nutritionix.com/v1_1/search/" + sText[0] + "?results=0%3A50&cal_min=0&cal_max=50000&fields=*&appId=b2f7efb9&appKey=6c6117ee833ec15cb3018340a39e5d3b";
@@ -228,9 +265,13 @@ public class FoodFragment extends Fragment {
 
             rQueue.add(request);
             return "Done";
-
         }
 
+        /**
+         * Unwraps JSONObject returned by API search and adds individual Food objects to an array of search results
+         * @return "OK" if food objects were successfully initialized and added to foodResults array
+         *         "Exception Caught" if any problem occurred in the process
+         */
         public String getFoodList() {
 
             try {
@@ -287,7 +328,10 @@ public class FoodFragment extends Fragment {
 
         }
 
-
+        /**
+         * Notifies user if search was unsuccessful
+         * @param results whether or not search was successful, the string returned by the doInBackground method
+         */
         @Override
         protected void onPostExecute(String results) {
             super.onPostExecute(results);
@@ -298,6 +342,9 @@ public class FoodFragment extends Fragment {
         }
     }
 
+    /**
+     * Custom adapter for searchResults ListView
+     */
     class SearchResultsAdapter extends BaseAdapter {
 
         int count;
@@ -305,37 +352,59 @@ public class FoodFragment extends Fragment {
         private LayoutInflater layoutInflater;
         private ArrayList<Food> foodDetails = new ArrayList<>();
 
-        public SearchResultsAdapter(Context context, ArrayList<Food> food_details) {
+        /**
+         * Constructor
+         * @param context current application context
+         * @param foodSearchResults search results from API search
+         */
+        public SearchResultsAdapter(Context context, ArrayList<Food> foodSearchResults) {
             layoutInflater = LayoutInflater.from(context);
-
-            foodDetails.addAll(food_details);
-            this.count = food_details.size();
+            foodDetails.addAll(foodSearchResults);
+            this.count = foodSearchResults.size();
             this.context = context;
         }
 
+        /**
+         * @return amount of elements there will be in ListView
+         */
         @Override
         public int getCount() {
             return count;
         }
 
+        /**
+         * Returns food object at index i
+         * @param i index of object
+         * @return food object at index i
+         */
         @Override
         public Object getItem(int i) {
             return foodDetails.get(i);
         }
 
+        /**
+         * Required method in order to be subclass of BaseAdapter
+         */
         @Override
         public long getItemId(int i) {
             return i;
         }
 
+        /**
+         * Configures element of ListView
+         * @param i index of element in ListView
+         * @param view view of the element in index i
+         * @param viewGroup the ListView
+         * @return the view of the configured element in the ListView
+         */
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
-            ViewHolder holder;
+            SearchResultsHolder holder;
             final Food tempFood = foodDetails.get(i);
             if (view == null) {
                 view = layoutInflater.inflate(R.layout.search_results_view, null);
-                holder = new ViewHolder();
+                holder = new SearchResultsHolder();
                 holder.foodName = view.findViewById(R.id.foodName);
                 holder.textCalories = view.findViewById(R.id.textCalories);
                 holder.textFat = view.findViewById(R.id.textFat);
@@ -347,6 +416,13 @@ public class FoodFragment extends Fragment {
 
                 holder.addFood.setOnClickListener(new View.OnClickListener() {
 
+                    /**
+                     * When addFood button is clicked, inflate an AlertDialog asking how many servings were eaten
+                     * Calculate amount of calories and macro-nutrients based on how many servings were eaten
+                     * Update the user's calorie and macro-nutrient totals for the day in Firebase
+                     * Update the display using updateDisplay method
+                     * @param view view of the addFood button
+                     */
                     @Override
                     public void onClick(View view) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -382,15 +458,12 @@ public class FoodFragment extends Fragment {
                         });
 
                         builder.show();
-
                     }
-
-
                 });
 
                 view.setTag(holder);
             } else {
-                holder = (ViewHolder) view.getTag();
+                holder = (SearchResultsHolder) view.getTag();
             }
 
             holder.foodName.setText(tempFood.getName());
@@ -404,7 +477,10 @@ public class FoodFragment extends Fragment {
             return view;
         }
 
-        class ViewHolder {
+        /**
+         * Structure to hold all of the components of a list element
+         */
+        class SearchResultsHolder {
             TextView foodName;
             TextView textCalories;
             TextView textFat;
