@@ -55,7 +55,6 @@ public class BoundService extends Service implements SensorEventListener {
     /**
      * Gets reference to current user from Firebase
      * Starts alarm used to perform many updates at midnight everyday, see setAlarm method
-     *
      * @param intent intent passed in when binding service to activity,
      *               it will also contain the username of the current user
      * @return custom binder class, see documentation for MyBinder class
@@ -141,8 +140,8 @@ public class BoundService extends Service implements SensorEventListener {
         }
 
         /**
-         *  Resets the users step count and calorie count and stores the user's steps, calorie count, and weight for the day
-         *  Updates user in Firebase
+         * Resets the users step count and calorie count and stores the user's steps, calorie count, and weight for the day
+         * Updates user in Firebase
          * @param context current application context
          * @param intent intent passed in by alarm
          */
