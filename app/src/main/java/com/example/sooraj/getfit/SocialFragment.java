@@ -44,6 +44,7 @@ import java.util.Map;
 
 public class SocialFragment extends Fragment {
 
+    //TODO: DOCUMENTATION
     FirebaseDatabase database;
     DatabaseReference users;
     String username;

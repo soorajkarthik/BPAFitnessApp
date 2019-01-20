@@ -59,18 +59,19 @@ public class FoodFragment extends Fragment {
      * Get reference to current user from the current activity
      * @param inflater the LayoutInflater used by the MainActivity
      * @param container ViewGroup that this fragment is a part of
-     * @param saveInstanceState state of the application the last time it was closed
+     * @param saveInstanceState the last saved state of the application
      * @return the view corresponding to this fragment
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
-        setHasOptionsMenu(true);
-        view = inflater.inflate(R.layout.fragment_food, container, false);
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
+
+        setHasOptionsMenu(true);
+        view = inflater.inflate(R.layout.fragment_food, container, false);
         searchResults = view.findViewById(R.id.search_results);
         progressCalories = view.findViewById(R.id.progressBarCalories);
         progressFat = view.findViewById(R.id.progressBarFat);
@@ -421,7 +422,7 @@ public class FoodFragment extends Fragment {
                      * Calculate amount of calories and macro-nutrients based on how many servings were eaten
                      * Update the user's calorie and macro-nutrient totals for the day in Firebase
                      * Update the display using updateDisplay method
-                     * @param view view of the addFood button
+                     * @param view view of the pressed button
                      */
                     @Override
                     public void onClick(View view) {

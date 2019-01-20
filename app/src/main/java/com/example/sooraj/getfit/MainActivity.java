@@ -23,7 +23,9 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Fields
+    /**
+     * Fields
+     */
     private FirebaseDatabase database;
     private DatabaseReference users;
     private android.support.v7.widget.Toolbar toolbar;
@@ -37,12 +39,16 @@ public class MainActivity extends AppCompatActivity {
     private ServiceConnection mServiceConnection;
     private boolean tabViewSetUpDone;
 
+    /**
+     * Get reference to all components of the activity's view
+     * Get reference to Firebase Database, and the "Users" node
+     * @param savedInstanceState the last saved state of the application
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Gets reference to database
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
@@ -50,12 +56,18 @@ public class MainActivity extends AppCompatActivity {
         updateUser();
     }
 
+    /**
+     * Starts BoundService once activity starts
+     */
     @Override
     protected void onStart() {
         super.onStart();
         startBoundService();
     }
 
+    /**
+     * Called every time activity is revisited/started
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -64,23 +76,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates the user's last seen time in Firebase
+     */
     private void updateLastSeen() {
         user.setLastSeen(System.currentTimeMillis());
         users.child(username).child("lastSeen").setValue(user.getLastSeen());
     }
 
+    /**
+     * Updates local user reference to match Firebase
+     * Sets up TabView the first time method is called
+     */
     private void updateUser() {
 
-        //Updates local reference to user every time user is updated in Firebase
+        //Ensures local reference to user is updated every time user is updated in Firebase
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 user = dataSnapshot.child(username).getValue(User.class);
 
 
-                //Ensures that tablayout is set up after initial reference to user is received
-                //Ensures tablayout is only set up once
-                //Sets the tab that is seen when the app is opened to the step counter tab
+                /*
+                 * Ensures that tablayout is set up after initial reference to user is received
+                 * Ensures tablayout is only set up once
+                 * Sets the tab that is seen when the app is opened to the step counter tab
+                 */
+
                 if (!tabViewSetUpDone) {
                     setUpTabView();
                     viewPager.setCurrentItem(1);
@@ -89,20 +111,24 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
 
+    /**
+     * Public so method can be accessed by fragments
+     * @return current user
+     */
     public User getUser() {
         return user;
     }
 
+    /**
+     * Starts a BoundService which counts steps and resets users steps and calories at midnight
+     * Binds BoundService to this activity
+     */
     public void startBoundService() {
 
-        //Starts bound service which counts steps and resets users steps and calories at midnight
-        //Binds bound service to this activity
         Intent intent = new Intent(this, BoundService.class);
         intent.putExtra("username", username);
         startService(intent);
@@ -110,38 +136,51 @@ public class MainActivity extends AppCompatActivity {
         //Setup a service connection which is connected to the bound service
         //Used to monitor the state of the service
         mServiceConnection = new ServiceConnection() {
+
+            /**
+             * Gets reference to BoundService once service has been connected to this activity
+             */
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder service) {
                 BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
                 mBoundService = myBinder.getService();
                 mServiceBound = true;
-
             }
 
+            /**
+             * Restarts BoundService if it stops for some reason
+             * Ensures BoundService is always running
+             */
             @Override
             public void onServiceDisconnected(ComponentName componentName) {
                 startBoundService();
             }
         };
 
-        //Binds bound service to this activity
         bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
     }
 
+    /**
+     * Sets up toolbar
+     * Set up view pager which allows user to scroll through TabLayout
+     */
     public void setUpTabView() {
 
-        //Gets reference to views
-        //Sets up viewpager which allows user to scroll through tablayout
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         tabLayout = findViewById(R.id.tabLayout);
         viewPager = findViewById(R.id.viewPager);
-        pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), username);
+        pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pageAdapter);
 
 
-        //Changes toolbar text and color when a new tab is selected
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+            /**
+             * Changes color and text of Toolbar and TabLayout based on the selected tab
+             * @param tab the selected tab
+             */
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
@@ -188,16 +227,13 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
+            public void onTabUnselected(TabLayout.Tab tab) {}
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
+            public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-        //Connects viewpager to tab layout
+        //Connects ViewPager to TabLayout
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabViewSetUpDone = true;
     }

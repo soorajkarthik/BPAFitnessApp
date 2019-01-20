@@ -6,15 +6,25 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class PageAdapter extends FragmentPagerAdapter {
 
-    private final String username;
+    /**
+     * Fields
+     */
     private int numOfTabs;
 
-    public PageAdapter(FragmentManager fm, int numOfTabs, String username) {
-        super(fm);
+    /**
+     * Constructor
+     * @param fragmentManager FragmentManager used by the current activity
+     * @param numOfTabs number of tabs in TabLayout
+     */
+    public PageAdapter(FragmentManager fragmentManager, int numOfTabs) {
+        super(fragmentManager);
         this.numOfTabs = numOfTabs;
-        this.username = username;
     }
 
+    /**
+     * @param position current position of ViewPager that PageAdapter is attached to
+     * @return Fragment based on position
+     */
     @Override
     public Fragment getItem(int position) {
 
@@ -34,6 +44,9 @@ public class PageAdapter extends FragmentPagerAdapter {
         }
     }
 
+    /**
+     * @return number of tabs in TabLayout
+     */
     @Override
     public int getCount() {
         return numOfTabs;

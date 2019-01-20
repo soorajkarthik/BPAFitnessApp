@@ -21,7 +21,9 @@ import com.google.firebase.database.ValueEventListener;
 
 public class LoginActivity extends AppCompatActivity {
 
-    //Firebase
+    /**
+     * Fields
+     */
     private FirebaseDatabase database;
     private DatabaseReference users;
     private SharedPreferences pref;
@@ -29,40 +31,41 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogIn, btnToSignUp;
     private CheckBox checkStaySignedIn;
 
+    /**
+     * Get reference to all components of the activity's view
+     * Get reference to Firebase Database, and the "Users" node
+     * If a user is currently signed on, goes directly to MainActivity
+     * If no user is currently signed on, stay on current screen
+     * @param savedInstanceState the last saved state of the application
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         pref = getApplicationContext().getSharedPreferences("MyPref", 0);
 
+        //Check to see if user is currently logged on, if true, start MainActivity
         if (pref.getString("username", null) != null) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             intent.putExtra("username", pref.getString("username", null));
             startActivity(intent);
         }
 
-
         setContentView(R.layout.activity_login);
 
-
-        //Firebase
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
-
 
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
         btnLogIn = findViewById(R.id.btnLogIn);
         btnToSignUp = findViewById(R.id.btnToSignUp);
-
         checkStaySignedIn = findViewById(R.id.checkStaySignedIn);
 
 
         btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                logIn(editUsername.getText().toString(),
-                        editPassword.getText().toString());
+                logIn(editUsername.getText().toString(), editPassword.getText().toString());
 
             }
         });
@@ -70,12 +73,19 @@ public class LoginActivity extends AppCompatActivity {
         btnToSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Start SignUpActivity
                 Intent myIntent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(myIntent);
             }
         });
     }
 
+    /**
+     * Check to see if there is a user in Firebase with the entered username and password combination
+     * If there is, start MainActivity
+     * @param username entered username
+     * @param password entered password
+     */
     private void logIn(final String username, final String password) {
 
         users.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -87,6 +97,8 @@ public class LoginActivity extends AppCompatActivity {
                     if (login.getPassword().equals(password)) {
                         Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
+                        //If stay signed in box is checked, store username on
+                        //device so login is no longer necessary until user logs out
                         if (checkStaySignedIn.isChecked()) {
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putString("username", username);
@@ -105,9 +117,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                //custom code
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
 }

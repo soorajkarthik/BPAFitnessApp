@@ -21,22 +21,27 @@ import java.util.Objects;
 
 public class GetInformationActivity extends AppCompatActivity {
 
-    //Firebase
+    /**
+     * Fields
+     */
     private FirebaseDatabase database;
     private DatabaseReference users;
     private User user;
-
     private Button confirmButton;
     private EditText editAge, editWeight, editStepGoal;
     private Spinner gender, heightFeet, heightInches, weightGoal, activityLevel;
 
-
+    /**
+     * Get reference to all components of the activity's view
+     * Get reference to Firebase Database, and the "Users" node
+     * Get reference to current user from the username contained in the intent used to start this activity
+     * @param savedInstanceState the last saved state of the application
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_getinformation);
 
-        //Firebase
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         final String username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
@@ -67,6 +72,12 @@ public class GetInformationActivity extends AppCompatActivity {
 
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * When button is pressed, check to see if all values are valid
+             * If values are valid, update the user in Firebase
+             * @param view view of the pressed button
+             */
             @Override
             public void onClick(View view) {
                 if (editAge.getText().toString().equals("")) {
@@ -105,9 +116,12 @@ public class GetInformationActivity extends AppCompatActivity {
                     int stepGoal = Integer.parseInt(editStepGoal.getText().toString());
                     int weightGoalInt = weightGoal.getSelectedItemPosition() - 1;
                     int activityLevelInt = activityLevel.getSelectedItemPosition() - 1;
+
+                    //calculate basal metabolic rate (bmr) using different formulas based on the user's entered sex
                     int bmr = genderString.equals("Male") ? (int) (66 + (6.3 * weight) + (12.9 * height) - (6.8 * age)) : (int) (655 + (4.3 * weight) + (4.7 * height) - (4.7 * age));
                     int calorieGoal;
 
+                    //calculate calories required to maintain current weight based on bmr and activity level
                     switch (activityLevelInt) {
                         case 0:
                             calorieGoal = (int) (bmr * 1.2);
@@ -129,6 +143,7 @@ public class GetInformationActivity extends AppCompatActivity {
                             break;
                     }
 
+                    //set calorie goal based on user's weight goal (lose fat, maintain weight, or gain muscle)
                     switch (weightGoalInt) {
                         case 0:
                             calorieGoal -= 400;
@@ -140,11 +155,12 @@ public class GetInformationActivity extends AppCompatActivity {
                             break;
                     }
 
+                    //calculate macro-nutrients based on calorie goal
                     int carbs = (int) (calorieGoal * 0.4 / 4);
                     int fat = (int) (calorieGoal * .3 / 9);
                     int protein = (int) (calorieGoal * .3 / 4);
 
-
+                    //Update local user reference
                     user.setAge(age);
                     user.setGender(genderString);
                     user.setHeight(height);
@@ -159,9 +175,11 @@ public class GetInformationActivity extends AppCompatActivity {
                     user.setProteinGoal(protein);
                     user.setSetUpCompleted(true);
 
+                    //Update user in Firebase
                     users.child(username).setValue(user);
                     Toast.makeText(GetInformationActivity.this, "Profile Setup Completed!", Toast.LENGTH_SHORT).show();
 
+                    //Start MainActivity
                     Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                     myIntent.putExtra("username", username);
                     startActivity(myIntent);

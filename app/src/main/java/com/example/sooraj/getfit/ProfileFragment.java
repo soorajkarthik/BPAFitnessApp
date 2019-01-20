@@ -23,7 +23,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileFragment extends Fragment {
 
-    //Fields
+    /**
+     * Fields
+     */
     private FirebaseDatabase database;
     private DatabaseReference users;
     private View view;

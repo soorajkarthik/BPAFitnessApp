@@ -23,6 +23,9 @@ import java.text.DecimalFormat;
 
 public class StepsFragment extends Fragment {
 
+    /**
+     * Fields
+     */
     private View view;
     private User user;
     private FirebaseDatabase database;
@@ -31,19 +34,22 @@ public class StepsFragment extends Fragment {
     private TextView stepsText, percentCompleted, distanceWalked, caloriesBurnedText;
     private ProgressBar progressBar;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        database = FirebaseDatabase.getInstance();
-        users = database.getReference("Users");
-        user = ((MainActivity) getActivity()).getUser();
-        username = user.getUsername();
-
-    }
-
-    @Override
+    /**
+     * Get reference to all components of the fragment's view
+     * Get reference to Firebase Database, and the "Users" node
+     * Get reference to current user from the current activity
+     * @param inflater the LayoutInflater used by the MainActivity
+     * @param container ViewGroup that this fragment is a part of
+     * @param saveInstanceState the last saved state of the application
+     * @return the view corresponding to this fragment
+     */
+   @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
+       database = FirebaseDatabase.getInstance();
+       users = database.getReference("Users");
+       user = ((MainActivity) getActivity()).getUser();
+       username = user.getUsername();
 
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_steps, container, false);
@@ -55,13 +61,22 @@ public class StepsFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * Inflates options menu
+     * @param menu Menu used by the current activity
+     * @param inflater MenuInflater used by the current activity
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_steps, menu);
         updateDisplay();
     }
 
+    /**
+     * Inflates dialog from which user can change their step goal
+     * @param item the selected item from the options menu
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_steps) {
@@ -72,6 +87,11 @@ public class StepsFragment extends Fragment {
             builder.setView(viewInflated);
 
             builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                /**
+                 * If user has entered a new step goal, update user's step goal in Firebase
+                 * @param dialog the dialog that received the click
+                 * @param which the button that was clicked
+                 */
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
@@ -86,6 +106,11 @@ public class StepsFragment extends Fragment {
                 }
             });
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                /**
+                 * Closes dialog
+                 * @param dialog the dialog that received the click
+                 * @param which the button that was clicked
+                 */
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -99,6 +124,11 @@ public class StepsFragment extends Fragment {
     }
 
 
+    /**
+     * Updates progress bar and text to match values stored in Firebase
+     * Animates progress bar
+     * Calculates amount of calories burned by user based on steps taken and updates value in Firebase
+     */
     public void updateDisplay() {
 
         int percent = (user.getSteps() * 100) / user.getStepGoal();

@@ -37,6 +37,8 @@ import java.util.HashMap;
 
 public class ProgressFragment extends Fragment {
 
+    //TODO: DOCUMENTATION
+
     private static int chartType;
     private View view;
     private BarChart barChart;
