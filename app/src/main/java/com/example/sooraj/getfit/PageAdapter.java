@@ -17,6 +17,7 @@ public class PageAdapter extends FragmentPagerAdapter {
      * @param numOfTabs number of tabs in TabLayout
      */
     public PageAdapter(FragmentManager fragmentManager, int numOfTabs) {
+
         super(fragmentManager);
         this.numOfTabs = numOfTabs;
     }
@@ -49,6 +50,7 @@ public class PageAdapter extends FragmentPagerAdapter {
      */
     @Override
     public int getCount() {
+
         return numOfTabs;
     }
 }

@@ -54,9 +54,9 @@ public class FoodFragment extends Fragment {
     private ListView searchResults;
 
     /**
-     * Get reference to all components of the fragment's view
      * Get reference to Firebase Database, and the "Users" node
      * Get reference to current user from the current activity
+     * Get reference to all components of the fragment's view
      * @param inflater the LayoutInflater used by the MainActivity
      * @param container ViewGroup that this fragment is a part of
      * @param saveInstanceState the last saved state of the application
@@ -170,10 +170,21 @@ public class FoodFragment extends Fragment {
         progressCarbs.setProgress(0);
         progressProtein.setProgress(0);
 
-        ObjectAnimator.ofInt(progressCalories, "progress", ((user.getCalories() * 10000) / user.getCalorieGoal())).setDuration(1000).start();
-        ObjectAnimator.ofInt(progressFat, "progress", ((user.getFat() * 10000) / user.getFatGoal())).setDuration(1000).start();
-        ObjectAnimator.ofInt(progressCarbs, "progress", ((user.getCarbs() * 10000) / user.getCarbGoal())).setDuration(1000).start();
-        ObjectAnimator.ofInt(progressProtein, "progress", ((user.getProtein() * 10000) / user.getProteinGoal())).setDuration(1000).start();
+        ObjectAnimator.ofInt(progressCalories, "progress",
+                ((user.getCalories() * 10000) / user.getCalorieGoal()))
+                .setDuration(1000).start();
+
+        ObjectAnimator.ofInt(progressFat, "progress",
+                ((user.getFat() * 10000) / user.getFatGoal()))
+                .setDuration(1000).start();
+
+        ObjectAnimator.ofInt(progressCarbs, "progress",
+                ((user.getCarbs() * 10000) / user.getCarbGoal()))
+                .setDuration(1000).start();
+
+        ObjectAnimator.ofInt(progressProtein, "progress",
+                ((user.getProtein() * 10000) / user.getProteinGoal()))
+                .setDuration(1000).start();
 
 
     }
@@ -294,10 +305,14 @@ public class FoodFragment extends Fragment {
                         tempFood.setId(fields.getString("item_id"));
                         tempFood.setName(fields.getString("item_name"));
                         tempFood.setBrand(fields.getString("brand_name"));
+
                         if (fields.getInt("nf_serving_size_qty") == 0) {
                             tempFood.setServingSize("1 serving(s)");
-                        } else {
-                            tempFood.setServingSize(fields.getInt("nf_serving_size_qty") + " " + fields.getString("nf_serving_size_unit") + "(s)");
+                        }
+
+                        else {
+                            tempFood.setServingSize(fields.getInt("nf_serving_size_qty") + " "
+                                    + fields.getString("nf_serving_size_unit") + "(s)");
                         }
                     } catch (Exception e) {
                         continue;
@@ -338,7 +353,9 @@ public class FoodFragment extends Fragment {
             super.onPostExecute(results);
 
             if (results.equalsIgnoreCase("Exception Caught")) {
-                Toast.makeText(getActivity(), "Unable to connect to server :/", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        "Unable to connect to server :/",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -404,7 +421,9 @@ public class FoodFragment extends Fragment {
             SearchResultsHolder holder;
             final Food tempFood = foodDetails.get(i);
             if (view == null) {
+
                 view = layoutInflater.inflate(R.layout.search_results_view, null);
+
                 holder = new SearchResultsHolder();
                 holder.foodName = view.findViewById(R.id.foodName);
                 holder.textCalories = view.findViewById(R.id.textCalories);
@@ -428,7 +447,12 @@ public class FoodFragment extends Fragment {
                     public void onClick(View view) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Servings");
-                        View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.serving_number_dialog, (ViewGroup) getMyView(), false);
+
+                        View viewInflated = LayoutInflater.from(getContext())
+                                        .inflate(R.layout.serving_number_dialog,
+                                        (ViewGroup) getMyView(),
+                                        false);
+
                         final EditText input = viewInflated.findViewById(R.id.servingsNumber);
                         builder.setView(viewInflated);
 
@@ -437,14 +461,19 @@ public class FoodFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 double numOfServings = Double.parseDouble(input.getText().toString());
+
+                                //Calculate quantities based on number of servings
                                 user.setCalories(user.getCalories() + (int) (tempFood.getCalories() * numOfServings));
                                 user.setFat(user.getFat() + (int) (tempFood.getFat() * numOfServings));
                                 user.setCarbs(user.getCarbs() + (int) (tempFood.getCarbs() * numOfServings));
                                 user.setProtein(user.getProtein() + (int) (tempFood.getProtein() * numOfServings));
+
+                                //Update user in Firebase
                                 users.child(username).child("calories").setValue(user.getCalories());
                                 users.child(username).child("fat").setValue(user.getFat());
                                 users.child(username).child("carbs").setValue(user.getCarbs());
                                 users.child(username).child("protein").setValue(user.getProtein());
+
                                 updateDisplay();
                                 search.setQuery("", false);
                                 search.clearFocus();

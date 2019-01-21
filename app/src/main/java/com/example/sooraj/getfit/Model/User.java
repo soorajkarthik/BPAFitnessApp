@@ -18,7 +18,12 @@ public class User {
     private double bmi;
     private int steps;
     private int stepGoal;
-    private int weightGoal;//lose = 0, maintain 1, gain(lean muscle) = 2
+    /*
+     * 0 = lose fat
+     * 1 = maintain weight
+     * 2 = gain muscle
+     */
+    private int weightGoal;
     private int caloriesBurned;
     private int calories;
     private int calorieGoal;
@@ -28,7 +33,14 @@ public class User {
     private int carbGoal;
     private int fatGoal;
     private int proteinGoal;
-    private int activityLevel;//0 = sedentary, 1 = light, 2 = moderate, 3 = heavy, 4 = very heavy
+    /*
+     * 0 = Little to no activity
+     * 1 = Light exercise/sports 1–3 days/week
+     * 2 = Moderate exercise/sports 3–5 days/week
+     * 3 = Hard exercise/sports 6–7 days a week
+     * 4 = Very hard exercise/sports and/or physical job
+     */
+    private int activityLevel;
     private long lastSeen;
     private HashMap<String, Integer> stepsStorage;
     private HashMap<String, Integer> calorieStorage;

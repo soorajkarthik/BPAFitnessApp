@@ -116,14 +116,19 @@ public class BoundService extends Service implements SensorEventListener {
      * @param context application's current context
      */
     public void setAlarm(Context context) {
+
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, MyAlarm.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+
+        am.setRepeating(AlarmManager.RTC_WAKEUP,
+                calendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pi);
     }
 
     /**
@@ -153,7 +158,6 @@ public class BoundService extends Service implements SensorEventListener {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     user = dataSnapshot.child(username).getValue(User.class);
-                    Calendar c = Calendar.getInstance();
 
                     Date date = new Date(System.currentTimeMillis() - 12 * 60 * 60 * 1000);
                     SimpleDateFormat df = new SimpleDateFormat("MM-dd-yyyy");

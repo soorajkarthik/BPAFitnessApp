@@ -51,7 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
-        username = Objects.requireNonNull(getIntent().getExtras()).getString("username");
+
+        username = Objects.requireNonNull(getIntent()
+                .getExtras())
+                .getString("username");
+
         tabViewSetUpDone = false;
         updateUser();
     }
@@ -94,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
         users.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                user = dataSnapshot.child(username).getValue(User.class);
 
+                user = dataSnapshot.child(username).getValue(User.class);
 
                 /*
                  * Ensures that tablayout is set up after initial reference to user is received
@@ -142,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder service) {
+
                 BoundService.MyBinder myBinder = (BoundService.MyBinder) service;
                 mBoundService = myBinder.getService();
                 mServiceBound = true;
@@ -174,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
         pageAdapter = new PageAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(pageAdapter);
 
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             /**
@@ -186,38 +190,83 @@ public class MainActivity extends AppCompatActivity {
                 viewPager.setCurrentItem(tab.getPosition());
                 switch (tab.getPosition()) {
                     case 0:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_blue_dark));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_blue_dark));
-                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_blue_dark));
+                        toolbar.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                android.R.color.holo_blue_dark));
+
+                        tabLayout.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        android.R.color.holo_blue_dark));
+
+                        getWindow().setStatusBarColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        android.R.color.holo_blue_dark));
+
                         ProgressFragment.setToolbarText(toolbar);
                         break;
 
                     case 1:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+                        toolbar.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        R.color.colorAccent));
+
+                        tabLayout.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        R.color.colorAccent));
+
+                        getWindow().setStatusBarColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        R.color.colorAccent));
+
                         toolbar.setTitle("View Activity");
 
                         break;
 
                     case 2:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_orange_dark));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_orange_dark));
-                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_orange_dark));
+                        toolbar.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        android.R.color.holo_orange_dark));
+
+                        tabLayout.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        android.R.color.holo_orange_dark));
+
+                        getWindow().setStatusBarColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        android.R.color.holo_orange_dark));
+
                         toolbar.setTitle("Track Diet");
                         break;
 
                     case 3:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
-                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, android.R.color.holo_green_dark));
+                        toolbar.setBackgroundColor(ContextCompat.getColor(
+                                MainActivity.this,
+                                android.R.color.holo_green_dark));
+
+                        tabLayout.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                android.R.color.holo_green_dark));
+
+                        getWindow().setStatusBarColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        android.R.color.holo_green_dark));
+
                         toolbar.setTitle("Social");
                         break;
 
                     case 4:
-                        toolbar.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                        tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
-                        getWindow().setStatusBarColor(ContextCompat.getColor(MainActivity.this, R.color.colorPrimary));
+                        toolbar.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        R.color.colorPrimary));
+
+                        tabLayout.setBackgroundColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        R.color.colorPrimary));
+
+                        getWindow().setStatusBarColor(ContextCompat.getColor
+                                (MainActivity.this,
+                                        R.color.colorPrimary));
+
                         toolbar.setTitle("Your Profile");
                         break;
 
@@ -226,9 +275,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            /**
+             * Required method, no action necessary
+             */
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {}
 
+            /**
+             * Required method, no action necessary
+             */
             @Override
             public void onTabReselected(TabLayout.Tab tab) {}
         });

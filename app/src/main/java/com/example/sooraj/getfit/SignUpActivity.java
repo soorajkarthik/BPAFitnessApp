@@ -1,6 +1,7 @@
 package com.example.sooraj.getfit;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    //TODO: DOCUMENTATION
     /**
      * Fields
      */
@@ -29,15 +29,19 @@ public class SignUpActivity extends AppCompatActivity {
     private Button btnSignUp, btnToLogIn;
 
 
+    /**
+     * Get reference to Firebase Database, and the "Users" node
+     * Get reference to all components of the activity's view
+     * @param savedInstanceState the last saved state of the application
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
 
-        //Firebase
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
 
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_signup);
         editMail = findViewById(R.id.editMail);
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
@@ -46,42 +50,78 @@ public class SignUpActivity extends AppCompatActivity {
         btnToLogIn = findViewById(R.id.btnToLogIn);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * When sign-up button is pressed, goes through sign-up process
+             * @param view view of the clicked button
+             */
             @Override
             public void onClick(View view) {
-                final User user = new User(editMail.getText().toString(),
+                final User temp = new User(editMail.getText().toString(),
                         editUsername.getText().toString(),
                         editPassword.getText().toString());
 
                 users.addListenerForSingleValueEvent(new ValueEventListener() {
+                    /**
+                     * Creates and adds new user in Firebase if entered information is valid and username is unique
+                     * @param dataSnapshot a snapshot of the current state of the node in Firebase
+                     */
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child(user.getUsername()).exists()) {
-                            Toast.makeText(SignUpActivity.this, "This Username is Taken!", Toast.LENGTH_SHORT).show();
+
+                        //Check to make sure no user already exists with entered username
+                        if (dataSnapshot.child(temp.getUsername()).exists()) {
+
+                            Toast.makeText(SignUpActivity.this,
+                                    "This Username is Taken!",
+                                    Toast.LENGTH_SHORT).show();
+
                             editUsername.setText("");
-                        } else if (user.getUsername().isEmpty() || user.getUsername().contains(" ") || user.getUsername().length() < 6) {
-                            Toast.makeText(SignUpActivity.this, "That username is not valid", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(SignUpActivity.this, "Please select a username without any spaces with at least six characters", Toast.LENGTH_SHORT).show();
-                        } else {
+                        }
 
-                            if (editConfirmPassword.getText().toString().equals(editPassword.getText().toString())) {
-                                users.child(user.getUsername()).setValue(user);
-                                Toast.makeText(SignUpActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
+                        //Check to see if username is valid
+                        else if (temp.getUsername().isEmpty() ||
+                                temp.getUsername().contains(" ") ||
+                                temp.getUsername().length() < 6) {
+
+                            Toast.makeText(SignUpActivity.this,
+                                    "That username is not valid",
+                                    Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(SignUpActivity.this,
+                                    "Please select a username without any spaces with at least six characters",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+
+                            //Check to make sure entered password and password confirmation are exactly the same
+                            if (editConfirmPassword.getText().toString().
+                                    equals(editPassword.getText().toString())) {
+
+                                users.child(temp.getUsername()).setValue(temp); //Adds a new user to Firebase with the entered email, username, and password
+
+                                Toast.makeText(SignUpActivity.this,
+                                        "Registered Successfully!",
+                                        Toast.LENGTH_SHORT).show();
+
                                 Intent myIntent = new Intent(getApplicationContext(), GetInformationActivity.class);
-                                myIntent.putExtra("username", user.getUsername());
+                                myIntent.putExtra("username", temp.getUsername()); //Passes username to next activity
                                 startActivity(myIntent);
-
-                            } else {
-                                Toast.makeText(SignUpActivity.this, "Please ensure the password you have entered is consistent", Toast.LENGTH_SHORT).show();
-                                editConfirmPassword.setText("");
                             }
 
+                            else {
+
+                                Toast.makeText(SignUpActivity.this,
+                                        "Please ensure the password you have entered is consistent",
+                                        Toast.LENGTH_SHORT).show();
+
+                                editConfirmPassword.setText("");
+                            }
                         }
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        //add custom code
-                    }
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
                 });
             }
         });
@@ -94,5 +134,4 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
     }
-
 }

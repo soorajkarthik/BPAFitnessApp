@@ -32,28 +32,33 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox checkStaySignedIn;
 
     /**
-     * Get reference to all components of the activity's view
-     * Get reference to Firebase Database, and the "Users" node
-     * If a user is currently signed on, goes directly to MainActivity
+     * If a user is currently signed on, go directly to MainActivity
      * If no user is currently signed on, stay on current screen
+     * Get reference to Firebase Database, and the "Users" node
+     * Get reference to all components of the activity's view
      * @param savedInstanceState the last saved state of the application
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pref = getApplicationContext().getSharedPreferences("MyPref", 0);
+        pref = getApplicationContext().
+                getSharedPreferences("MyPref", 0);
 
         //Check to see if user is currently logged on, if true, start MainActivity
         if (pref.getString("username", null) != null) {
+
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.putExtra("username", pref.getString("username", null));
+
+            intent.putExtra("username",
+                    pref.getString("username", null));
+
             startActivity(intent);
         }
 
-        setContentView(R.layout.activity_login);
-
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
+
+        setContentView(R.layout.activity_login);
 
         editUsername = findViewById(R.id.editUsername);
         editPassword = findViewById(R.id.editPassword);
@@ -65,14 +70,16 @@ public class LoginActivity extends AppCompatActivity {
         btnLogIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                logIn(editUsername.getText().toString(), editPassword.getText().toString());
 
+                logIn(editUsername.getText().toString(),
+                        editPassword.getText().toString());
             }
         });
 
         btnToSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 //Start SignUpActivity
                 Intent myIntent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(myIntent);
@@ -89,17 +96,27 @@ public class LoginActivity extends AppCompatActivity {
     private void logIn(final String username, final String password) {
 
         users.addListenerForSingleValueEvent(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                 if (dataSnapshot.child(username).exists() && !username.isEmpty()) {
+
                     User login = dataSnapshot.child(username).getValue(User.class);
 
                     if (login.getPassword().equals(password)) {
-                        Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
-                        //If stay signed in box is checked, store username on
-                        //device so login is no longer necessary until user logs out
+                        Toast.makeText(LoginActivity.this,
+                                "Login Successful!",
+                                Toast.LENGTH_SHORT).show();
+
+                        /*
+                         * If stay signed in box is checked, store username on
+                         * device so login is no longer necessary until user logs out
+                         */
+
                         if (checkStaySignedIn.isChecked()) {
+
                             SharedPreferences.Editor editor = pref.edit();
                             editor.putString("username", username);
                             editor.commit();
@@ -108,11 +125,21 @@ public class LoginActivity extends AppCompatActivity {
                         Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
                         myIntent.putExtra("username", username);
                         startActivity(myIntent);
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(LoginActivity.this, "Username not registered", Toast.LENGTH_SHORT).show();
+
+                    else {
+
+                        Toast.makeText(LoginActivity.this,
+                                "Incorrect Password",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                else {
+
+                    Toast.makeText(LoginActivity.this,
+                            "Username not registered",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
 

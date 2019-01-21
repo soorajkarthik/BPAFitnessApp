@@ -35,9 +35,9 @@ public class StepsFragment extends Fragment {
     private ProgressBar progressBar;
 
     /**
-     * Get reference to all components of the fragment's view
      * Get reference to Firebase Database, and the "Users" node
      * Get reference to current user from the current activity
+     * Get reference to all components of the fragment's view
      * @param inflater the LayoutInflater used by the MainActivity
      * @param container ViewGroup that this fragment is a part of
      * @param saveInstanceState the last saved state of the application
@@ -68,21 +68,29 @@ public class StepsFragment extends Fragment {
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
         inflater.inflate(R.menu.menu_steps, menu);
         updateDisplay();
     }
 
     /**
      * Inflates dialog from which user can change their step goal
-     * @param item the selected item from the options menu
-     * @return
+     * @param item the item selected by the user
+     * @return true because there is no need for system processing, all processing necessary processing is done in the method
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         if (item.getItemId() == R.id.action_steps) {
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle("Edit Step Goal");
-            View viewInflated = LayoutInflater.from(getContext()).inflate(R.layout.edit_stepgoal_dialog, (ViewGroup) view, false);
+
+            View viewInflated = LayoutInflater.from(getContext())
+                        .inflate(R.layout.edit_stepgoal_dialog,
+                            (ViewGroup) view,
+                            false);
+
             final EditText input = viewInflated.findViewById(R.id.newStepGoal);
             builder.setView(viewInflated);
 
@@ -96,15 +104,16 @@ public class StepsFragment extends Fragment {
                 public void onClick(DialogInterface dialog, int which) {
 
                     if (!input.getText().toString().isEmpty()) {
+
                         dialog.dismiss();
                         int newStepGoal = Integer.parseInt(input.getText().toString());
                         user.setStepGoal(newStepGoal);
                         users.child(username).child("stepGoal").setValue(user.getStepGoal());
                         updateDisplay();
-
                     }
                 }
             });
+
             builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                 /**
                  * Closes dialog
@@ -113,6 +122,7 @@ public class StepsFragment extends Fragment {
                  */
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     dialog.cancel();
                 }
             });
@@ -144,7 +154,10 @@ public class StepsFragment extends Fragment {
 
         progressBar.setProgress(0);
 
-        ObjectAnimator.ofInt(progressBar, "progress", ((user.getSteps() * 10000) / user.getStepGoal())).setDuration(1000).start();
+        ObjectAnimator.ofInt(progressBar, "progress",
+                ((user.getSteps() * 10000) / user.getStepGoal()))
+                .setDuration(1000).start();
+
         user.setCaloriesBurned(caloriesBurned);
         users.child(username).child("caloriesBurned").setValue(user.getCaloriesBurned());
     }

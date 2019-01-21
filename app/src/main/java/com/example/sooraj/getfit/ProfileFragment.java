@@ -23,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class ProfileFragment extends Fragment {
 
-    //TODO: DOCUMENTATION
     /**
      * Fields
      */
@@ -38,32 +37,26 @@ public class ProfileFragment extends Fragment {
     private User user;
     private boolean editingEnabled = false;
 
+    /**
+     * Get reference to Firebase Database, and the "Users" node
+     * Get reference to current user from the current activity
+     * Get reference to all components of the fragment's view
+     * Sets text and spinners to match the values stored for the user in Firebase
+     * @param inflater the LayoutInflater used by the MainActivity
+     * @param container ViewGroup that this fragment is a part of
+     * @param saveInstanceState the last saved state of the application
+     * @return the view corresponding to this fragment
+     */
     @Override
-    public void onCreate(Bundle saveInstanceState) {
-        super.onCreate(saveInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
 
-
-        //Get reference to database and the current user
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
         user = ((MainActivity) getActivity()).getUser();
         username = user.getUsername();
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.fragment_profile, container, false);
-        return view;
-    }
-
-
-    @Override
-    public void onViewCreated(View view, Bundle saveInstanceState) {
-
-        super.onViewCreated(view, saveInstanceState);
-
-        //Get references to views
         textEditProfile = view.findViewById(R.id.textEditProfile);
         editNewWeight = view.findViewById(R.id.editNewWeight);
         editAge = view.findViewById(R.id.editAge);
@@ -78,7 +71,6 @@ public class ProfileFragment extends Fragment {
         textInches = view.findViewById(R.id.textInches);
         textStepGoal = view.findViewById(R.id.textStepGoal);
 
-        //Set values to what are currently stored in Firebase for current user
         editAge.setText(user.getAge() + "");
         editStepGoal.setText(user.getStepGoal() + "");
 
@@ -93,28 +85,48 @@ public class ProfileFragment extends Fragment {
         spinnerActivityLevel.setSelection(user.getActivityLevel() + 1);
         spinnerWeightGoal.setSelection(user.getWeightGoal() + 1);
 
-        /*
-         * Check to see if user's weight has changed (if the weight they entered is not the same as the weight stored in Firebase
-         * Updates user's weight in Firebase if the entered weight is different
-         * Updates user's calorie goal and macro-nutrient requirements based on their new weight
-         */
         buttonAddWeight.setOnClickListener(new View.OnClickListener() {
+
+            /**
+             * Check to see if user's weight has changed (if the weight they entered is not the same as the weight stored in Firebase
+             * Updates user's weight in Firebase if the entered weight is different
+             * Updates user's calorie goal and macro-nutrient requirements based on their new weight
+             * @param view view of the clicked button
+             */
             @Override
             public void onClick(View view) {
+
                 if (editNewWeight.getText().toString().equals(user.getWeight() + "")) {
-                    Toast.makeText(getActivity(), "This weight is your current weight", Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getActivity(), "Please only add new weights once your weight has changed", Toast.LENGTH_SHORT).show();
-                } else if (!editNewWeight.getText().toString().isEmpty()) {
+
+                    Toast.makeText(getActivity(),
+                            "This weight is your current weight",
+                            Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(getActivity(),
+                            "Please only add new weights once your weight has changed",
+                            Toast.LENGTH_SHORT).show();
+
+                }
+
+                else if (!editNewWeight.getText().toString().isEmpty()) {
 
                     int newWeight = Integer.parseInt(editNewWeight.getText().toString());
 
-
                     int age = Integer.parseInt(editAge.getText().toString());
-                    int height = Integer.parseInt(spinnerHeightFeet.getSelectedItem().toString()) * 12 + Integer.parseInt(spinnerHeightInches.getSelectedItem().toString());
+
+                    int feet = Integer.parseInt(spinnerHeightFeet.getSelectedItem().toString());
+                    int inches = Integer.parseInt(spinnerHeightInches.getSelectedItem().toString());
+                    int height =  (feet * 12) + inches;
+
                     String genderString = spinnerGender.getSelectedItem().toString();
                     int weightGoalInt = spinnerWeightGoal.getSelectedItemPosition() - 1;
                     int activityLevelInt = spinnerActivityLevel.getSelectedItemPosition() - 1;
-                    int bmr = genderString.equals("Male") ? (int) (66 + (6.3 * newWeight) + (12.9 * height) - (6.8 * age)) : (int) (655 + (4.3 * newWeight) + (4.7 * height) - (4.7 * age));
+
+                    //Calculate basal metabolic rate (bmr) using different formulas based on the user's entered sex
+                    int bmr = genderString.equals("Male") ?
+                            (int) (66 + (6.3 * newWeight) + (12.9 * height) - (6.8 * age)) :
+                            (int) (655 + (4.3 * newWeight) + (4.7 * height) - (4.7 * age));
+
                     double bmi = ((double) newWeight / (height * height)) * 703;
 
                     calculateCalorieGoal(weightGoalInt, activityLevelInt, bmr);
@@ -123,28 +135,50 @@ public class ProfileFragment extends Fragment {
                     user.setBmi(bmi);
                     users.child(username).setValue(user);
                     editNewWeight.setText("");
-                    Toast.makeText(getActivity(), "Your new weight has been set!", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Enter your new weight!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),
+                            "Your new weight has been set!",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                else {
+
+                    Toast.makeText(getActivity(),
+                            "Enter your new weight!",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
         setFocusEditingDisabled();
+        return view;
     }
 
+    /**
+     * Inflates options menu
+     * @param menu Menu used by the current activity
+     * @param inflater MenuInflater used by the current activity
+     */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.menu_profile, menu);
     }
 
+    /**
+     * Logs out user or allows profile editing based on which options menu item was selected
+     * @param item the item selected by the user
+     * @return true because there is no need for system processing, all processing necessary processing is done in the method
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         //Logs out user and deletes the stored username from device
         if (item.getItemId() == R.id.action_logout) {
-            SharedPreferences pref = getActivity().getApplicationContext().getSharedPreferences("MyPref", 0);
+
+            SharedPreferences pref = getActivity().
+                    getApplicationContext().
+                    getSharedPreferences("MyPref", 0);
+
             SharedPreferences.Editor editor = pref.edit();
             editor.clear();
             editor.commit();
@@ -154,54 +188,93 @@ public class ProfileFragment extends Fragment {
 
         /*
          * Check to see whether or not profile editing is enabled
-         * If disabled, then enable profile editing
-         * If enabled, check to see if all values are valid, and if so, update the user in Firebase
+         * If disabled, then enable profile editing, and change icon to check mark
+         * If enabled, check to see if all values are valid, and if so, update the user in Firebase and change icon back to edit icon
          */
-
         else if (item.getItemId() == R.id.action_profile && !editingEnabled) {
-            Toast.makeText(getActivity(), "Edit your profile", Toast.LENGTH_SHORT).show();
-            Toast.makeText(getActivity(), "Click \"Check\" to confirm ", Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getActivity(),
+                    "Edit your profile",
+                    Toast.LENGTH_SHORT).show();
+
+            Toast.makeText(getActivity(),
+                    "Click \"Check\" to confirm",
+                    Toast.LENGTH_SHORT).show();
+
             item.setIcon(R.drawable.done_white_24dp);
             setFocusEditingEnabled();
+        }
 
-        } else if (item.getItemId() == R.id.action_profile && editingEnabled) {
-
+        else if (item.getItemId() == R.id.action_profile && editingEnabled) {
 
             //Check to make sure all values are valid
-
             if (editAge.getText().toString().equals("")) {
-                Toast.makeText(getActivity(), "Please enter your Age", Toast.LENGTH_SHORT).show();
-            } else if (spinnerGender.getSelectedItem().toString().equals("Sex")) {
-                Toast.makeText(getActivity(), "Please select your Sex", Toast.LENGTH_SHORT).show();
-            } else if (spinnerHeightFeet.getSelectedItem().toString().equals("Height") || spinnerHeightInches.getSelectedItem().toString().equals("Height")) {
-                Toast.makeText(getActivity(), "Please select your Height", Toast.LENGTH_SHORT).show();
-            } else if (editStepGoal.getText().toString().equals("")) {
-                Toast.makeText(getActivity(), "Please enter your Step Goal", Toast.LENGTH_SHORT).show();
-            } else if (spinnerWeightGoal.getSelectedItem().toString().equals("Weight Goal")) {
-                Toast.makeText(getActivity(), "Please select your Weight Goal", Toast.LENGTH_SHORT).show();
-            } else if (spinnerActivityLevel.getSelectedItem().toString().equals("Activity Level")) {
-                Toast.makeText(getActivity(), "Please select your Activity Level", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getActivity(),
+                        "Please enter your Age",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            else if (spinnerGender.getSelectedItem().toString().equals("Sex")) {
+
+                Toast.makeText(getActivity(),
+                        "Please select your Sex",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            else if (spinnerHeightFeet.getSelectedItem().toString().equals("Height") ||
+                    spinnerHeightInches.getSelectedItem().toString().equals("Height")) {
+
+                Toast.makeText(getActivity(),
+                        "Please select your Height",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            else if (editStepGoal.getText().toString().equals("")) {
+
+                Toast.makeText(getActivity(),
+                        "Please enter your Step Goal",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            else if (spinnerWeightGoal.getSelectedItem().toString().equals("Weight Goal")) {
+
+                Toast.makeText(getActivity(),
+                        "Please select your Weight Goal",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            else if (spinnerActivityLevel.getSelectedItem().toString().equals("Activity Level")) {
+
+                Toast.makeText(getActivity(),
+                        "Please select your Activity Level",
+                        Toast.LENGTH_SHORT).show();
             }
 
             //Update the user in Firebase
             else {
 
                 int age = Integer.parseInt(editAge.getText().toString());
-                int height = Integer.parseInt(spinnerHeightFeet.getSelectedItem().toString()) * 12 + Integer.parseInt(spinnerHeightInches.getSelectedItem().toString());
+
+                int feet = Integer.parseInt(spinnerHeightFeet.getSelectedItem().toString());
+                int inches = Integer.parseInt(spinnerHeightInches.getSelectedItem().toString());
+                int height = (feet * 12) + inches;
+
                 int weight = user.getWeight();
                 double bmi = ((double) weight / (height * height)) * 703;
                 int stepGoal = Integer.parseInt(editStepGoal.getText().toString());
                 String genderString = spinnerGender.getSelectedItem().toString();
                 int weightGoalInt = spinnerWeightGoal.getSelectedItemPosition() - 1;
                 int activityLevelInt = spinnerActivityLevel.getSelectedItemPosition() - 1;
-                int bmr = genderString.equals("Male") ? (int) (66 + (6.3 * weight) + (12.9 * height) - (6.8 * age)) : (int) (655 + (4.3 * weight) + (4.7 * height) - (4.7 * age));
+
+                //Calculate basal metabolic rate (bmr) using different formulas based on the user's entered sex
+                int bmr = genderString.equals("Male") ?
+                        (int) (66 + (6.3 * weight) + (12.9 * height) - (6.8 * age)) :
+                        (int) (655 + (4.3 * weight) + (4.7 * height) - (4.7 * age));
 
                 calculateCalorieGoal(weightGoalInt, activityLevelInt, bmr);
 
-                /*
-                 * Update local current user reference
-                 * Update current user in Firebase
-                 */
+                //Update local user reference
                 user.setAge(age);
                 user.setGender(genderString);
                 user.setHeight(height);
@@ -210,22 +283,30 @@ public class ProfileFragment extends Fragment {
                 user.setBmi(bmi);
                 user.setActivityLevel(activityLevelInt);
 
+                //Update user in Firebase
                 users.child(username).setValue(user);
 
-                Toast.makeText(getActivity(), "Your changes were saved!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),
+                        "Your changes were saved!",
+                        Toast.LENGTH_SHORT).show();
+
                 setFocusEditingDisabled();
                 item.setIcon(R.drawable.edit_white_24dp);
-
             }
-
         }
+
         return true;
     }
 
+    /**
+     * Calculates and stores user's calorie goal and macro-nutrient requirements
+     * @param weightGoalInt how the user wants to change their weight, see User class for more details
+     * @param activityLevelInt the user's activity level, see User class for more details
+     * @param bmr the user's bmr
+     */
     public void calculateCalorieGoal(int weightGoalInt, int activityLevelInt, int bmr) {
 
         int calorieGoal;
-
 
         //Calculate calories required to maintain current weight based on activity level
         switch (activityLevelInt) {
@@ -281,7 +362,7 @@ public class ProfileFragment extends Fragment {
         user.setProteinGoal(protein);
     }
 
-    /*
+    /**
      * Disables profile editing
      * Allows the user to enter new weights
      */
@@ -315,7 +396,7 @@ public class ProfileFragment extends Fragment {
         editingEnabled = false;
     }
 
-    /*
+    /**
      * Enables profile editing
      * Prevents the user from adding new weights
      */
