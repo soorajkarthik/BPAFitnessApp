@@ -59,11 +59,11 @@ public class FoodFragment extends Fragment {
      * Get reference to all components of the fragment's view
      * @param inflater the LayoutInflater used by the MainActivity
      * @param container ViewGroup that this fragment is a part of
-     * @param saveInstanceState the last saved state of the application
+     * @param savedInstanceState the last saved state of the application
      * @return the view corresponding to this fragment
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         database = FirebaseDatabase.getInstance();
         users = database.getReference("Users");
@@ -101,29 +101,49 @@ public class FoodFragment extends Fragment {
 
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus || search.getQuery().length() > 0)
+
+                if (hasFocus || search.getQuery().length() > 0) {
+
                     setProgressInvisible();
-                else
+                }
+
+                else {
+
                     setProgressVisible();
+                }
+
             }
         });
 
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            /**
+             * Required method, no action necessary
+             */
             @Override
             public boolean onQueryTextSubmit(String query) {
+
                 return false;
             }
 
+            /**
+             * Refreshes search results every time user types/deletes a letter
+             * Only performs search if there are three or more letters since
+             *      there are too many results for queries of two or fewer letters
+             * @param newText the string currently in the search bar
+             * @return false since listener does not show any suggestions
+             */
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if (newText.length() > 3) {
+                if (newText.length() > 2) {
+
                     myAsyncTask m = new myAsyncTask();
                     m.execute(newText);
                 }
+
                 return false;
             }
-
         });
 
         updateDisplay();
@@ -148,7 +168,7 @@ public class FoodFragment extends Fragment {
     }
 
     /**
-     * @return returns view corresponding to this fragment
+     * @return the view corresponding to this fragment
      */
     private View getMyView() {
         return view;
@@ -251,11 +271,16 @@ public class FoodFragment extends Fragment {
         protected String doInBackground(String[] sText) {
 
             final String[] search = sText;
+
+            //API Search URL
             String url = "https://api.nutritionix.com/v1_1/search/" + sText[0] + "?results=0%3A50&cal_min=0&cal_max=50000&fields=*&appId=b2f7efb9&appKey=6c6117ee833ec15cb3018340a39e5d3b";
+
             request = new JsonObjectRequest(com.android.volley.Request.Method.GET, url, null,
                     new Response.Listener<JSONObject>() {
+
                         @Override
                         public void onResponse(JSONObject response) {
+
                             try {
                                 foodList = response.getJSONArray("hits");
                                 String s = getFoodList();
@@ -264,13 +289,18 @@ public class FoodFragment extends Fragment {
                                 filterFoodArray(textSearch);
                                 searchResults.setAdapter(new SearchResultsAdapter(getActivity(), filteredFoodResults));
 
-                            } catch (Exception e) {
+                            }
+
+                            catch (Exception e) {
+
                                 e.printStackTrace();
                             }
                         }
                     }, new Response.ErrorListener() {
+
                 @Override
                 public void onErrorResponse(VolleyError error) {
+
                     error.printStackTrace();
                 }
             });
@@ -295,7 +325,7 @@ public class FoodFragment extends Fragment {
                     String matchFound = "N";
 
 
-                    try {
+                    try { //Try unwrapping JSONObject at index i, if any values are null, skip this entry and continue
                         JSONObject obj = foodList.getJSONObject(i);
                         JSONObject fields = obj.getJSONObject("fields");
                         tempFood.setCalories(fields.getInt("nf_calories"));
@@ -314,11 +344,18 @@ public class FoodFragment extends Fragment {
                             tempFood.setServingSize(fields.getInt("nf_serving_size_qty") + " "
                                     + fields.getString("nf_serving_size_unit") + "(s)");
                         }
-                    } catch (Exception e) {
+                    }
+
+                    catch (Exception e) {
+
                         continue;
                     }
 
-
+                    /*
+                     * Check to see if tempFood has already been added into foodResults during an earlier search
+                     * If so, don't add tempFood again
+                     * If no match is found, add tempFood
+                     */
                     for (int j = 0; i < foodResults.size(); j++) {
                         if (foodResults.get(j).getId().equals(tempFood.getId())) {
                             matchFound = "Y";
@@ -335,13 +372,15 @@ public class FoodFragment extends Fragment {
                     }
                 }
 
-            } catch (Exception e) {
+            }
+
+            catch (Exception e) {
+
                 e.printStackTrace();
                 return "Exception Caught";
             }
 
             return "OK";
-
         }
 
         /**
@@ -391,7 +430,6 @@ public class FoodFragment extends Fragment {
         }
 
         /**
-         * Returns food object at index i
          * @param i index of object
          * @return food object at index i
          */
@@ -420,7 +458,6 @@ public class FoodFragment extends Fragment {
 
             SearchResultsHolder holder;
             final Food tempFood = foodDetails.get(i);
-            if (view == null) {
 
                 view = layoutInflater.inflate(R.layout.search_results_view, null);
 
@@ -438,13 +475,11 @@ public class FoodFragment extends Fragment {
 
                     /**
                      * When addFood button is clicked, inflate an AlertDialog asking how many servings were eaten
-                     * Calculate amount of calories and macro-nutrients based on how many servings were eaten
-                     * Update the user's calorie and macro-nutrient totals for the day in Firebase
-                     * Update the display using updateDisplay method
-                     * @param view view of the pressed button
+                     * @param view view of the clicked button
                      */
                     @Override
                     public void onClick(View view) {
+
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Servings");
 
@@ -457,8 +492,18 @@ public class FoodFragment extends Fragment {
                         builder.setView(viewInflated);
 
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                            /**
+                             * Get amount of servings from dialog's EditText when "ok" is clicked
+                             * Calculate amount of calories and macro-nutrients based on how many servings were eaten
+                             * Update the user's calorie and macro-nutrient totals for the day in Firebase
+                             * Update the display using updateDisplay method
+                             * @param dialog dialog being interacted with
+                             * @param which index of button pressed
+                             */
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 dialog.dismiss();
                                 double numOfServings = Double.parseDouble(input.getText().toString());
 
@@ -480,9 +525,11 @@ public class FoodFragment extends Fragment {
 
                             }
                         });
+
                         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 dialog.cancel();
                             }
                         });
@@ -491,10 +538,7 @@ public class FoodFragment extends Fragment {
                     }
                 });
 
-                view.setTag(holder);
-            } else {
-                holder = (SearchResultsHolder) view.getTag();
-            }
+            view.setTag(holder);
 
             holder.foodName.setText(tempFood.getName());
             holder.textCalories.setText(tempFood.getCalories() + "");
