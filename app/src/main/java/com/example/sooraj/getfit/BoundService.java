@@ -183,10 +183,14 @@ public class BoundService extends Service implements SensorEventListener {
 
 
     /**
-     * Custom Binder class to simplify the process of getting the current service
+     * Custom Binder class to be used as the client Binder
      */
     public class MyBinder extends Binder {
 
+        /**
+         * @return local instance of the BoundService so client can
+         *         have access to this instance of the service
+         */
         public BoundService getService() {
             return BoundService.this;
         }
