@@ -27,7 +27,7 @@ GetFit is an application that’s designed to keep track of your of your physica
 - Food API: Nutritionix
 - Step Counter: In-built Sensor
 - Graphical Statistics: MPAndroidChart v2.2.4
-- Animations: AppIntro, ProgressView
+- Animations: ProgressView, MPAndroidChart v2.2.4
 
 #### Functionalities this app consists of:
 - TabLayout
