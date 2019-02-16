@@ -9,7 +9,6 @@
 GetFit is an application that’s designed to keep track of your of your physical activity/fitness, daily caloric intake, and to connect with friends to workout
 
 #### This app is targetted to those of any age who want...
-
 - To track their activity
 - To change and track food habits in order to lose fat or gain muscle
 - To keep track of daily calorie count
